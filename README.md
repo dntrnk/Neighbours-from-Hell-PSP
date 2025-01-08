@@ -1,2 +1,2 @@
-# Neighbours from Hell PSP
-Unofficial recreation of Neighbours from Hell for PSP
+# Как достать соседа PSP
+Неоффициальное воссоздание "Как достать соседа" для PSP
