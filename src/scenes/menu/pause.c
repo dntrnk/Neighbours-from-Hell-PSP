@@ -1,0 +1,268 @@
+#include "../../objects/scene_manager.h"
+
+#include <math.h>
+
+#include "../../engine/controls/controls.h"
+#include "../../engine/graphics/g2d.h"
+#include "../../engine/fonts/intraFont.h"
+#include "../../engine/NFHSound/NFHSound.h"
+
+#define MENU_BLUE G2D_RGBA(0, 96, 254, 255)
+
+extern Scene Tutorial1Scene;
+extern Scene MainMenuScene;
+
+extern g2dImage* BG_NEW_GAME;
+extern g2dImage* BG_INGAME_MENU;
+extern g2dImage* SpriteList_BUTTONS;
+
+extern intraFont* Font_ACMESA;
+extern intraFont* Font_BLUEHIGH_8;
+extern intraFont* Font_BLUEHIGH_10;
+extern intraFont* Font_BLUEHIGB_10;
+
+extern g2dImage* Sprite_Punkt;
+
+extern g2dImage* Button_tutorial_1;
+extern g2dImage* Button_level_peep;
+
+static bool tutorial_selected;
+
+static float new_scroll_y;
+static float new_scroll_y_target;
+static int scroll_y_limit;
+static int scroll_y;
+
+static inline int clamp(int x, int min, int max) {
+    return (x < min) ? min : ((x > max) ? max : x);
+}
+
+static inline float lerp(float a, float b, float t) {
+    return b + (a - b) * t;
+}
+
+static void init(void) {
+    NFHHouseMusicPause(); // Pause
+    NFHMusicPlay(MUSIC_TITEL, 1);
+
+    tutorial_selected = is_this_scene(&Tutorial1Scene);
+    new_scroll_y = 0.0f;
+    new_scroll_y_target = 0.0f;
+    scroll_y = 0;
+    scroll_y_limit = -10;
+}
+
+static void update(void) {
+    controls_read();
+
+    // Через стик можно будет "листать" описание
+    int stick_y = controls_AnalogY();
+
+    if (abs(stick_y) > 65) {
+        new_scroll_y_target = clamp(new_scroll_y - clamp(stick_y, -10, 10), scroll_y_limit, 0);
+    }
+
+    if (abs(new_scroll_y - new_scroll_y_target) < 1) {
+        new_scroll_y = new_scroll_y_target;
+        scroll_y = floor(new_scroll_y);
+    } else {
+        new_scroll_y = lerp(new_scroll_y, new_scroll_y_target, 0.8);
+        scroll_y = floor(new_scroll_y);
+    }
+
+    // if (controls_pressed(PSP_CTRL_CROSS)) {
+    //     NFHHouseMusicPause(); // Resume
+    //     NFHMusicStop();
+    //     scene_pop();
+    // } else if (controls_pressed(PSP_CTRL_CIRCLE)) {
+    //     scene_restart();
+
+    // Выход из меню по кнопке O
+    if (controls_pressed(PSP_CTRL_CIRCLE)) {
+        NFHSoundPlay(SOUND_BUT1);
+    } else if (controls_released(PSP_CTRL_CIRCLE)) {
+        NFHHouseMusicPause(); // Resume
+        NFHMusicStop();
+        scene_pop();
+    }
+}
+
+static void draw(void) {
+    // да, копипаста (с мелкими изменениями да да)
+    g2dClear(BLACK);
+
+    // Правая половина (копирка newgame)
+    g2d_DrawImage(BG_NEW_GAME, 240, 129, 240, 80, WHITE, 240, 129, 240, 80, 0, 255, G2D_UP_LEFT);
+
+    // Описание уровня
+    intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGB_10, 1);
+
+    if (tutorial_selected) {
+        intraFontPrint(Font_BLUEHIGB_10, 253, 129 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Поначалу всегда тяжело. Если вы");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 137 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "прочитали руководство,");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 145 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "потренируйтесь с Вуди, пока не");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 153 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "прозвучала команда \'Мотор!\'");
+
+        intraFontPrint(Font_BLUEHIGB_10, 253, 165 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Научитесь водить Вуди по дому,");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 173 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "путешествовать между комнатами");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 181 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "и этажами.");
+
+        intraFontPrint(Font_BLUEHIGB_10, 253, 193 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Советуем пройти это вступление,");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 201 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "прежде чем переходить");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 209 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "к съемкам.");
+    } else {
+        intraFontPrint(Font_BLUEHIGB_10, 253, 129 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Как мы скоро увидим, наш сосед");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 137 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "тот еще тип.");
+
+        intraFontPrint(Font_BLUEHIGB_10, 253, 149 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Редко застанешь его мирно");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 157 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "сидящим в кресле.");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 165 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Исключения только");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 173 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "подтверждают правило...");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 181 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Может, он просто затаился");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 189 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "и что то высматривает?");
+        intraFontPrint(Font_BLUEHIGB_10, 275, 187 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, ".");
+        intraFontPrint(Font_BLUEHIGB_10, 276, 187 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, ".");
+
+        intraFontPrint(Font_BLUEHIGB_10, 253, 201 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "Вуди это не по душе. Придется");
+        intraFontPrint(Font_BLUEHIGB_10, 253, 209 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "навестить соседушку...");
+    }
+
+    g2d_DrawImage(BG_NEW_GAME, 240, 0, 240, 129, WHITE, 240, 0, 240, 129, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(BG_NEW_GAME, 240, 209, 240, 63, WHITE, 240, 209, 240, 63, 0, 255, G2D_UP_LEFT);
+
+    // Подпись к иконке
+    intraFontSetStyle(Font_BLUEHIGH_8, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGH_8, 0);
+
+    if (tutorial_selected) {
+        intraFontPrint(Font_BLUEHIGH_8, 253, 120 + intraFontTextHeight(Font_BLUEHIGH_8), "Наш герой - Вуди!");
+    } else {
+        intraFontPrint(Font_BLUEHIGH_8, 253, 120 + intraFontTextHeight(Font_BLUEHIGH_8), "Любопытный сосед");
+    }
+
+    intraFontSetStyle(Font_ACMESA, 0.65, WHITE, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontActivate(Font_ACMESA, 1);
+    intraFontPrint(Font_ACMESA, 409, 7 + intraFontTextHeight(Font_ACMESA), "Описание серии");
+    intraFontPrint(Font_ACMESA, 409, 7 + intraFontTextHeight(Font_ACMESA), "Описание серии");
+
+    intraFontSetStyle(Font_ACMESA, 0.65, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_ACMESA, 1);
+    intraFontPrint(Font_ACMESA, 270, 217 + intraFontTextHeight(Font_ACMESA), "Рекорд серии:");
+    intraFontPrint(Font_ACMESA, 270, 217 + intraFontTextHeight(Font_ACMESA), "Рекорд серии:");
+
+    intraFontPrint(Font_ACMESA, 270, 227 + intraFontTextHeight(Font_ACMESA), "Пакостей");
+    intraFontPrint(Font_ACMESA, 270, 227 + intraFontTextHeight(Font_ACMESA), "Пакостей");
+
+    intraFontPrint(Font_ACMESA, 326, 227 + intraFontTextHeight(Font_ACMESA), "Оценка");
+    intraFontPrint(Font_ACMESA, 326, 227 + intraFontTextHeight(Font_ACMESA), "Оценка");
+
+    intraFontPrint(Font_ACMESA, 373, 222 + intraFontTextHeight(Font_ACMESA), "Назад");
+    intraFontPrint(Font_ACMESA, 373, 222 + intraFontTextHeight(Font_ACMESA), "Назад");
+    intraFontPrint(Font_ACMESA, 373, 229 + intraFontTextHeight(Font_ACMESA), "в игру");
+    intraFontPrint(Font_ACMESA, 373, 229 + intraFontTextHeight(Font_ACMESA), "в игру");
+
+    // Статистика уровня... ну пока что просто заглушка будет
+    intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontActivate(Font_BLUEHIGB_10, 1);
+
+    if (tutorial_selected) {
+        intraFontPrint(Font_BLUEHIGB_10, 322, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0/1");
+        intraFontPrint(Font_BLUEHIGB_10, 322, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0/1");
+    } else {
+        intraFontPrint(Font_BLUEHIGB_10, 322, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0/4");
+        intraFontPrint(Font_BLUEHIGB_10, 322, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0/4");
+    }
+    
+    intraFontPrint(Font_BLUEHIGB_10, 352, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0%");
+    intraFontPrint(Font_BLUEHIGB_10, 352, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0%");
+
+    if (tutorial_selected) {
+        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+    } else {
+        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 260, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 265, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 270, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+    }
+
+    // Квота
+    intraFontSetStyle(Font_BLUEHIGH_10, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGH_10, 1);
+
+    intraFontPrint(Font_BLUEHIGH_10, 329, 80 + intraFontTextHeight(Font_BLUEHIGH_10), "Оценка");
+    intraFontPrint(Font_BLUEHIGH_10, 374, 80 + intraFontTextHeight(Font_BLUEHIGH_10), "Время");
+
+    intraFontSetStyle(Font_BLUEHIGB_10, 1, WHITE, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontActivate(Font_BLUEHIGB_10, 1);
+    
+    if (tutorial_selected) {
+        intraFontPrint(Font_BLUEHIGB_10, 362, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "100%");
+        intraFontPrint(Font_BLUEHIGB_10, 362, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "100%");
+
+        intraFontPrint(Font_BLUEHIGB_10, 407, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "0:00мин");
+        intraFontPrint(Font_BLUEHIGB_10, 407, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "0:00мин");
+    } else {
+        intraFontPrint(Font_BLUEHIGB_10, 362, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "50%");
+        intraFontPrint(Font_BLUEHIGB_10, 362, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "50%");
+
+        intraFontPrint(Font_BLUEHIGB_10, 407, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "5:00мин");
+        intraFontPrint(Font_BLUEHIGB_10, 407, 71 + intraFontTextHeight(Font_BLUEHIGB_10), "5:00мин");
+    }
+
+    // Подсказка
+    intraFontSetStyle(Font_BLUEHIGB_10, 1, MENU_BLUE, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGB_10, 1);
+    intraFontPrint(Font_BLUEHIGB_10, 341, 94 + intraFontTextHeight(Font_BLUEHIGB_10), "Подсказка!");
+
+    intraFontSetStyle(Font_BLUEHIGH_8, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGH_8, 0);
+
+    if (tutorial_selected) {
+        intraFontPrint(Font_BLUEHIGH_8, 335, 101 + intraFontTextHeight(Font_BLUEHIGH_8), "Слушайте советы");
+        intraFontPrint(Font_BLUEHIGH_8, 339, 101+6 + intraFontTextHeight(Font_BLUEHIGH_8), "режиссера! Он");
+        intraFontPrint(Font_BLUEHIGH_8, 332, 101+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "подскажет вам, что");
+        intraFontPrint(Font_BLUEHIGH_8, 354, 101+6+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "делать.");
+    } else {
+        intraFontPrint(Font_BLUEHIGH_8, 330, 104 + intraFontTextHeight(Font_BLUEHIGH_8), "Некоторые пакости в");
+        intraFontPrint(Font_BLUEHIGH_8, 340, 104+6 + intraFontTextHeight(Font_BLUEHIGH_8), "сериях можно");
+        intraFontPrint(Font_BLUEHIGH_8, 345, 104+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "пропускать.");
+    }
+
+    g2d_DrawImage(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
+
+    // Название уровня
+    intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_ACMESA, 1);
+
+    if (tutorial_selected) {
+        intraFontPrint(Font_ACMESA, 255, 35 + intraFontTextHeight(Font_ACMESA), "Первые шаги");
+        intraFontPrint(Font_ACMESA, 255, 35 + intraFontTextHeight(Font_ACMESA), "Первые шаги");
+    } else {
+        intraFontPrint(Font_ACMESA, 255, 29 + intraFontTextHeight(Font_ACMESA), "Сделал гадость - сердцу\n\n\n\nрадость");
+        intraFontPrint(Font_ACMESA, 255, 29 + intraFontTextHeight(Font_ACMESA), "Сделал гадость - сердцу\n\n\n\nрадость");
+    }
+
+    if (tutorial_selected) {
+        g2d_DrawImage(Button_tutorial_1, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+    } else {
+        g2d_DrawImage(Button_level_peep, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+    }
+
+    // Левая половина
+    g2d_DrawImageEasy(BG_INGAME_MENU, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
+
+    intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_ACMESA, 1);
+    intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
+    intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
+
+    g2dFlip(G2D_VSYNC);
+}
+
+Scene PauseScene = {
+    .init = init,
+    .update = update,
+    .draw = draw,
+    .unload = NULL
+};

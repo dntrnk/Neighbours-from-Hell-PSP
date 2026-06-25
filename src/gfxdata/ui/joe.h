@@ -1,0 +1,16 @@
+#ifndef GFXDATA_UI_JOE_H
+#define GFXDATA_UI_JOE_H
+
+#define FRAME_UI_JOE_HEAD_0 0
+#define FRAME_UI_JOE_HEAD_1 1
+#define FRAME_UI_JOE_HEAD_2 2
+#define FRAME_UI_JOE_HEAD_3 3
+#define FRAME_UI_JOE_HEAD_4 4
+#define FRAME_UI_JOE_HEAD_5 5
+#define FRAME_UI_JOE_HEAD_6 6
+#define FRAME_UI_JOE_HEAD_7 7
+#define FRAME_UI_JOE_HEAD_8 8
+#define FRAME_UI_JOE_HEAD_9 9
+#define FRAME_UI_JOE_HEAD_10 10
+
+#endif // GFXDATA_UI_JOE_H

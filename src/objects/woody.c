@@ -1,0 +1,1417 @@
+#include "woody.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "../engine/controls/controls.h"
+#include "../engine/fonts/intraFont.h"
+#include "../engine/NFHSound/NFHSound.h"
+
+#define CG_YELLOW_TRICKS G2D_RGBA(239, 239, 0, 255)
+#define CG_BLUE_TIMER G2D_RGBA(121, 181, 181, 255)
+#define COLOR_GREEN_PERCENT G2D_RGBA(132, 175, 109, 255)
+#define COLOR_WHITE_PERCENT G2D_RGBA(254, 254, 254, 255)
+
+#define COLOR_BLACK_BUBBLE G2D_RGBA(0, 0, 0, 235)
+#define COLOR_GRAY_BUBBLE G2D_RGBA(158, 158, 158, 235)
+#define COLOR_WHITE_BUBBLE G2D_RGBA(255, 255, 255, 235)
+
+#define IS_LAST_ANIMATION_FRAME (woody->animation_frame == woody->animation_length - 1 && woody->animation_frame_time == 4)
+
+extern g2dImage* SpriteAtlas_INGAMEUI;
+
+extern g2dImage* SpriteList_BUTTONS;
+extern g2dImage* SpriteList_ITEMS_1;
+extern g2dImage* SpriteList_ITEMS_2;
+
+extern intraFont* Font_ACMESA;
+extern intraFont* Font_BLUEHIGC_11;
+extern intraFont* Font_BLUEHIGC_24;
+extern intraFont* Font_BLUEHIGB_18;
+
+extern int camera_x;
+extern int camera_y;
+
+static inline int clamp(int x, int min, int max) {
+    return (x < min) ? min : ((x > max) ? max : x);
+}
+
+static inline float lerp(float a, float b, float t) {
+    return b + (a - b) * t;
+}
+
+Woody* woody_create(
+    g2dImage* spritelists[16],
+    const Frame* gfxdata[16],
+    const Animation* animations[16],
+    int start_x,
+    int start_y,
+    hDoor* (*h_doors)[2],
+    vDoor* (*v_doors)[3],
+    LookObject* (*look_objects)[8],
+    Hideout* (*hideouts),
+    Storage* (*storages)[8],
+    int camera_limit_x,
+    int camera_limit_y,
+    RoomID room,
+    RoomCollision* room_collisions,
+    int min_quota,
+    int total_tricks,
+    LevelEnd* level_end,
+    bool* level_end_active
+) {
+    Woody* woody = malloc(sizeof(Woody));
+    memset(woody, 0, sizeof(Woody));
+
+    // Анимации
+    for (int i = 0; i < 16; i++) {
+        woody->spritelists[i] = spritelists[i];
+        woody->gfxdata[i] = gfxdata[i];
+        woody->animations[i] = animations[i];
+    }
+
+    woody->current_spritelist = 0;
+
+    woody->current_animation_pack = -1;
+    woody->current_animation_index = -1;
+
+    woody->animation_loop = false;
+    woody->animation_frame = 0;
+    woody->animation_frame_time = 0;
+    woody->animation_length = 0;
+
+    woody->sprite_src_x = 0;
+    woody->sprite_src_y = 0;
+    woody->sprite_w = 0;
+    woody->sprite_h = 0;
+    woody->sprite_offset_x = 0;
+    woody->sprite_offset_y = 0;
+
+    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+
+    // Анимации дверей
+    woody->enter_door = NULL;
+    woody->dest_door = NULL;
+
+    woody->enter_door_sprite_x = 0;
+    woody->enter_door_sprite_y = 0;
+
+    woody->dest_door_current_spritelist = 0;
+
+    woody->dest_door_current_animation_pack = -1;
+    woody->dest_door_current_animation_index = -1;
+
+    woody->dest_door_animation_frame = 0;
+    woody->dest_door_animation_frame_time = 0;
+    woody->dest_door_animation_length = 0;
+
+    woody->dest_door_sprite_x = 0;
+    woody->dest_door_sprite_y = 0;
+    woody->dest_door_sprite_src_x = 0;
+    woody->dest_door_sprite_src_y = 0;
+    woody->dest_door_sprite_w = 0;
+    woody->dest_door_sprite_h = 0;
+    woody->dest_door_sprite_offset_x = 0;
+    woody->dest_door_sprite_offset_y = 0;
+
+    woody->dest_door_exit_x = 0;
+
+    // Основа Вуди
+    woody->x = start_x;
+    woody->y = start_y;
+
+    woody->speed_x = 2;
+    woody->speed_y = 1;
+
+    woody->velocity_x = 0;
+    woody->velocity_y = 0;
+
+    woody->can_move = false;
+    woody->in_door = false;
+    woody->is_on_floor = true;
+    woody->floor_y = start_y;
+    woody->hide = false;
+
+    woody->state = STATE_STOP;
+
+    woody->auto_move_goal_type = GOAL_NONE;
+    woody->auto_move_goal_x = 0;
+    woody->auto_move_goal_y = 0;
+
+    woody->h_doors = h_doors;
+    woody->v_doors = v_doors;
+
+    woody->look_objects = look_objects;
+    
+    // strcpy(woody->look_object_phrase_text, "");
+    woody->look_object_phrase_y = 0;
+    woody->look_object_bubble_size = 0;
+    woody->look_object_phrase_show = false;
+
+    woody->hideouts = hideouts;
+
+    woody->storages = storages;
+
+    woody->room = room;
+    woody->room_collisions = room_collisions;
+
+    woody->level_end = level_end;
+    woody->level_end_active = level_end_active;
+
+    // Прохождение уровня
+    woody->quota = 0;
+    woody->min_quota = min_quota;
+
+    woody->tricks = 0;
+    woody->total_tricks = total_tricks;
+
+    // Инвентарь
+    for (int i = 0; i < 16; i++) {
+        woody->inventory[i] = ITEM_NONE;
+    }
+
+    woody->selected_item = 0;
+    woody->item_count = 0;
+
+    // Интерфейс
+    for (int i = 0; i < 3; i++) {
+        woody->hints[i].show = false;
+        woody->hints[i].is_active_goal = false;
+    }
+
+    woody->ui_quota = 0.0f;
+    sprintf(woody->ui_quota_text, "%d", (int) woody->ui_quota);
+    woody->ui_quota_animation_play = false;
+    woody->ui_quota_animation_frame = 0;
+    woody->ui_quota_delta = 0.0f;
+    strcpy(woody->ui_quota_delta_text, "+0");
+    woody->ui_quota_delta_text_show = false;
+    woody->ui_quota_text_color = COLOR_GREEN_PERCENT;
+
+    sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
+    intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+    woody->ui_tricks_counter_text_x = 460 - floor(intraFontMeasureText(Font_BLUEHIGC_24, woody->ui_tricks_counter_text) * 0.5);
+    woody->ui_tricks_counter_text_show = true;
+
+    woody->inventory_animation_items_show = true;
+    woody->inventory_animation_play = false;
+    woody->inventory_animation_first_index = 0;
+    woody->inventory_animation_last_index = 0;
+    woody->inventory_animation_frame = 0;
+    woody->inventory_animation_frame_time = 0;
+
+    woody->ui_tricks_counter_animation_play = false;
+    woody->ui_tricks_counter_animation_frame = 0;
+    woody->ui_tricks_counter_animation_frame_time = 0;
+
+    // Камера
+    woody->camera_limit_x = camera_limit_x;
+    woody->camera_limit_y = camera_limit_y;
+
+    woody->camera_offset_x = 0;
+    woody->camera_offset_y = 0;
+
+    woody->new_camera_offset_x = 0;
+    woody->new_camera_offset_y = 0;
+
+    woody->camera_door_offset_x = 0;
+    woody->camera_door_offset_y = 0;
+
+    return woody;
+}
+
+void woody_animation_update_frame(Woody* woody) {
+    const Animation* current_animation = &woody->animations[woody->current_animation_pack][woody->current_animation_index];
+    int animation_frame = current_animation->frames[woody->animation_frame];
+    const Frame* frame = &woody->gfxdata[woody->current_animation_pack][animation_frame];
+
+    woody->sprite_src_x = frame->src_x;
+    woody->sprite_src_y = frame->src_y;
+    woody->sprite_w = frame->w;
+    woody->sprite_h = frame->h;
+    woody->sprite_offset_x = frame->offset_x;
+    woody->sprite_offset_y = frame->offset_y;
+    woody->current_spritelist = frame->spritelist_index;
+
+    int current_sound = current_animation->sfx[woody->animation_frame];
+
+    if (current_sound != SOUND_NONE)
+        NFHSoundPlay(current_sound);
+
+}
+
+void woody_animation_set(Woody* woody, int pack, int animation) {
+    if (woody->current_animation_pack == pack && woody->current_animation_index == animation) {
+        return;
+    }
+
+    woody->current_animation_pack = pack;
+    woody->current_animation_index = animation;
+    woody->animation_frame = 0;
+    woody->animation_frame_time = 0;
+
+    const Animation* new_animation = &woody->animations[pack][animation];
+    woody->animation_loop = new_animation->loop;
+    woody->animation_length = new_animation->frame_count;
+
+    woody_animation_update_frame(woody);
+}
+
+void woody_dest_door_animation_update_frame(Woody* woody) {
+    const Animation* current_animation = &woody->animations[woody->dest_door_current_animation_pack][woody->dest_door_current_animation_index];
+    int animation_frame = current_animation->frames[woody->dest_door_animation_frame];
+    const Frame* frame = &woody->gfxdata[woody->dest_door_current_animation_pack][animation_frame];
+
+    woody->dest_door_sprite_src_x = frame->src_x;
+    woody->dest_door_sprite_src_y = frame->src_y;
+    woody->dest_door_sprite_w = frame->w;
+    woody->dest_door_sprite_h = frame->h;
+    woody->dest_door_sprite_offset_x = frame->offset_x;
+    woody->dest_door_sprite_offset_y = frame->offset_y;
+    woody->dest_door_current_spritelist = frame->spritelist_index;
+
+    int current_sound = current_animation->sfx[woody->dest_door_animation_frame];
+
+    if (current_sound != SOUND_NONE) {
+        NFHSoundPlay(current_sound);
+    }
+}
+
+void woody_dest_door_animation_set(Woody* woody, int pack, int animation) {
+    woody->dest_door_current_animation_pack = pack;
+    woody->dest_door_current_animation_index = animation;
+    woody->dest_door_animation_length = woody->animations[pack][animation].frame_count;
+    woody->dest_door_animation_frame = 0;
+    woody->dest_door_animation_frame_time = 0;
+
+    woody_dest_door_animation_update_frame(woody);
+}
+
+void woody_start_using_h_door(Woody* woody, hDoor* new_enter_door) {
+    hDoor* current_door = new_enter_door;
+    hDoor* new_dest_door = woody->h_doors[current_door->dest_door_room][current_door->dest_door_id];
+
+    woody->enter_door = new_enter_door;
+    woody->dest_door = new_dest_door;
+
+    woody->room = current_door->dest_door_room;
+    woody->in_door = true;
+
+    current_door->using_by = USING_WOODY;
+    woody->enter_door_sprite_x = current_door->sprite_x;
+    woody->enter_door_sprite_y = current_door->sprite_y;
+
+    new_dest_door->using_by = USING_WOODY;
+    woody->dest_door_exit_x = new_dest_door->exit_x;
+    woody->dest_door_sprite_x = new_dest_door->sprite_x;
+    woody->dest_door_sprite_y = new_dest_door->sprite_y;
+
+    if (current_door->dest_door_id == 0) {
+        woody_dest_door_animation_set(woody, ANIMATION_PACK_WOODY_DOORLEFT, ANIMATION_WOODY_DOORLEFT_LEAVE);
+    } else {
+        woody_dest_door_animation_set(woody, ANIMATION_PACK_WOODY_DOORRIGHT, ANIMATION_WOODY_DOORRIGHT_LEAVE);
+    }
+
+    woody->state = STATE_IN_H_DOOR;
+}
+
+void woody_start_using_v_door(Woody* woody, vDoor* new_enter_door) {
+    vDoor* current_door = new_enter_door;
+    vDoor* new_dest_door = woody->v_doors[current_door->dest_door_room][current_door->dest_door_id];
+
+    woody->enter_door = new_enter_door;
+    woody->dest_door = new_dest_door;
+
+    woody->room = current_door->dest_door_room;
+    woody->in_door = true;
+
+    current_door->using_by = USING_WOODY;
+    woody->enter_door_sprite_x = current_door->sprite_x;
+    woody->enter_door_sprite_y = current_door->sprite_y;
+
+    new_dest_door->using_by = USING_WOODY;
+    woody->dest_door_sprite_x = new_dest_door->sprite_x;
+    woody->dest_door_sprite_y = new_dest_door->sprite_y;
+
+    woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORBACK, ANIMATION_WOODY_DOORBACK_ENTER);
+    woody_dest_door_animation_set(woody, ANIMATION_PACK_WOODY_DOORBACK, ANIMATION_WOODY_DOORBACK_LEAVE);
+
+    woody->state = STATE_IN_V_DOOR;
+}
+
+static void woody_auto_move_complete(Woody* woody) {
+    switch (woody->auto_move_goal_type) {
+        case GOAL_LOOK_OBJECT:
+            woody->state = STATE_LOOK_OBJECT;
+            woody->look_object_phrase_show = true;
+
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+
+            break;
+        case GOAL_HIDEOUT:
+            woody->state = STATE_HIDEOUT_ENTER;
+            woody->hide = true;
+
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_ENTER);
+
+            break;
+        case GOAL_FLOOR:
+            woody->state = STATE_H_MOVE;
+
+            break;
+        case GOAL_STORAGE:
+            woody->state = STATE_STORAGE_CHECK;
+
+            Storage** storages_in_room = woody->storages[woody->room];
+            for (int i = 0; i < 8; i++) {
+                Storage* current_storage = storages_in_room[i];
+                if (current_storage != NULL) {
+                    if (woody->x == current_storage->collision_x) {
+                        switch (current_storage->sprite_type) {
+                            case SPRITE_TYPE_OPENS:
+                                current_storage->sprite_show = true;
+
+                                break;
+                            case SPRITE_TYPE_DISAPPEARS:
+
+                                break;
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
+
+            break;
+        case GOAL_NONE:
+
+            break;
+    }
+
+    woody->auto_move_goal_type = GOAL_NONE;
+}
+
+static void woody_hints_update(Woody* woody) {
+    // Отключаем существующие подсказки
+    for (int i = 0; i < 3; i++) {
+        Hint* current_hint = &woody->hints[i];
+        current_hint->show = false;
+        current_hint->is_active_goal = false;
+    }
+
+    // Смотрим LookObjects
+    for (int i = 0; i < 8; i++) {
+        LookObject* current_look_object = woody->look_objects[woody->room][i];
+        if (current_look_object != NULL) {
+            if (abs(current_look_object->collision_x - woody->x) < 36) {
+                woody->hints[2] = woody->hints[1];
+                woody->hints[1] = woody->hints[0];
+
+                Hint* current_hint = &woody->hints[0];
+                current_hint->text = current_look_object->hint_text;
+                current_hint->button_type = SQUARE;
+                current_hint->show = true;
+                current_hint->is_active_goal = false;
+
+                if (woody->auto_move_goal_type == GOAL_LOOK_OBJECT && woody->auto_move_goal_x == current_look_object->collision_x) {
+                    current_hint->is_active_goal = true;
+                }
+            }
+        } else {
+            break;
+        }
+    }
+
+    // Смотрим Hideouts
+    Hideout* current_hideout = woody->hideouts[woody->room];
+    if (current_hideout != NULL) {
+        if (abs(current_hideout->collision_x - woody->x) < 36) {
+            woody->hints[2] = woody->hints[1];
+            woody->hints[1] = woody->hints[0];
+
+            Hint* current_hint = &woody->hints[0];
+            current_hint->text = current_hideout->hint_enter_text;
+            current_hint->button_type = CIRCLE;
+            current_hint->show = true;
+            current_hint->is_active_goal = false;
+
+            if ((woody->auto_move_goal_type == GOAL_HIDEOUT || woody->state == STATE_HIDEOUT_ENTER) && woody->auto_move_goal_x == current_hideout->collision_x) {
+                current_hint->is_active_goal = true;
+            } else {
+                if (woody->state == STATE_HIDEOUT) {
+                    current_hint->text = current_hideout->hint_exit_text;
+                    current_hint->is_active_goal = false;
+                } else if (woody->state == STATE_HIDEOUT_EXIT) {
+                    current_hint->text = current_hideout->hint_exit_text;
+                    current_hint->is_active_goal = true;
+                }
+            }
+        }
+    }
+
+    // Смотрим Storages
+    for (int i = 0; i < 8; i++) {
+        Storage* current_storage = woody->storages[woody->room][i];
+        if (current_storage != NULL) {
+            if (abs(current_storage->collision_x - woody->x) < 36) {
+                woody->hints[2] = woody->hints[1];
+                woody->hints[1] = woody->hints[0];
+
+                Hint* current_hint = &woody->hints[0];
+                current_hint->text = current_storage->hint_text;
+                current_hint->button_type = CROSS;
+                current_hint->show = true;
+                current_hint->is_active_goal = false;
+
+                if (woody->auto_move_goal_x == current_storage->collision_x && (woody->auto_move_goal_type == GOAL_STORAGE || woody->state == STATE_STORAGE_CHECK || woody->state == STATE_STORAGE_FOUND || woody->state == STATE_STORAGE_NOT_FOUND)) {
+                    current_hint->is_active_goal = true;
+                }
+            }
+        } else {
+            break;
+        }
+    }
+    
+}
+
+void woody_update(Woody* woody) {
+    // Движение
+    switch (woody->state) {
+        case STATE_H_MOVE:
+            woody->velocity_x = 0;
+
+            if (controls_held(PSP_CTRL_LEFT)) {
+                woody->velocity_x = -woody->speed_x;
+                if (woody->x + woody->velocity_x < woody->room_collisions[woody->room].x1) {
+                    // Проверка на дверь
+                    hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
+
+                    if (current_door != NULL) {
+                        if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {
+                            woody_start_using_h_door(woody, current_door);
+                            woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORLEFT, ANIMATION_WOODY_DOORLEFT_ENTER);
+                        }
+                    } else {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+                    }
+
+                    woody->velocity_x = 0;
+                }
+            } else if (controls_held(PSP_CTRL_RIGHT)) {
+                woody->velocity_x = woody->speed_x;
+                if (woody->x + woody->velocity_x > woody->room_collisions[woody->room].x2) {
+                    // Проверка на дверь
+                    hDoor* current_door = woody->h_doors[woody->room][1]; // Правая дверь всегда под индексом 1!
+
+                    if (current_door != NULL) {
+                        if (woody->x + woody->velocity_x >= current_door->collision_x && current_door->using_by == USING_NONE) {
+                            woody_start_using_h_door(woody, current_door);
+                            woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORRIGHT, ANIMATION_WOODY_DOORRIGHT_ENTER);
+                        }
+                    } else {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+                    }
+
+                    woody->velocity_x = 0;
+                }
+            }
+
+            // Ассист движения к вертикальным дверям
+            if (controls_held(PSP_CTRL_UP)) {
+                for (int door = 0; door < 3; door++) {
+                    if (woody->v_doors[woody->room][door] != NULL) {
+                        int current_collision_x = woody->v_doors[woody->room][door]->collision_x;
+                        int distance = abs(current_collision_x - woody->x);
+
+                        if (distance == 0) {
+                            woody->is_on_floor = false;
+                            woody->velocity_y = -woody->speed_y;
+                            woody->state = STATE_V_MOVE;
+                        } else {
+                            if (distance < 36) {
+                                if (woody->x < current_collision_x) {
+                                    woody->velocity_x = woody->speed_x;
+                                    if (woody->x + woody->velocity_x >= current_collision_x) {
+                                        woody->x = current_collision_x;
+                                        woody->velocity_x = 0;
+                                        woody->is_on_floor = false;
+                                        woody->velocity_y = -woody->speed_y;
+                                        woody->state = STATE_V_MOVE;
+                                    }
+                                } else {
+                                    woody->velocity_x = -woody->speed_x;
+                                    if (woody->x + woody->velocity_x <= current_collision_x) {
+                                        woody->x = current_collision_x;
+                                        woody->velocity_x = 0;
+                                        woody->is_on_floor = false;
+                                        woody->velocity_y = -woody->speed_y;
+                                        woody->state = STATE_V_MOVE;
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                }
+            }
+
+            // Авто-движение к LookObject
+            if (controls_pressed(PSP_CTRL_SQUARE)) {
+                LookObject** look_object_in_room = woody->look_objects[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    LookObject* current_look_object = look_object_in_room[i];
+                    if (current_look_object != NULL) {
+                        if (abs(current_look_object->collision_x - woody->x) < 36) {
+                            woody->state = STATE_AUTO_H_MOVE;
+                            woody->auto_move_goal_type = GOAL_LOOK_OBJECT;
+                            woody->auto_move_goal_x = current_look_object->collision_x;
+                            woody->auto_move_goal_y = current_look_object->collision_y;
+                            woody->look_object_phrase_text = current_look_object->phrase_text;
+                            woody->look_object_phrase_y = current_look_object->phrase_y;
+                            woody->look_object_bubble_size = current_look_object->bubble_size;
+
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            // Авто-движение к Hideout
+            if (controls_pressed(PSP_CTRL_CIRCLE)) {
+                Hideout* current_hideout = woody->hideouts[woody->room];
+                if (current_hideout != NULL) {
+                    if (abs(current_hideout->collision_x - woody->x) < 36) {
+                        woody->state = STATE_AUTO_H_MOVE;
+                        woody->auto_move_goal_type = GOAL_HIDEOUT;
+                        woody->auto_move_goal_x = current_hideout->collision_x;
+                        woody->auto_move_goal_y = current_hideout->collision_y;
+                    }
+                }
+            }
+
+            // Авто-движение к Storages
+            if (controls_pressed(PSP_CTRL_CROSS)) {
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    Storage* current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (abs(current_storage->collision_x - woody->x) < 36) {
+                            woody->state = STATE_AUTO_H_MOVE;
+                            woody->auto_move_goal_type = GOAL_STORAGE;
+                            woody->auto_move_goal_x = current_storage->collision_x;
+                            woody->auto_move_goal_y = current_storage->collision_y;
+
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            if (woody->velocity_x == 0) {
+                if (woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC && woody->current_animation_index == ANIMATION_WOODY_MG3) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+                }
+                else if (woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC && woody->current_animation_index == ANIMATION_WOODY_MG1) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+                }
+            } else {
+                if (woody->velocity_x > 0) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG1);
+                } else {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG3);
+                }
+
+                woody->x += woody->velocity_x;
+            }
+
+            break;
+        case STATE_V_MOVE:
+            // Вертикальное движение
+            if (controls_held(PSP_CTRL_UP)) {
+                woody->velocity_y = -woody->speed_y;
+            } else if (controls_held(PSP_CTRL_DOWN)) {
+                woody->velocity_y = woody->speed_y;
+            }
+
+            if (woody->velocity_y > 0) {
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+            } else {
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG0);
+            }
+
+            woody->y += woody->velocity_y;
+
+            // Вход в вертикальную дверь
+            for (int door = 0; door < 3; door++) {
+                vDoor* current_door = woody->v_doors[woody->room][door];
+                if (current_door != NULL) {
+                    if (current_door->using_by == USING_NONE && woody->x == current_door->collision_x && woody->y <= current_door->collision_y) {
+                        woody_start_using_v_door(woody, current_door);
+                        break;
+                    }
+                }
+            }
+
+            if (woody->y >= woody->floor_y) {
+                woody->y = woody->floor_y;
+                woody->is_on_floor = true;
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                woody->state = STATE_H_MOVE;
+            }
+
+            break;
+        case STATE_AUTO_H_MOVE:
+            woody->velocity_x = 0;
+
+            if (woody->auto_move_goal_x > woody->x) {
+                woody->velocity_x = woody->speed_x;
+            } else if (woody->auto_move_goal_x < woody->x) {
+                woody->velocity_x = -woody->speed_x;
+            } else {
+                if (woody->y == woody->auto_move_goal_y) {
+                    woody_auto_move_complete(woody);
+                } else {
+                    woody->state = STATE_AUTO_V_MOVE;
+                }
+            }
+
+            if (woody->velocity_x == 0) {
+                if (woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC && woody->current_animation_index == ANIMATION_WOODY_MG3) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+                }
+                else if (woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC && woody->current_animation_index == ANIMATION_WOODY_MG1) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+                } 
+            } else {
+                if (controls_pressed(PSP_CTRL_LEFT) || controls_pressed(PSP_CTRL_DOWN) || controls_pressed(PSP_CTRL_RIGHT)) {
+                    woody->state = STATE_H_MOVE;
+                    woody->auto_move_goal_type = GOAL_NONE;
+
+                    NFHSoundPlay(SOUND_ILLEGAL);
+                }
+
+                if (woody->velocity_x > 0) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG1);
+                } else {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG3);
+                }
+
+                woody->x += woody->velocity_x;
+
+                if (woody->velocity_x > 0) {
+                    if (woody->auto_move_goal_x < woody->x) {
+                        woody->x = woody->auto_move_goal_x;
+                    }
+                } else {
+                    if (woody->auto_move_goal_x > woody->x) {
+                        woody->x = woody->auto_move_goal_x;
+                    }
+                }
+            }
+
+            break;
+        case STATE_AUTO_V_MOVE:
+            woody->velocity_y = 0;
+
+            if (woody->auto_move_goal_y > woody->y) {
+                woody->velocity_y = woody->speed_y;
+
+                // Авто-движение к LookObject
+                if (controls_pressed(PSP_CTRL_SQUARE)) {
+                    LookObject** look_object_in_room = woody->look_objects[woody->room];
+                    for (int i = 0; i < 8; i++) {
+                        LookObject* current_look_object = look_object_in_room[i];
+                        if (current_look_object != NULL) {
+                            if (woody->x == current_look_object->collision_x) {
+                                woody->state = STATE_AUTO_H_MOVE;
+                                woody->auto_move_goal_type = GOAL_LOOK_OBJECT;
+                                woody->auto_move_goal_x = current_look_object->collision_x;
+                                woody->auto_move_goal_y = current_look_object->collision_y;
+                                woody->look_object_phrase_text = current_look_object->phrase_text;
+                                woody->look_object_phrase_y = current_look_object->phrase_y;
+                                woody->look_object_bubble_size = current_look_object->bubble_size;
+
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                // Авто-движение к Hideout
+                if (controls_pressed(PSP_CTRL_CIRCLE)) {
+                    Hideout* current_hideout = woody->hideouts[woody->room];
+                    if (current_hideout != NULL) {
+                        if (woody->x == current_hideout->collision_x) {
+                            woody->state = STATE_AUTO_H_MOVE;
+                            woody->auto_move_goal_type = GOAL_HIDEOUT;
+                            woody->auto_move_goal_x = current_hideout->collision_x;
+                            woody->auto_move_goal_y = current_hideout->collision_y;
+                        }
+                    }
+                }
+
+                // Авто-движение к Storages
+                if (controls_pressed(PSP_CTRL_CROSS)) {
+                    Storage** storages_in_room = woody->storages[woody->room];
+                    for (int i = 0; i < 8; i++) {
+                        Storage* current_storage = storages_in_room[i];
+                        if (current_storage != NULL) {
+                            if (woody->x == current_storage->collision_x) {
+                                woody->state = STATE_AUTO_H_MOVE;
+                                woody->auto_move_goal_type = GOAL_STORAGE;
+                                woody->auto_move_goal_x = current_storage->collision_x;
+                                woody->auto_move_goal_y = current_storage->collision_y;
+
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+            } else if (woody->auto_move_goal_y < woody->y) {
+                woody->velocity_y = -woody->speed_y;
+
+                if (controls_pressed(PSP_CTRL_LEFT) || controls_pressed(PSP_CTRL_DOWN) || controls_pressed(PSP_CTRL_RIGHT)) {
+                    woody->state = STATE_AUTO_V_MOVE;
+                    woody->auto_move_goal_type = GOAL_FLOOR;
+                    woody->auto_move_goal_y = woody->floor_y;
+
+                    NFHSoundPlay(SOUND_ILLEGAL);
+                }
+            } else {
+                woody_auto_move_complete(woody);
+            }
+
+            if (woody->velocity_y != 0) {
+                if (woody->velocity_y > 0) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+                } else {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG0);
+                }
+
+                woody->y += woody->velocity_y;
+            }
+
+            if (woody->y >= woody->floor_y) {
+                woody->y = woody->floor_y;
+                woody->is_on_floor = true;
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                woody->state = STATE_H_MOVE;
+            }
+
+            break;
+        case STATE_LOOK_OBJECT:
+            if (controls_pressed(PSP_CTRL_LEFT) || controls_pressed(PSP_CTRL_DOWN) || controls_pressed(PSP_CTRL_RIGHT)) {
+                woody->state = STATE_AUTO_V_MOVE;
+                woody->auto_move_goal_type = GOAL_FLOOR;
+                woody->auto_move_goal_y = woody->floor_y;
+                woody->look_object_phrase_show = false;
+            }
+
+            break;
+        case STATE_HIDEOUT_ENTER:
+            // Ждём когда кончится анимация, а потом пихаем Вуди в состояние STATE_HIDEOUT
+            if (IS_LAST_ANIMATION_FRAME) {
+                woody->state = STATE_HIDEOUT;
+            }
+
+            break;
+        case STATE_HIDEOUT:
+            if (controls_pressed(PSP_CTRL_CIRCLE)) {
+                woody->state = STATE_HIDEOUT_EXIT;
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_LEAVE);
+            }
+
+            break;
+        case STATE_HIDEOUT_EXIT: 
+            // Ждём когда кончится анимация, а потом заставляем Вуди идти на пол
+            if (IS_LAST_ANIMATION_FRAME) {
+                woody->state = STATE_AUTO_V_MOVE;
+                woody->auto_move_goal_type = GOAL_FLOOR;
+                woody->auto_move_goal_y = woody->floor_y;
+                woody->hide = false;
+            }
+
+            break;
+        case STATE_STORAGE_CHECK:
+            if (IS_LAST_ANIMATION_FRAME) {
+                Storage* current_storage = NULL;
+
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (woody->x == current_storage->collision_x) {
+                            if (!current_storage->opened) {
+                                current_storage->opened = true;
+                                woody->state = STATE_STORAGE_FOUND;
+
+                                switch (current_storage->side) {
+                                    case SIDE_LEFT_HIGH:
+                                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE_HIGH3);
+
+                                        break;
+                                    case SIDE_LEFT_MID:
+                                        break;
+                                    case SIDE_LEFT_LOW:
+                                        break;
+                                    case SIDE_UP_HIGH:
+                                        break;
+                                    case SIDE_UP_MID:
+                                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE0);
+
+                                        break;
+                                    case SIDE_UP_LOW:
+                                        break;
+                                    case SIDE_RIGHT_HIGH:
+                                        break;
+                                    case SIDE_RIGHT_MID:
+                                        break;
+                                    case SIDE_RIGHT_LOW:
+                                        break;
+                                }
+                            } else {
+                                woody->state = STATE_STORAGE_NOT_FOUND;
+                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_LOSE);
+                            }
+
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            break;
+        case STATE_STORAGE_FOUND:
+            if (IS_LAST_ANIMATION_FRAME) {
+                Storage* current_storage = NULL;
+
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (woody->x == current_storage->collision_x) {
+                            int first_item_index = woody->item_count;
+                            woody->inventory_animation_first_index = first_item_index;
+                            woody->inventory_animation_last_index = first_item_index;
+                            for (int i = 0; i < 4; i++) { // 4 - макисмальное кол-во предметов в Storage
+                                Item current_item = current_storage->items[i];
+                                if (current_item != ITEM_NONE) {
+                                    woody->inventory[first_item_index + i] = current_item;
+                                    woody->item_count++;
+                                    woody->inventory_animation_last_index++;
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            woody->inventory_animation_items_show = true;
+                            woody->inventory_animation_play = true;
+                            woody->inventory_animation_frame = 0;
+                            woody->inventory_animation_frame_time = 0;
+
+                            woody->state = STATE_STORAGE_END;
+
+                            switch (current_storage->side) {
+                                case SIDE_LEFT_HIGH:
+                                case SIDE_LEFT_MID:
+                                case SIDE_LEFT_LOW:
+                                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+
+                                    break;
+                                case SIDE_UP_HIGH:
+                                case SIDE_UP_MID:
+                                case SIDE_UP_LOW:
+                                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS0);
+
+                                    break;
+                                case SIDE_RIGHT_HIGH:
+                                case SIDE_RIGHT_MID:
+                                case SIDE_RIGHT_LOW:
+                                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+
+                                    break;
+                            }
+
+                            current_storage->sprite_show = false;
+
+                        }
+
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            break;
+        case STATE_STORAGE_NOT_FOUND:
+            if (IS_LAST_ANIMATION_FRAME) {
+                woody->state = STATE_STORAGE_END;
+
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+
+                Storage* current_storage = NULL;
+
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (woody->x == current_storage->collision_x) {
+                            current_storage->sprite_show = false;
+                        }
+
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            break;
+        case STATE_STORAGE_END:
+            if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
+                woody->state = STATE_AUTO_V_MOVE;
+                woody->auto_move_goal_type = GOAL_FLOOR;
+                woody->auto_move_goal_y = woody->floor_y;
+            }
+
+            // Авто-движение к Storages
+            if (controls_pressed(PSP_CTRL_CROSS)) {
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    Storage* current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (woody->x == current_storage->collision_x) {
+                            woody->state = STATE_AUTO_H_MOVE;
+                            woody->auto_move_goal_type = GOAL_STORAGE;
+                            woody->auto_move_goal_x = current_storage->collision_x;
+                            woody->auto_move_goal_y = current_storage->collision_y;
+                            
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            break;
+        case STATE_IN_H_DOOR:
+            // Camera Door Offset
+            woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, woody->dest_door_exit_x - woody->x, 0.95f);
+            woody->camera_door_offset_y = lerp(woody->camera_door_offset_y, woody->room_collisions[woody->room].floor - woody->y, 0.95f);
+
+            // Анимация Dest Door
+            woody->dest_door_animation_frame_time++;
+            if (woody->dest_door_animation_frame_time == 5) {
+                woody->dest_door_animation_frame_time = 0;
+                woody->dest_door_animation_frame++;
+                if (woody->dest_door_animation_frame == woody->dest_door_animation_length) {
+                    woody->in_door = false;
+                    woody->x = woody->dest_door_exit_x;
+                    woody->y = woody->room_collisions[woody->room].floor;
+                    woody->floor_y = woody->y;
+                    woody->camera_door_offset_x = 0;
+                    woody->camera_door_offset_y = 0;
+
+                    woody->state = STATE_H_MOVE;
+
+                    if (woody->dest_door_current_animation_pack == ANIMATION_PACK_WOODY_DOORRIGHT && woody->dest_door_current_animation_index == ANIMATION_WOODY_DOORRIGHT_LEAVE) {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+                    } else {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+                    }
+
+                    hDoor* enter_door = (hDoor*) woody->enter_door;
+                    enter_door->using_by = USING_NONE;
+
+                    hDoor* dest_door = (hDoor*) woody->dest_door;
+                    dest_door->using_by = USING_NONE;
+
+                    if (woody->room == ROOM_FRO) {
+                        // Уровень пройден
+                        woody->can_move = false;
+                        woody->state = STATE_LEVEL_ENDING;
+
+                        NFHHouseMusicStop();
+                        NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+                    }
+                } else {
+                    woody_dest_door_animation_update_frame(woody);
+                }
+            }
+
+            break;
+        case STATE_IN_V_DOOR:
+            // Camera Door Offset
+            vDoor* dest_door = (vDoor*)woody->dest_door;
+
+            if (woody->dest_door_animation_frame >= 10) {
+                woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, dest_door->collision_x - woody->x, 0.92);
+                woody->camera_door_offset_y = lerp(woody->camera_door_offset_y, woody->room_collisions[woody->room].floor - woody->floor_y, 0.92);
+            }
+
+            // Анимация Dest Door
+            woody->dest_door_animation_frame_time++;
+            if (woody->dest_door_animation_frame_time == 5) {
+                woody->dest_door_animation_frame_time = 0;
+                woody->dest_door_animation_frame++;
+                if (woody->dest_door_animation_frame == woody->dest_door_animation_length) {
+                    woody->in_door = false;
+                    woody->x = dest_door->collision_x;
+                    woody->y = dest_door->collision_y;
+                    woody->floor_y = woody->room_collisions[woody->room].floor;
+                    woody->camera_door_offset_x = 0;
+                    woody->camera_door_offset_y = 0;
+
+                    woody->state = STATE_V_MOVE;
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+
+                    woody->velocity_y = woody->speed_y;
+
+                    vDoor* enter_door = (vDoor*) woody->enter_door;
+                    enter_door->using_by = USING_NONE;
+
+                    dest_door->using_by = USING_NONE;
+                } else {
+                    woody_dest_door_animation_update_frame(woody);
+                }
+            }
+
+            break;
+        case STATE_LEVEL_START:
+            // Типо как STATE_H_MOVE, но с автодвижением
+            woody->velocity_x = -woody->speed_x;
+
+            if (woody->x + woody->velocity_x < woody->room_collisions[woody->room].x1) {
+                // Проверка на дверь
+                hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
+
+                if (current_door != NULL) {
+                    if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {
+                        woody_start_using_h_door(woody, current_door);
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORLEFT, ANIMATION_WOODY_DOORLEFT_ENTER);
+                    }
+                }
+                woody->velocity_x = 0;
+            }
+
+            if (woody->velocity_x == 0) {
+                if (woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC && woody->current_animation_index == ANIMATION_WOODY_MG3) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+                }
+            } else {
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG3);
+
+                woody->x += woody->velocity_x;
+            }
+
+            break;
+        case STATE_LEVEL_ENDING:
+            if (woody->is_on_floor) {
+                if (!*woody->level_end_active) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_TRIUMPH);
+                    *woody->level_end_active = true;
+                }
+
+                if (woody->level_end->counter == 1) {
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                    woody->animation_loop = false;
+                    woody->state = STATE_STOP;
+
+                    strcpy(woody->level_end->tricks_text, woody->ui_tricks_counter_text);
+                    sprintf(woody->level_end->quota_text, "%d", woody->quota);
+                }
+            } else {
+                // потом
+            }
+
+            break;
+        case STATE_STOP:
+            break;
+    }
+
+    // if (previous_x != woody->x) { // If Woody Moved
+    woody_hints_update(woody);
+    // }
+
+    // Анимации
+    woody->animation_frame_time++;
+    if (woody->animation_frame_time == 5) {
+        woody->animation_frame_time = 0;
+        woody->animation_frame++;
+        if (woody->animation_frame == woody->animation_length) {
+            if (woody->animation_loop) {
+                woody->animation_frame = 0;
+            } else {
+                woody->animation_frame = woody->animation_length - 1;
+            }
+        }
+        woody_animation_update_frame(woody);
+    }
+
+    // UI
+    if (woody->inventory_animation_play) {
+        woody->inventory_animation_frame_time++;
+        if (woody->inventory_animation_frame_time == 10) {
+            woody->inventory_animation_frame_time = 0;
+            woody->inventory_animation_frame++;
+
+            if (woody->inventory_animation_frame == 5) {
+                woody->inventory_animation_frame = 0;
+                woody->inventory_animation_play = false;
+            } else {
+                woody->inventory_animation_items_show = !woody->inventory_animation_items_show;
+            }
+        }
+    }
+
+    if (woody->ui_tricks_counter_animation_play) {
+        woody->ui_tricks_counter_animation_frame_time++;
+        if (woody->ui_tricks_counter_animation_frame_time == 10) {
+            woody->ui_tricks_counter_animation_frame_time = 0;
+            woody->ui_tricks_counter_animation_frame++;
+            
+            if (woody->ui_tricks_counter_animation_frame == 6) {
+                woody->ui_quota_animation_play = true;
+                woody->ui_quota_animation_frame = 0;
+                woody->ui_tricks_counter_animation_play = false;
+            } else {
+                woody->ui_tricks_counter_text_show = !woody->ui_tricks_counter_text_show;
+            }
+        }
+    }
+
+    if (woody->ui_quota_animation_play) {
+        float add = woody->ui_quota_delta / (60 - woody->ui_quota_animation_frame);
+
+        woody->ui_quota += add;
+        woody->ui_quota_delta -= add;
+
+        woody->ui_quota_animation_frame++;
+
+        if (woody->ui_quota_animation_frame == 60) {
+            woody->ui_quota_animation_play = false;
+            woody->ui_quota = woody->quota;
+            woody->ui_quota_delta = 0;
+            woody->ui_quota_animation_frame = 0;
+            woody->ui_quota_delta_text_show = false;
+        }
+
+        int ui_quota_round = (int) (woody->ui_quota);
+
+        if (ui_quota_round >= woody->min_quota)
+            woody->ui_quota_text_color = COLOR_WHITE_PERCENT;
+
+        sprintf(woody->ui_quota_text, "%d", ui_quota_round);
+        sprintf(woody->ui_quota_delta_text, "+%d", woody->quota - ui_quota_round);
+    }
+    
+    // Движение камерой на стик
+    int stick_x = controls_AnalogX();
+    int stick_y = controls_AnalogY();
+        
+    if ((abs(stick_x) > 65) || (abs(stick_y) > 65)) {
+        woody->new_camera_offset_x = stick_x;
+        woody->new_camera_offset_y = stick_y;
+    } else {
+        woody->new_camera_offset_x = 0;
+        woody->new_camera_offset_y = 0;
+    }
+
+    if (abs(woody->camera_offset_x - woody->new_camera_offset_x) < 1) {
+        woody->camera_offset_x = woody->new_camera_offset_x;
+    } else {
+        woody->camera_offset_x = lerp(woody->camera_offset_x, woody->new_camera_offset_x, 0.8);
+    }
+
+    if (abs(woody->camera_offset_y - woody->new_camera_offset_y) < 1) {
+        woody->camera_offset_y = woody->new_camera_offset_y;
+    } else {
+        woody->camera_offset_y = lerp(woody->camera_offset_y, woody->new_camera_offset_y, 0.8);
+    }
+
+    // Clamp камеры по Вуди
+    camera_x = clamp(woody->x - 186 + floor(woody->camera_door_offset_x + 0.5), 0, woody->camera_limit_x);
+    camera_y = clamp(woody->floor_y - 110 + floor(woody->camera_door_offset_y + 0.5), 0, woody->camera_limit_y);
+    
+    // Добавление оффсета стиком
+    camera_x = clamp(camera_x + floor(woody->camera_offset_x + 0.5), 0, woody->camera_limit_x);
+    camera_y = clamp(camera_y + floor(woody->camera_offset_y + 0.5), 0, woody->camera_limit_y);
+}
+
+void woody_draw(const Woody* woody) {
+    g2d_DrawImage(woody->spritelists[woody->current_spritelist], woody->x + woody->sprite_offset_x - 179 - camera_x, woody->y + woody->sprite_offset_y - 165 - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
+
+    if (woody->look_object_phrase_show) {
+        // Bubble Bottom
+        g2d_DrawImage(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - 27, 120, 27, WHITE, 0, 398, 120, 27, 0, 235, G2D_UP_LEFT);
+
+        // Bubble Center
+        g2d_DrawRectFilled(woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
+        g2d_DrawRectFilled(woody->x - camera_x - 13, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE);
+
+        g2d_DrawRectFilled(woody->x - camera_x - 12, woody->y - camera_y - woody->look_object_bubble_size - 27, 116, woody->look_object_bubble_size, COLOR_WHITE_BUBBLE);
+
+        g2d_DrawRectFilled(woody->x - camera_x + 104, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE);
+        g2d_DrawRectFilled(woody->x - camera_x + 105, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
+
+        // Bubble Top
+        g2d_DrawImage(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 39, 120, 12, WHITE, 275, 293, 120, 12, 0, 235, G2D_UP_LEFT);
+
+        for (int i = 0; i < 2; i++) {
+            intraFontSetStyle(Font_ACMESA, 0.65, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
+            intraFontActivate(Font_ACMESA, 1);
+            intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
+        }
+    }
+}
+
+void woody_door_draw(const Woody* woody) {
+    // Enter Door
+    g2d_DrawImage(woody->spritelists[woody->current_spritelist], woody->enter_door_sprite_x + woody->sprite_offset_x - camera_x, woody->enter_door_sprite_y + woody->sprite_offset_y - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
+
+    // Destination Door
+    g2d_DrawImage(woody->spritelists[woody->dest_door_current_spritelist], woody->dest_door_sprite_x + woody->dest_door_sprite_offset_x - camera_x, woody->dest_door_sprite_y + woody->dest_door_sprite_offset_y - camera_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, WHITE, woody->dest_door_sprite_src_x, woody->dest_door_sprite_src_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, 0, 255, G2D_UP_LEFT);
+}
+
+void woody_draw_ui(const Woody* woody) {
+    // Подсказки
+    if (!woody->in_door) {
+        int hint_text_x = 93;
+        g2dColor hint_text_color;
+
+        for (int i = 0; i < 3; i++) {
+            Hint current_hint = woody->hints[i];
+            if (current_hint.show) {
+                if (current_hint.is_active_goal) {
+                    hint_text_color = CG_YELLOW_TRICKS;
+                } else {
+                    hint_text_color = WHITE;
+                }
+
+                switch (current_hint.button_type) {
+                    case SQUARE:
+                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 23, 23, 23, 0, 255, G2D_UP_LEFT);
+
+                        break;
+                    case CROSS:
+                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT);
+
+                        break;
+                    case CIRCLE:
+                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT);
+
+                        break;
+                }
+
+                intraFontSetStyle(Font_BLUEHIGC_11, 1, hint_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
+                intraFontActivate(Font_BLUEHIGC_11, 0);
+                intraFontPrint(Font_BLUEHIGC_11, hint_text_x, 224 + intraFontTextHeight(Font_BLUEHIGC_11), current_hint.text);
+                hint_text_x += floor(intraFontMeasureText(Font_BLUEHIGC_11, current_hint.text)) + 28;
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Пакости
+    if (woody->ui_tricks_counter_text_show) {
+        intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+        intraFontActivate(Font_BLUEHIGC_24, 1);
+        intraFontPrint(Font_BLUEHIGC_24, woody->ui_tricks_counter_text_x, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_tricks_counter_text);
+    }
+
+    // Инвентарь
+    for (int i = 0; i < woody->item_count; i++) {
+        if (woody->inventory[i] == ITEM_NONE) {
+            break;
+        } else {
+            if (!woody->inventory_animation_items_show && woody->inventory_animation_first_index <= i && i <= woody->inventory_animation_last_index) {
+                continue;
+            }
+
+            g2dImage* current_spritelist = SpriteList_ITEMS_1;
+            int item_state = 1;
+            int src_x = (woody->inventory[i] * 3 + item_state) * 45;
+            int src_y = 0;
+
+            int sprite_index = src_x / 495;
+            if (sprite_index >= 15) {
+                current_spritelist = SpriteList_ITEMS_2;
+                src_y = (sprite_index - 15) * 34;
+            } else {
+                src_y = sprite_index * 34;
+            }
+            src_x %= 495;
+
+            g2d_DrawImage(current_spritelist, 99 + i * 45, 235, 45, 34, WHITE, src_x, src_y, 45, 34, 0, 255, G2D_UP_LEFT);
+        }
+    }
+
+    // Таймер
+    intraFontSetStyle(Font_BLUEHIGC_24, 1, CG_BLUE_TIMER, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontActivate(Font_BLUEHIGC_24, 0);
+    intraFontPrint(Font_BLUEHIGC_24, 438, 209 + intraFontTextHeight(Font_BLUEHIGC_24), "--:--");
+
+    // Проценты
+    intraFontSetStyle(Font_BLUEHIGC_24, 1, woody->ui_quota_text_color, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontActivate(Font_BLUEHIGC_24, 0);
+    intraFontPrint(Font_BLUEHIGC_24, 419, 249 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_quota_text);
+
+    // Над-проценты
+    if (woody->ui_quota_delta_text_show && woody->ui_tricks_counter_text_show) {
+        intraFontSetStyle(Font_BLUEHIGC_24, 0.7, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_RIGHT);
+        intraFontActivate(Font_BLUEHIGC_24, 0);
+        intraFontPrint(Font_BLUEHIGC_24, 418, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_quota_delta_text);
+
+        intraFontSetStyle(Font_BLUEHIGB_18, 0.8, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+        intraFontActivate(Font_BLUEHIGB_18, 0);
+        intraFontPrint(Font_BLUEHIGB_18, 419, 238 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
+    }
+
+    intraFontSetStyle(Font_BLUEHIGB_18, 1, woody->ui_quota_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_BLUEHIGB_18, 0);
+    intraFontPrint(Font_BLUEHIGB_18, 418, 253 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
+}
+
+void woody_tricks_counter_update(Woody* woody, int trick_quota) {
+    woody->tricks++;
+    woody->quota += trick_quota;
+
+    sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
+
+    intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+    woody->ui_tricks_counter_text_x = 460 - floor(intraFontMeasureText(Font_BLUEHIGC_24, woody->ui_tricks_counter_text) * 0.5);
+    woody->ui_tricks_counter_text_show = false;
+
+    woody->ui_tricks_counter_animation_play = true;
+    woody->ui_tricks_counter_animation_frame_time = 0;
+    woody->ui_tricks_counter_animation_frame = 0;
+
+    woody->ui_quota_delta = (float) trick_quota;
+    sprintf(woody->ui_quota_delta_text, "+%d", trick_quota);
+    woody->ui_quota_delta_text_show = true;
+}
+
+bool woody_check_sign_collision(const Woody* woody, const Sign* sign) {
+    int woody_collision_x = woody->x + 54;
+    return (woody->room == sign->room && sign->collision_x1 < woody_collision_x && woody_collision_x < sign->collision_x2);
+}
+
+void woody_unload(Woody* woody) {
+    free(woody);
+}
