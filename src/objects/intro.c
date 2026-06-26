@@ -142,36 +142,6 @@ void intro_draw_loading(int progress) {
     if (progress != 0)
         g2d_DrawImage(SpriteAtlas_INTRO, 147, 216, progress, 26, WHITE, 0, 298, progress, 26, 0, 255, G2D_UP_LEFT);
 
-    // if (progress <= 20) {
-    //     intraFontSetStyle(Font_ACMESAI_13, 1, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
-    //     intraFontActivate(Font_ACMESAI_13, 0);
-
-    //     for (int i = -1; i <= 1; i++)
-    //     {
-    //         for (int j = -1; j <= 1; j++)
-    //             intraFontPrint(Font_ACMESAI_13, 240-i, 250-j + intraFontTextHeight(Font_ACMESAI_13), "АНАЛИЗИРУЮТСЯ ДАННЫЕ...");
-    //     }
-
-    //     intraFontSetStyle(Font_ACMESAI_13, 1, WHITE, 0, 0, INTRAFONT_ALIGN_CENTER);
-    //     intraFontActivate(Font_ACMESAI_13, 0);
-
-    //     intraFontPrint(Font_ACMESAI_13, 240, 250 + intraFontTextHeight(Font_ACMESAI_13), "АНАЛИЗИРУЮТСЯ ДАННЫЕ...");
-    // } else {
-    //     intraFontSetStyle(Font_ACMESAI_13, 1, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
-    //     intraFontActivate(Font_ACMESAI_13, 0);
-
-    //     for (int i = -1; i <= 1; i+=2)
-    //     {
-    //         for (int j = -1; j <= 1; j+=2)
-    //             intraFontPrint(Font_ACMESAI_13, 240-i, 250-j + intraFontTextHeight(Font_ACMESAI_13), "ЗАГРУЗКА ДАННЫХ...");
-    //     }
-
-    //     intraFontSetStyle(Font_ACMESAI_13, 1, WHITE, 0, 0, INTRAFONT_ALIGN_CENTER);
-    //     intraFontActivate(Font_ACMESAI_13, 0);
-
-    //     intraFontPrint(Font_ACMESAI_13, 240, 250 + intraFontTextHeight(Font_ACMESAI_13), "ЗАГРУЗКА ДАННЫХ...");
-    // }
-
     g2d_DrawImage(Sprite_LOADING_TEXT_DATA, 175, 250, 131, 11, WHITE, 0, 0, 131, 11, 0, 255, G2D_UP_LEFT);
 }
 
