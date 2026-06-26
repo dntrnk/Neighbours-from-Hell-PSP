@@ -480,7 +480,7 @@ static void woody_hints_update(Woody* woody) {
 void woody_update(Woody* woody) {
     // Движение
     switch (woody->state) {
-        case STATE_H_MOVE:
+        case STATE_H_MOVE: {
             woody->velocity_x = 0;
 
             if (controls_held(PSP_CTRL_LEFT)) {
@@ -631,7 +631,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_V_MOVE:
+        }
+
+        case STATE_V_MOVE: {
             // Вертикальное движение
             if (controls_held(PSP_CTRL_UP)) {
                 woody->velocity_y = -woody->speed_y;
@@ -666,7 +668,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_AUTO_H_MOVE:
+        }
+
+        case STATE_AUTO_H_MOVE: {
             woody->velocity_x = 0;
 
             if (woody->auto_move_goal_x > woody->x) {
@@ -716,7 +720,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_AUTO_V_MOVE:
+        }
+
+        case STATE_AUTO_V_MOVE: {
             woody->velocity_y = 0;
 
             if (woody->auto_move_goal_y > woody->y) {
@@ -810,7 +816,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_LOOK_OBJECT:
+        }
+
+        case STATE_LOOK_OBJECT: {
             if (controls_pressed(PSP_CTRL_LEFT) || controls_pressed(PSP_CTRL_DOWN) || controls_pressed(PSP_CTRL_RIGHT)) {
                 woody->state = STATE_AUTO_V_MOVE;
                 woody->auto_move_goal_type = GOAL_FLOOR;
@@ -819,21 +827,27 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_HIDEOUT_ENTER:
+        }
+
+        case STATE_HIDEOUT_ENTER: {
             // Ждём когда кончится анимация, а потом пихаем Вуди в состояние STATE_HIDEOUT
             if (IS_LAST_ANIMATION_FRAME) {
                 woody->state = STATE_HIDEOUT;
             }
 
             break;
-        case STATE_HIDEOUT:
+        }
+
+        case STATE_HIDEOUT: {
             if (controls_pressed(PSP_CTRL_CIRCLE)) {
                 woody->state = STATE_HIDEOUT_EXIT;
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_LEAVE);
             }
 
             break;
-        case STATE_HIDEOUT_EXIT: 
+        }
+
+        case STATE_HIDEOUT_EXIT: {
             // Ждём когда кончится анимация, а потом заставляем Вуди идти на пол
             if (IS_LAST_ANIMATION_FRAME) {
                 woody->state = STATE_AUTO_V_MOVE;
@@ -843,7 +857,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_STORAGE_CHECK:
+        }
+
+        case STATE_STORAGE_CHECK: {
             if (IS_LAST_ANIMATION_FRAME) {
                 Storage* current_storage = NULL;
 
@@ -894,7 +910,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_STORAGE_FOUND:
+        }
+
+        case STATE_STORAGE_FOUND: {
             if (IS_LAST_ANIMATION_FRAME) {
                 Storage* current_storage = NULL;
 
@@ -957,7 +975,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_STORAGE_NOT_FOUND:
+        }
+
+        case STATE_STORAGE_NOT_FOUND: {
             if (IS_LAST_ANIMATION_FRAME) {
                 woody->state = STATE_STORAGE_END;
 
@@ -981,7 +1001,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_STORAGE_END:
+        }
+
+        case STATE_STORAGE_END: {
             if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
                 woody->state = STATE_AUTO_V_MOVE;
                 woody->auto_move_goal_type = GOAL_FLOOR;
@@ -1009,7 +1031,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_IN_H_DOOR:
+        }
+
+        case STATE_IN_H_DOOR: {
             // Camera Door Offset
             woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, woody->dest_door_exit_x - woody->x, 0.95f);
             woody->camera_door_offset_y = lerp(woody->camera_door_offset_y, woody->room_collisions[woody->room].floor - woody->y, 0.95f);
@@ -1055,7 +1079,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_IN_V_DOOR:
+        }
+
+        case STATE_IN_V_DOOR: {
             // Camera Door Offset
             vDoor* dest_door = (vDoor*)woody->dest_door;
 
@@ -1092,7 +1118,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_LEVEL_START:
+        }
+
+        case STATE_LEVEL_START: {
             // Типо как STATE_H_MOVE, но с автодвижением
             woody->velocity_x = -woody->speed_x;
 
@@ -1120,7 +1148,9 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_LEVEL_ENDING:
+        }
+
+        case STATE_LEVEL_ENDING: {
             if (woody->is_on_floor) {
                 if (!*woody->level_end_active) {
                     woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_TRIUMPH);
@@ -1140,8 +1170,11 @@ void woody_update(Woody* woody) {
             }
 
             break;
-        case STATE_STOP:
+        }
+
+        case STATE_STOP: {
             break;
+        }
     }
 
     // if (previous_x != woody->x) { // If Woody Moved

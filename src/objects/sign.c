@@ -85,7 +85,7 @@ void sign_update(Sign* sign, bool woody_colliding) {
         sign->current_state++;
 
         switch (sign->current_state) {
-            case 1:
+            case 1: {
                 sign->x = -128;
                 sign->y = -128;
 
@@ -107,7 +107,9 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 right_door_lir->sprite_h = 94;
 
                 break;
-            case 2:
+            }
+
+            case 2: {
                 sign->x = 215;
                 sign->y = 180;
 
@@ -117,7 +119,9 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 sign->room = ROOM_LIR;
 
                 break;
-            case 3:
+            }
+
+            case 3: {
                 sign->x = 381;
                 sign->y = 322;
 
@@ -139,7 +143,9 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 back_door_anc->sprite_h = 67;
 
                 break;
-            case 4:
+            }
+
+            case 4: {
                 sign->x = -128;
                 sign->y = -128;
 
@@ -161,7 +167,9 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 right_door_anc->sprite_h = 94;
 
                 break;
-            case 5:
+            }
+
+            case 5: {
                 sign->x = -128;
                 sign->y = -128;
 
@@ -171,7 +179,9 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 sign->room = ROOM_FRO;
 
                 break;
-            case 6:
+            }
+
+            case 6: {
                 sign->collision_x1 = -128;
                 sign->collision_x2 = -128;
 
@@ -180,6 +190,7 @@ void sign_update(Sign* sign, bool woody_colliding) {
                 woody_tricks_counter_update(sign->woody, 100);
 
                 break;
+            }
         }
         tutorial_update_phrase(sign->tutorial);
     }

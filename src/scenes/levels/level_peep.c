@@ -633,30 +633,39 @@ static void update(void) {
         int intro_exit_code = intro_update(intro);
 
         switch (intro_exit_code) {
-            case INTRO_WOODY_START_MOVE_TO_HOUSE:
+            case INTRO_WOODY_START_MOVE_TO_HOUSE: {
                 woody->state = STATE_LEVEL_START;
 
                 break;
-            case INTRO_NEIGHBOUR_CAN_MOVE:
+            }
+
+            case INTRO_NEIGHBOUR_CAN_MOVE: {
                 neighbour_active = true;
                 neighbour->bubble_show = true;
 
                 break;
-            case INTRO_WOODY_START_ANIMATION:
+            }
+
+            case INTRO_WOODY_START_ANIMATION: {
                 woody->state = STATE_STOP;
                 woody->can_move = false;
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_START);
 
                 break;
-            case INTRO_WOODY_CAN_MOVE:
+            }
+
+            case INTRO_WOODY_CAN_MOVE: {
                 woody->state = STATE_H_MOVE;
                 woody->can_move = true;
 
                 break;
-            case INTRO_DELETE:
+            }
+
+            case INTRO_DELETE: {
                 intro_active = false;
                     
                 break;
+            }
         }
     }
 
