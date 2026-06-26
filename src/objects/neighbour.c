@@ -115,7 +115,7 @@ static const AnimationPlayTillTheEndArgs action_args_19 = {ANIMATION_PACK_NEIGHB
 
 // Закончить использовать дверь с гостиной на кухню
 static const EndUsingHDoorArgs action_args_20 = {ROOM_LIR, 1, 21};
-static const PositionSetArgs action_args_21 = {208, -50, 22};
+static const PositionSetArgs action_args_21 = {208, -54, 22};
 static const WalkToXArgs action_args_22 = {410, 23};
 
 // Идти к двери с кухни в гостиную
