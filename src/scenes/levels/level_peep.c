@@ -98,6 +98,7 @@ static vDoor* v_doors[9][3];
 
 static unsigned short new_hint_id;
 
+static g2dImage* Sprite_BINOCULARS_MS;
 static g2dImage* Sprite_SOFA_MS;
 
 static LookObject* look_objects[9][8];
@@ -357,16 +358,18 @@ static void init(void) {
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
 
+    Sprite_BINOCULARS_MS = g2d_LoadImage("assets/sprites/kit/binoculars/binoculars_ms.png", G2D_CLUT8);
+
     LookObject* new_look_object4 = malloc(sizeof(LookObject));
     if (new_look_object4) {
         *new_look_object4 = (LookObject) {
-            .spritelist = NULL,
-            .sprite_x = 0,
-            .sprite_y = 0,
+            .spritelist = Sprite_BINOCULARS_MS,
+            .sprite_x = 661,
+            .sprite_y = 126,
             .sprite_src_x = 0,
             .sprite_src_y = 0,
-            .sprite_w = 0,
-            .sprite_h = 0,
+            .sprite_w = 11,
+            .sprite_h = 19,
             .sprite_show = true,
             .collision_x = 599,
             .collision_y = 115,
@@ -844,6 +847,7 @@ static void unload(void) {
         }
     }
 
+    g2d_FreeImage(Sprite_BINOCULARS_MS);
     g2d_FreeImage(Sprite_SOFA_MS);
 
     // look_objects_unload
