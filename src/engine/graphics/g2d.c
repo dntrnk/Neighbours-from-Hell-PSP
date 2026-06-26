@@ -9,7 +9,7 @@ void g2d_FreeImage(g2dImage* image) {
         g2dTexFree(&image);
 }
 
-void g2d_DrawImage(const g2dImage* tex, int x, int y, int w, int h, g2dColor color, int srcx, int srcy, int srcw, int srch, int r, int a, g2dCoord_Mode mode) {
+void g2d_DrawImage(g2dImage* tex, int x, int y, int w, int h, g2dColor color, int srcx, int srcy, int srcw, int srch, int r, int a, g2dCoord_Mode mode) {
     g2dBeginRects(tex);
     g2dSetCoordMode(mode);
     g2dSetCoordXY(x, y);
@@ -23,7 +23,7 @@ void g2d_DrawImage(const g2dImage* tex, int x, int y, int w, int h, g2dColor col
     g2dEnd();
 }
 
-void g2d_DrawImageEasy(const g2dImage* tex, int x, int y, g2dColor color, int r, int a, g2dCoord_Mode mode) {
+void g2d_DrawImageEasy(g2dImage* tex, int x, int y, g2dColor color, int r, int a, g2dCoord_Mode mode) {
     g2dBeginRects(tex);
     g2dSetCoordMode(mode);
     g2dSetCoordXY(x, y);
@@ -61,7 +61,7 @@ Sprite* g2d_CreateSprite(g2dImage* tex, int src_x, int src_y, int w, int h, int 
     return spr;
 }
 
-void g2d_DrawSprite(const Sprite* spr, int x, int y) {
+void g2d_DrawSprite(Sprite* spr, int x, int y) {
     g2dBeginRects(spr->tex);
     g2dSetCoordMode(G2D_UP_LEFT); // DEFAULT
     g2dSetTexLinear(false);
