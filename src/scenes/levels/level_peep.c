@@ -25,8 +25,6 @@
 #include "../../objects/tutorial.h"
 #include "../../objects/level_end.h"
 
-extern char error_screen_text[1024];
-
 extern Scene PauseScene;
 
 extern g2dImage* SpriteList_WOODY_GENERIC;
@@ -133,8 +131,7 @@ static void init(void) {
     FILE* file = fopen("data/levels/level_peep.json", "r");
 
     if (file == NULL) {
-        sprintf(error_screen_text, "Не удалось открыть файл \"data/levels/level_peep.json\"");
-        scene_error();
+        scene_error("Не удалось открыть файл \"data/levels/level_peep.json\"");
     }
 
     fseek(file, 0, SEEK_END);

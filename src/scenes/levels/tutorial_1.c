@@ -25,8 +25,6 @@
 #include "../../objects/tutorial.h"
 #include "../../objects/level_end.h"
 
-extern char error_screen_text[1024];
-
 extern Scene PauseScene;
 
 extern g2dImage* SpriteList_WOODY_GENERIC;
@@ -121,8 +119,7 @@ static void init(void) {
     FILE* file = fopen("data/levels/tutorial_1.json", "r");
 
     if (file == NULL) {
-        sprintf(error_screen_text, "Не удалось открыть файл \"data/levels/tutorial_1.json\"");
-        scene_error();
+        scene_error("Не удалось открыть файл \"data/levels/tutorial_1.json\"");
     }
 
     fseek(file, 0, SEEK_END);
@@ -366,8 +363,7 @@ static void init(void) {
     int tutorial_phrases_count = cJSON_GetArraySize(tutorial_phrases);
 
     if (tutorial_phrases_count > 32) {
-        sprintf(error_screen_text, "Количество фраз в туториале больше 32");
-        scene_error();
+        scene_error("Количество фраз в туториале больше 32");
     }
 
     Phrase phrases[tutorial_phrases_count];

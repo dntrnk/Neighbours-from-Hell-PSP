@@ -18,6 +18,6 @@ void scene_restart(void);
 void scene_handle_requests(void);
 void scene_update(void);
 void scene_draw(void);
-void scene_error(void);
+void scene_error(const char* format, ...);
 
 #endif // SCENE_MANAGER_H

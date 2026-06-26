@@ -4,8 +4,6 @@
 #include "../audio/pspaalib.h"
 #include "../../objects/scene_manager.h"
 
-extern char error_screen_text[1024];
-
 static const char* const music_bindings[] = {
     [MUSIC_DNTRNK] = "assets/music/dntrnk.at3",
     [MUSIC_TITEL] = "assets/music/titel.at3",
@@ -80,8 +78,7 @@ void NFHMusicPlay(int new_music, int loop) {
     if (music_loaded != new_music) {
         int error_code = AalibLoad(music_bindings[new_music], 5, 1);
         if (error_code != 0) {
-            sprintf(error_screen_text, "Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
-            scene_error();
+            scene_error("Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
         }
 
         music_loaded = new_music;
@@ -104,8 +101,7 @@ void NFHHouseMusicLoad(void) {
     if (house_music_loaded != new_music) {
         int error_code = AalibLoad(music_bindings[new_music], 6, 1);
         if (error_code != 0) {
-            sprintf(error_screen_text, "Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
-            scene_error();
+            scene_error("Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
         }
 
         house_music_loaded = new_music;
@@ -133,8 +129,7 @@ void NFHSoundLoad(int sound, int channel) {
     sound_channels_bindings[sound] = channel;
     int error_code = AalibLoad(sfx_bindings[sound], channel, 1);
     if (error_code != 0) {
-        sprintf(error_screen_text, "Ошибка загрузки %s: %d", sfx_bindings[sound], error_code);
-        scene_error();
+        scene_error("Ошибка загрузки %s: %d", sfx_bindings[sound], error_code);
     }
 }
 

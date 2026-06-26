@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 #define MAX_SCENE_STACK 8
 
@@ -28,7 +29,7 @@ static Scene* next_scene;
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 
-extern char error_screen_text[1024];
+char error_screen_text[1024];
 extern intraFont* Font_BLUEHIGB_18;
 
 int get_freeRam(void);
@@ -143,7 +144,12 @@ inline void scene_handle_requests(void) {
     }
 }
 
-void scene_error(void) {
+void scene_error(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    vsnprintf(error_screen_text, sizeof(error_screen_text), format, args);
+    va_end(args);
+
     NFHMusicStop();
     NFHHouseMusicStop();
 

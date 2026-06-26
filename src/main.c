@@ -83,8 +83,6 @@ int camera_y = 0;
 int camera_right = 0;
 int camera_bottom = 0;
 
-char error_screen_text[1024];
-
 int get_freeRam(void) {
     void* buf[128];
     int i, j;
