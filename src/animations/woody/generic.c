@@ -16,7 +16,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MS0_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -45,7 +45,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MS1_4
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -74,7 +74,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MS2_4
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -103,7 +103,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MS3_6
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -132,7 +132,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MG0_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_STEP1A,
             SOUND_NONE,
@@ -161,7 +161,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MG1_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_STEP1A,
             SOUND_NONE,
@@ -190,7 +190,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MG2_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_STEP1A,
             SOUND_NONE,
@@ -219,7 +219,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_MG3_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_STEP1A,
             SOUND_NONE,
@@ -249,7 +249,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_TRIUMPH_30
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_WOD_STEP2A,
@@ -294,7 +294,7 @@ const Animation woody_generic_animations[] = {
             FRAME_WOODY_TRIUMPH_30
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_WOD_JUHU1,

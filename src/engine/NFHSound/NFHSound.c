@@ -36,7 +36,16 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_STEP2] = "assets/sfx/na_step2.wav",
     [SOUND_NA_SITSDOWN1] = "assets/sfx/na_sitsdown1.wav",
     [SOUND_NA_REMOTE1] = "assets/sfx/na_remote1.wav",
-    [SOUND_NA_GETSUP1] = "assets/sfx/na_getsup1.wav"
+    [SOUND_NA_GETSUP1] = "assets/sfx/na_getsup1.wav",
+    [SOUND_NA_PEEP1] = "assets/sfx/na_peep1.wav",
+    [SOUND_NA_PEEP2] = "assets/sfx/na_peep2.wav",
+    [SOUND_NA_PEEP3] = "assets/sfx/na_peep3.wav",
+    [SOUND_NA_PEEP4] = "assets/sfx/na_peep4.wav",
+    [SOUND_OBJ_SQUIEEK1] = "assets/sfx/obj_squieek1.wav",
+    [SOUND_NA_WORKOUT1] = "assets/sfx/na_workout1.wav",
+    [SOUND_NA_WORKOUT2] = "assets/sfx/na_workout2.wav",
+    [SOUND_NA_AAA_LONG2] = "assets/sfx/na_aaa_long2.wav",
+    [SOUND_OBJ_PLOP1] = "assets/sfx/obj_plop1.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -61,7 +70,16 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_NA_STEP2] = 0,
     [SOUND_NA_SITSDOWN1] = 0,
     [SOUND_NA_REMOTE1] = 0,
-    [SOUND_NA_GETSUP1] = 0
+    [SOUND_NA_GETSUP1] = 0,
+    [SOUND_NA_PEEP1] = 0,
+    [SOUND_NA_PEEP2] = 0,
+    [SOUND_NA_PEEP3] = 0,
+    [SOUND_NA_PEEP4] = 0,
+    [SOUND_OBJ_SQUIEEK1] = 0,
+    [SOUND_NA_WORKOUT1] = 0,
+    [SOUND_NA_WORKOUT2] = 0,
+    [SOUND_NA_AAA_LONG2] = 0,
+    [SOUND_OBJ_PLOP1] = 0
 };
 
 typedef struct {

@@ -66,6 +66,9 @@ extern const Animation neighbour_doorright_animations[];
 extern const Frame neighbour_sofa_frames[];
 extern const Animation neighbour_sofa_animations[];
 
+extern const Frame neighbour_binoculars_frames[];
+extern const Animation neighbour_binoculars_animations[];
+
 extern int camera_x;
 extern int camera_y;
 extern int camera_right;
@@ -563,18 +566,21 @@ static void init(void) {
     neighbour_spritelists[2] = SpriteList_DOORRIGHT;
     // neighbour_spritelists[3] = SpriteList_DOORBACK;
     neighbour_spritelists[4] = g2d_LoadImage("assets/sprites/lir/sofa/level_peep.png", G2D_CLUT8);
+    neighbour_spritelists[5] = g2d_LoadImage("assets/sprites/kit/binoculars/level_peep.png", G2D_CLUT8);
 
     neighbour_gfxdata[0] = neighbour_generic_frames;
     neighbour_gfxdata[1] = neighbour_doorleft_frames;
     neighbour_gfxdata[2] = neighbour_doorright_frames;
     // neighbour_gfxdata[3] = neighbour_doorback_frames;
     neighbour_gfxdata[4] = neighbour_sofa_frames;
+    neighbour_gfxdata[5] = neighbour_binoculars_frames;
 
     neighbour_animations[0] = neighbour_generic_animations;
     neighbour_animations[1] = neighbour_doorleft_animations;
     neighbour_animations[2] = neighbour_doorright_animations;
     // neighbour_animations[3] = neighbour_doorback_animations;
     neighbour_animations[4] = neighbour_sofa_animations;
+    neighbour_animations[5] = neighbour_binoculars_animations;
 
     neighbour = neighbour_create(
         neighbour_spritelists, // spritelists
@@ -890,6 +896,7 @@ static void unload(void) {
     woody_unload(woody);
 
     g2d_FreeImage(neighbour_spritelists[4]);
+    g2d_FreeImage(neighbour_spritelists[5]);
     neighbour_unload(neighbour);
     intro_unload(intro);
     level_end_unload(level_end);

@@ -13,7 +13,7 @@ typedef struct {
 
 typedef struct {
     const unsigned short int* frames;
-    short sfx[64];
+    const short* sfx;
     unsigned short frame_count;
     bool loop;
 } Animation;

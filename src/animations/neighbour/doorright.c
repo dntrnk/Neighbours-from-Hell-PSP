@@ -28,7 +28,7 @@ const Animation neighbour_doorright_animations[] = {
             FRAME_NEIGHBOUR_DOORRIGHT_19
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -81,7 +81,7 @@ const Animation neighbour_doorright_animations[] = {
             FRAME_NEIGHBOUR_DOORRIGHT_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_DOOR_OPEN1,
             SOUND_NONE,

@@ -116,20 +116,29 @@ static const AnimationPlayTillTheEndArgs action_args_19 = {ANIMATION_PACK_NEIGHB
 // Закончить использовать дверь с гостиной на кухню
 static const EndUsingHDoorArgs action_args_20 = {ROOM_LIR, 1, 21};
 static const PositionSetArgs action_args_21 = {208, -54, 22};
+
+// Идти к биноклю
 static const WalkToXArgs action_args_22 = {410, 23};
 
+// Смотреть в бинокль
+static const PositionSetArgs action_args_23 = {309, -50, 24};
+static const LookObjectVisibilitySetArgs action_args_24 = {ROOM_KIT, 1, false, 25};
+static const AnimationPlayTillTheEndArgs action_args_25 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 26};
+static const LookObjectVisibilitySetArgs action_args_26 = {ROOM_KIT, 1, true, 27};
+static const PositionSetArgs action_args_27 = {410, -54, 28};
+
 // Идти к двери с кухни в гостиную
-static const BubbleSetArgs action_args_23 = {BUBBLE_SOFA, 24};
-static const WalkToXArgs action_args_24 = {210, 25};
+static const BubbleSetArgs action_args_28 = {BUBBLE_SOFA, 29};
+static const WalkToXArgs action_args_29 = {210, 30};
 
 // Начать использовать дверь с кухни на гостиную
-static const StartUsingHDoorArgs action_args_25 = {ROOM_KIT, 0, 26};
-static const PositionSetArgs action_args_26 = {248, -53, 27};
-static const AnimationPlayTillTheEndArgs action_args_27 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 28};
+static const StartUsingHDoorArgs action_args_30 = {ROOM_KIT, 0, 31};
+static const PositionSetArgs action_args_31 = {248, -53, 32};
+static const AnimationPlayTillTheEndArgs action_args_32 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 33};
 
 // Закончить использовать дверь с кухни на гостиную
-static const EndUsingHDoorArgs action_args_28 = {ROOM_KIT, 0, 29};
-static const PositionSetArgs action_args_29 = {148, -56, 1};
+static const EndUsingHDoorArgs action_args_33 = {ROOM_KIT, 0, 34};
+static const PositionSetArgs action_args_34 = {148, -56, 1};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -173,18 +182,25 @@ const Action actions[] = {
     // Идти к биноклю
     {WALK_TO_X, &action_args_22, false},
 
+    // Смотреть в бинокль
+    {POSITION_SET, &action_args_23, true},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_24, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_25, false},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_26, true},
+    {POSITION_SET, &action_args_27, true},
+
     // Идти к двери с кухни в гостиную
-    {BUBBLE_SET, &action_args_23, true},
-    {WALK_TO_X, &action_args_24, false},
+    {BUBBLE_SET, &action_args_28, true},
+    {WALK_TO_X, &action_args_29, false},
 
     // Начать использовать дверь с кухни на гостиную
-    {START_USING_H_DOOR, &action_args_25, true},
-    {POSITION_SET, &action_args_26, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_27, false},
+    {START_USING_H_DOOR, &action_args_30, true},
+    {POSITION_SET, &action_args_31, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_32, false},
 
     // Закончить использовать дверь с кухни на гостиную
-    {END_USING_H_DOOR, &action_args_28, true},
-    {POSITION_SET, &action_args_29, true}
+    {END_USING_H_DOOR, &action_args_33, true},
+    {POSITION_SET, &action_args_34, true}
 };
 
 Neighbour* neighbour_create(

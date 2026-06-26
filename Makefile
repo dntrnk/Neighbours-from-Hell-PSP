@@ -36,6 +36,8 @@ OBJS = \
     src/animations/neighbour/doorright.o \
     src/gfxdata/neighbour/sofa.o \
     src/animations/neighbour/sofa.o \
+    src/gfxdata/neighbour/binoculars.o \
+    src/animations/neighbour/binoculars.o \
     src/objects/sign.o \
     src/gfxdata/ui/sign.o \
     src/animations/ui/sign.o \

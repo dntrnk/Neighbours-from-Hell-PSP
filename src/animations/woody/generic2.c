@@ -29,7 +29,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_WARDROBE_19
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_STEP1A,
             SOUND_OBJ_OPEN1,
@@ -82,7 +82,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_WARDROBE_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_OBJ_OPEN1,
             SOUND_NONE,
@@ -116,7 +116,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_USE_MID_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE
         },
 
@@ -131,7 +131,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_USE_MID_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE
         },
 
@@ -164,7 +164,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_GT0_15
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -210,7 +210,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_WHATSUP_13
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_WOD_EH1,
             SOUND_NONE,
@@ -252,7 +252,7 @@ const Animation woody_generic2_animations[] = {
             FRAME_WOODY_TAKEHIGH3_5
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,

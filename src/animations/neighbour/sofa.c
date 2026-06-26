@@ -34,7 +34,7 @@ const Animation neighbour_sofa_animations[] = {
             FRAME_NEIGHBOUR_SIT_REMO_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -106,7 +106,7 @@ const Animation neighbour_sofa_animations[] = {
 			FRAME_NEIGHBOUR_SIT_1
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -157,7 +157,7 @@ const Animation neighbour_sofa_animations[] = {
 			FRAME_NEIGHBOUR_SITDOWN_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NA_SITSDOWN1,
             SOUND_NONE,
@@ -182,7 +182,7 @@ const Animation neighbour_sofa_animations[] = {
 			FRAME_NEIGHBOUR_SITDOWN_5
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NA_GETSUP1,

@@ -9,7 +9,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MS0_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE
         },
 
@@ -29,7 +29,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MS1_20
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -49,7 +49,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MS2_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE
         },
 
@@ -69,7 +69,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MS3_20
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -96,7 +96,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MG0_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NA_STEP1,
             SOUND_NONE,
             SOUND_NONE,
@@ -125,7 +125,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MG1_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NA_STEP1,
             SOUND_NONE,
             SOUND_NONE,
@@ -154,7 +154,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MG2_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NA_STEP1,
             SOUND_NONE,
             SOUND_NONE,
@@ -183,7 +183,7 @@ const Animation neighbour_generic_animations[] = {
             FRAME_NEIGHBOUR_MG3_7
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NA_STEP1,
             SOUND_NONE,
             SOUND_NONE,

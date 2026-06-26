@@ -18,7 +18,7 @@ const Animation woody_doorback_animations[] = {
             FRAME_WOODY_DOORBACK_LEAVE_9
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_DOOR_OPEN1,
             SOUND_NONE,
@@ -67,7 +67,7 @@ const Animation woody_doorback_animations[] = {
             FRAME_WOODY_DOORBACK_ENTER_0
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,

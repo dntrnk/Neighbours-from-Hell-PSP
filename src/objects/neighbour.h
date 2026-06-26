@@ -13,6 +13,7 @@
 #include "../animations/neighbour/doorright.h"
 // doorback
 #include "../animations/neighbour/sofa.h"
+#include "../animations/neighbour/binoculars.h"
 
 typedef struct {
     // Анимации

@@ -20,7 +20,7 @@ const Animation ui_sign_animations[] = {
             FRAME_UI_SIGN_SIGN1,
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,

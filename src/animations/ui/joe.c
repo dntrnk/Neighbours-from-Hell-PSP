@@ -30,7 +30,7 @@ const Animation ui_joe_animations[] = {
             FRAME_UI_JOE_HEAD_1
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
@@ -99,7 +99,7 @@ const Animation ui_joe_animations[] = {
             FRAME_UI_JOE_HEAD_1
         },
 
-        .sfx = {
+        .sfx = (const short[]) {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
