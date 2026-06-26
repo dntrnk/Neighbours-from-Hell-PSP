@@ -328,7 +328,7 @@ static void authors_menu_draw(void) {
 
     intraFontSetStyle(Font_BLUEHIGB_18, 0.661f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 1);
-    intraFontPrint(Font_BLUEHIGB_18, 62, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "Оригинальная игра: JoWood Vienna");
+    intraFontPrint(Font_BLUEHIGB_18, 62, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "Оригинальная игра: JoWood Productions");
     intraFontPrint(Font_BLUEHIGB_18, 62, 56 + intraFontTextHeight(Font_BLUEHIGB_18), "Версию для PSP сделал: dntrnk");
 
     intraFontPrint(Font_BLUEHIGB_18, 326, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "вернуться в меню");
