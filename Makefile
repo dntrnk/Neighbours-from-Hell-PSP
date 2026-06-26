@@ -1,7 +1,6 @@
 TARGET = neighbours-from-hell
 
 OBJS = \
-    src/engine/math/vfpu_math.o \
     src/engine/graphics/g2d.o \
     src/engine/graphics/glib2d.o \
     src/engine/controls/controls.o \

@@ -6,7 +6,6 @@
 // Please report bugs at : geecko.dev@free.fr
 
 #include "glib2d.h"
-#include "../math/vfpu_math.h"
 
 #include <stdlib.h>
 #include <pspkernel.h>
@@ -784,8 +783,8 @@ void g2dGetRotation(float *degrees) {
 void g2dSetRotationRad(float radians) {
     if (radians == obj.rot) return;
     obj.rot = radians;
-    obj.rot_sin = vfpu_sinf(radians);
-    obj.rot_cos = vfpu_cosf(radians);
+    obj.rot_sin = sinf(radians);
+    obj.rot_cos = cosf(radians);
     if (radians != 0.f) obj_use_rot = true;
 }
 

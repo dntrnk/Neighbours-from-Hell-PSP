@@ -21,7 +21,6 @@
 #include <math.h>
 
 #include "intraFont.h"
-#include "../math/vfpu_math.h"
 
 static unsigned int __attribute__((aligned(16))) clut[16];
 
@@ -752,8 +751,8 @@ void intraFontSetStyle(intraFont *font, float size, unsigned int color, unsigned
       font->Rsin = 0.f;
       font->Rcos = 1.f;
     } else {
-      font->Rsin = vfpu_sinf(angle * GU_PI / 180.f);
-			font->Rcos = vfpu_cosf(angle * GU_PI / 180.f);
+      font->Rsin = sinf(angle * GU_PI / 180.f);
+			font->Rcos = cosf(angle * GU_PI / 180.f);
     }
     font->isRotated = !(font->Rsin == 0.f && font->Rcos == 1.f);
   }
