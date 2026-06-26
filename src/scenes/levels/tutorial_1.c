@@ -352,6 +352,7 @@ static void init(void) {
         neighbour_animations, // animations
 
         0, 0, // start_x, start_y
+        ROOM_LIR, // start_room
         BUBBLE_SOFA, // start_bubble
         NULL, NULL, // h_doors, v_doors
         NULL // look_objects

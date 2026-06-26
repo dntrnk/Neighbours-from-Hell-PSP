@@ -97,6 +97,7 @@ Neighbour* neighbour_create(
     const Animation* animations[16],
     int start_x,
     int start_y,
+    RoomID start_room,
     int start_bubble,
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],

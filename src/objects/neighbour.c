@@ -193,6 +193,7 @@ Neighbour* neighbour_create(
     const Animation* animations[16],
     int start_x,
     int start_y,
+    RoomID start_room,
     int start_bubble,
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
@@ -264,7 +265,7 @@ Neighbour* neighbour_create(
 
     neighbour->look_objects = look_objects;
 
-    neighbour->room = ROOM_LIR; // TODO: из аргумента получать в какой комнате сосед появляется
+    neighbour->room = start_room;
 
     // Прохождение уровня
     neighbour->emotion = 0;
