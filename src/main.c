@@ -63,8 +63,13 @@ g2dImage* Sprite_NFH_LOGO = NULL;
 g2dImage* Sprite_LOADING_TEXT_DATA = NULL;
 g2dImage* Sprite_Punkt = NULL;
 
-g2dImage* Button_tutorial_1 = NULL;
-g2dImage* Button_level_peep = NULL;
+g2dImage* Icon_tutorial_1 = NULL;
+g2dImage* Icon_level_peep = NULL;
+
+g2dImage* Button_tut1_normal = NULL;
+g2dImage* Button_tut1_normal_pressed = NULL;
+g2dImage* Button_peep_normal = NULL;
+g2dImage* Button_peep_normal_pressed = NULL;
 
 intraFont* Font_BLUEHIGC_11 = NULL;
 intraFont* Font_BLUEHIGC_24 = NULL;
@@ -138,8 +143,13 @@ int main(void) {
     Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
     Sprite_Punkt = g2d_LoadImage("assets/sprites/ui/menu/punkt.png", G2D_RGBA8888);
 
-    Button_tutorial_1 = g2d_LoadImage("assets/sprites/ui/menu/tutorial_1.png", G2D_CLUT8);
-    Button_level_peep = g2d_LoadImage("assets/sprites/ui/menu/level_peep.png", G2D_CLUT8);
+    Icon_tutorial_1 = g2d_LoadImage("assets/sprites/ui/menu/tutorial_1.png", G2D_CLUT8);
+    Icon_level_peep = g2d_LoadImage("assets/sprites/ui/menu/level_peep.png", G2D_CLUT8);
+
+    Button_tut1_normal = g2d_LoadImage("assets/sprites/ui/menu/button_tut1_normal.png", G2D_CLUT8);
+    Button_tut1_normal_pressed = g2d_LoadImage("assets/sprites/ui/menu/button_tut1_normal_pressed.png", G2D_CLUT8);
+    Button_peep_normal = g2d_LoadImage("assets/sprites/ui/menu/button_peep_normal.png", G2D_CLUT8);
+    Button_peep_normal_pressed = g2d_LoadImage("assets/sprites/ui/menu/button_peep_normal_pressed.png", G2D_CLUT8);
 
     Font_BLUEHIGC_11 = intraFontLoadTTF("assets/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 11);
     Font_BLUEHIGC_24 = intraFontLoadTTF("assets/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 24);
@@ -209,8 +219,13 @@ int main(void) {
     g2d_FreeImage(Sprite_LOADING_TEXT_DATA);
     g2d_FreeImage(Sprite_Punkt);
 
-    g2d_FreeImage(Button_tutorial_1);
-    g2d_FreeImage(Button_level_peep);
+    g2d_FreeImage(Icon_tutorial_1);
+    g2d_FreeImage(Icon_level_peep);
+
+    g2d_FreeImage(Button_tut1_normal);
+    g2d_FreeImage(Button_tut1_normal_pressed);
+    g2d_FreeImage(Button_peep_normal);
+    g2d_FreeImage(Button_peep_normal_pressed);
 
     g2dTerm();
 

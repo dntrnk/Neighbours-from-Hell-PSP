@@ -29,8 +29,13 @@ extern g2dImage* BG_NEW_GAME;
 extern g2dImage* Sprite_NFH_LOGO;
 extern g2dImage* Sprite_Punkt;
 
-extern g2dImage* Button_tutorial_1;
-extern g2dImage* Button_level_peep;
+extern g2dImage* Icon_tutorial_1;
+extern g2dImage* Icon_level_peep;
+
+extern g2dImage* Button_tut1_normal;
+extern g2dImage* Button_tut1_normal_pressed;
+extern g2dImage* Button_peep_normal;
+extern g2dImage* Button_peep_normal_pressed;
 
 extern intraFont* Font_BLUEHIGH_8;
 extern intraFont* Font_BLUEHIGH_10;
@@ -296,9 +301,17 @@ static void new_game_menu_draw(void) {
     }
 
     if (tutorial_selected) {
-        g2d_DrawImage(Button_tutorial_1, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_tutorial_1, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Button_level_peep, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_level_peep, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+    }
+
+    if (tutorial_selected) {
+        g2d_DrawImage(Button_tut1_normal_pressed, 71, 39, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_peep_normal, 71, 84, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
+    } else {
+        g2d_DrawImage(Button_tut1_normal, 71, 39, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_peep_normal_pressed, 71, 84, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
     }
 
     g2dFlip(G2D_VSYNC);
