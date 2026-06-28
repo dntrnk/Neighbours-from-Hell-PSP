@@ -170,6 +170,7 @@ Woody* woody_create(
 
     woody->selected_item = 0;
     woody->item_count = 0;
+    woody->inventory_using = false;
 
     // Интерфейс
     for (int i = 0; i < 3; i++) {
@@ -340,47 +341,67 @@ void woody_start_using_v_door(Woody* woody, vDoor* new_enter_door) {
 static void woody_auto_move_complete(Woody* woody) {
     switch (woody->auto_move_goal_type) {
         case GOAL_LOOK_OBJECT:
-            woody->state = STATE_LOOK_OBJECT;
-            woody->look_object_phrase_show = true;
+            if (!woody->inventory_using) {
+                woody->state = STATE_LOOK_OBJECT;
+                woody->look_object_phrase_show = true;
 
-            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+            } else {
+                woody->state = STATE_NONO;
+                woody->inventory_using = false;
 
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+            }
             break;
         case GOAL_HIDEOUT:
-            woody->state = STATE_HIDEOUT_ENTER;
-            woody->hide = true;
+            // Пока что нет пакостей, связанных с укрытиями
+            if (!woody->inventory_using) {
+                woody->state = STATE_HIDEOUT_ENTER;
+                woody->hide = true;
 
-            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_ENTER);
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_ENTER);
+            } else {
+                woody->state = STATE_NONO;
+                woody->inventory_using = false;
 
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+            }
             break;
         case GOAL_FLOOR:
             woody->state = STATE_H_MOVE;
 
             break;
         case GOAL_STORAGE:
-            woody->state = STATE_STORAGE_CHECK;
+            // Пока что нет пакостей, связанных с храналищами
+            if (!woody->inventory_using) {
+                woody->state = STATE_STORAGE_CHECK;
 
-            Storage** storages_in_room = woody->storages[woody->room];
-            for (int i = 0; i < 8; i++) {
-                Storage* current_storage = storages_in_room[i];
-                if (current_storage != NULL) {
-                    if (woody->x == current_storage->collision_x) {
-                        switch (current_storage->sprite_type) {
-                            case SPRITE_TYPE_OPENS:
-                                current_storage->sprite_show = true;
+                Storage** storages_in_room = woody->storages[woody->room];
+                for (int i = 0; i < 8; i++) {
+                    Storage* current_storage = storages_in_room[i];
+                    if (current_storage != NULL) {
+                        if (woody->x == current_storage->collision_x) {
+                            switch (current_storage->sprite_type) {
+                                case SPRITE_TYPE_OPENS:
+                                    current_storage->sprite_show = true;
 
-                                break;
-                            case SPRITE_TYPE_DISAPPEARS:
+                                    break;
+                                case SPRITE_TYPE_DISAPPEARS:
 
-                                break;
+                                    break;
+                            }
                         }
+                    } else {
+                        break;
                     }
-                } else {
-                    break;
                 }
-            }
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
+            } else {
+                woody->state = STATE_NONO;
+                woody->inventory_using = false;
 
-            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+            }
 
             break;
         case GOAL_NONE:
@@ -475,6 +496,24 @@ static void woody_hints_update(Woody* woody) {
 }
 
 void woody_update(Woody* woody) {
+    // Управление инвентарём
+    if (woody->inventory_using) {
+        if (controls_pressed(PSP_CTRL_LTRIGGER) && woody->selected_item != 0) {
+            woody->selected_item--;
+            NFHSoundPlay(SOUND_BUT_HOVER1);
+        } else if (controls_pressed(PSP_CTRL_RTRIGGER) && woody->selected_item != woody->item_count - 1) {
+            woody->selected_item++;
+            NFHSoundPlay(SOUND_BUT_HOVER1);
+        }
+    }
+
+    if (controls_pressed(PSP_CTRL_TRIANGLE) && woody->item_count != 0) {
+        woody->inventory_using = !woody->inventory_using;
+        if (woody->inventory_using) {
+            NFHSoundPlay(SOUND_BUT_HOVER1);
+        }
+    }
+
     // Движение
     switch (woody->state) {
         case STATE_H_MOVE: {
@@ -1117,6 +1156,49 @@ void woody_update(Woody* woody) {
             break;
         }
 
+        case STATE_NONO: {
+            if (controls_pressed(PSP_CTRL_LEFT) || controls_pressed(PSP_CTRL_DOWN) || controls_pressed(PSP_CTRL_RIGHT)) {
+                woody->state = STATE_AUTO_V_MOVE;
+                woody->auto_move_goal_type = GOAL_FLOOR;
+                woody->auto_move_goal_y = woody->floor_y;
+            }
+
+            if (IS_LAST_ANIMATION_FRAME) {
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+
+                if (woody->y == woody->floor_y) {
+                    woody->state = STATE_H_MOVE;
+                } else {
+                    switch (woody->auto_move_goal_type) {
+                        case GOAL_LOOK_OBJECT:
+                            woody->state = STATE_LOOK_OBJECT;
+                            woody->look_object_phrase_show = false;
+
+                            break;
+
+                        case GOAL_HIDEOUT:
+                            woody->state = STATE_LOOK_OBJECT;
+                            woody->look_object_phrase_show = false;
+
+                            break;
+
+                        case GOAL_STORAGE:
+                            woody->state = STATE_STORAGE_END;
+
+                            break;
+                        case GOAL_FLOOR:
+
+                            break;
+                        case GOAL_NONE:
+
+                            break;
+                    }
+                }
+            }
+
+            break;
+        }
+
         case STATE_LEVEL_START: {
             // Типо как STATE_H_MOVE, но с автодвижением
             woody->velocity_x = -woody->speed_x;
@@ -1375,7 +1457,7 @@ void woody_draw_ui(const Woody* woody) {
             }
 
             g2dImage* current_spritelist = SpriteList_ITEMS_1;
-            int item_state = 1;
+            int item_state = (woody->inventory_using && i == woody->selected_item) ? 0 : 1;
             int src_x = (woody->inventory[i] * 3 + item_state) * 45;
             int src_y = 0;
 

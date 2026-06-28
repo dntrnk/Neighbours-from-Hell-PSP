@@ -54,6 +54,9 @@ extern const Animation woody_doorback_animations[];
 extern const Frame woody_generic2_frames[];
 extern const Animation woody_generic2_animations[];
 
+extern const Frame woody_generic3_frames[];
+extern const Animation woody_generic3_animations[];
+
 extern const Frame neighbour_generic_frames[];
 extern const Animation neighbour_generic_animations[];
 
@@ -523,19 +526,22 @@ static void init(void) {
     woody_spritelists[1] = SpriteList_DOORLEFT;
     woody_spritelists[2] = SpriteList_DOORRIGHT;
     woody_spritelists[3] = SpriteList_DOORBACK;
-    woody_spritelists[4] = g2d_LoadImage("assets_thq/sprites/woody/generic2.png", G2D_CLUT8); 
+    woody_spritelists[4] = g2d_LoadImage("assets_thq/sprites/woody/generic2.png", G2D_CLUT8);
+    woody_spritelists[5] = g2d_LoadImage("assets_thq/sprites/woody/generic3.png", G2D_CLUT8);
 
     woody_gfxdata[0] = woody_generic_frames;
     woody_gfxdata[1] = woody_doorleft_frames;
     woody_gfxdata[2] = woody_doorright_frames;
     woody_gfxdata[3] = woody_doorback_frames;
     woody_gfxdata[4] = woody_generic2_frames;
+    woody_gfxdata[5] = woody_generic3_frames;
     
     woody_animations[0] = woody_generic_animations;
     woody_animations[1] = woody_doorleft_animations;
     woody_animations[2] = woody_doorright_animations;
     woody_animations[3] = woody_doorback_animations;
     woody_animations[4] = woody_generic2_animations;
+    woody_animations[5] = woody_generic3_animations;
 
     woody = woody_create(
         woody_spritelists, // spritelists
@@ -893,6 +899,7 @@ static void unload(void) {
     }
 
     g2d_FreeImage(woody->spritelists[4]);
+    g2d_FreeImage(woody->spritelists[5]);
     woody_unload(woody);
 
     g2d_FreeImage(neighbour_spritelists[4]);

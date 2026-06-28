@@ -21,6 +21,7 @@
 #include "../animations/woody/doorright.h"
 #include "../animations/woody/doorback.h"
 #include "../animations/woody/generic2.h"
+#include "../animations/woody/generic3.h"
 
 typedef enum {
     STATE_H_MOVE,
@@ -37,6 +38,7 @@ typedef enum {
     STATE_STORAGE_FOUND,
     STATE_STORAGE_NOT_FOUND,
     STATE_STORAGE_END,
+    STATE_NONO,
     STATE_LEVEL_START,
     STATE_LEVEL_ENDING,
     STATE_STOP
@@ -157,6 +159,7 @@ typedef struct Woody {
     Item inventory[16];
     int selected_item;
     int item_count;
+    bool inventory_using;
 
     // Интерфейс
     Hint hints[3];
