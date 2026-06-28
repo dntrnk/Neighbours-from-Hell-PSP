@@ -9,6 +9,7 @@
 typedef struct {
     int counter;
     int selected_button;
+    int clicked_button;
 
     char tricks_text[32];
     char quota_text[32];

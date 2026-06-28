@@ -29,6 +29,7 @@ LevelEnd* level_end_create(void) {
     level_end->counter = 117;
 
     level_end->selected_button = BUTTON_OK;
+    level_end->clicked_button = BUTTON_RESTART;
 
     level_end->buttons_colors[0] = LEVEL_END_GREEN;
     level_end->buttons_colors[1] = LEVEL_END_YELLOW;
@@ -64,7 +65,17 @@ void level_end_update(LevelEnd* level_end) {
         }
     }
 
+    /*
+        Нажатие кнопки с "залипанием" как в оригинальной игре
+        Действие происходит если:
+            Кнопку Х только что отпустили
+            Положение кнопки не поменялось
+    */
+
     if (controls_pressed(PSP_CTRL_CROSS)) {
+        level_end->clicked_button = level_end->selected_button;
+        NFHSoundPlay(SOUND_BUT1);
+    } else if (controls_released(PSP_CTRL_CROSS) && level_end->selected_button == level_end->clicked_button) {
         if (level_end->selected_button == BUTTON_RESTART) {
             scene_restart();
         } else {
@@ -72,7 +83,6 @@ void level_end_update(LevelEnd* level_end) {
             scene_handle_requests();
             scene_push(&NewGameMenuScene);
         }
-        NFHSoundPlay(SOUND_BUT1);
     }
 }
 
