@@ -20,6 +20,8 @@ OBJS = \
 	src/animations/woody/generic.o \
 	src/gfxdata/woody/generic2.o \
 	src/animations/woody/generic2.o \
+	src/gfxdata/woody/generic3.o \
+	src/animations/woody/generic3.o \
 	src/gfxdata/woody/doorleft.o \
 	src/animations/woody/doorleft.o \
 	src/gfxdata/woody/doorright.o \

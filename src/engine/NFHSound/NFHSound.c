@@ -45,7 +45,10 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_WORKOUT1] = "assets_thq/sfx/na_workout1.wav",
     [SOUND_NA_WORKOUT2] = "assets_thq/sfx/na_workout2.wav",
     [SOUND_NA_AAA_LONG2] = "assets_thq/sfx/na_aaa_long2.wav",
-    [SOUND_OBJ_PLOP1] = "assets_thq/sfx/obj_plop1.wav"
+    [SOUND_OBJ_PLOP1] = "assets_thq/sfx/obj_plop1.wav",
+    [SOUND_WOD_NONO] = "assets_thq/sfx/wod_nono.wav",
+    [SOUND_WOD_LAUGH2] = "assets_thq/sfx/wod_laugh2.wav",
+    [SOUND_WOD_FEAR1] = "assets_thq/sfx/wod_fear1.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -79,7 +82,10 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_NA_WORKOUT1] = 0,
     [SOUND_NA_WORKOUT2] = 0,
     [SOUND_NA_AAA_LONG2] = 0,
-    [SOUND_OBJ_PLOP1] = 0
+    [SOUND_OBJ_PLOP1] = 0,
+    [SOUND_WOD_NONO] = 0,
+    [SOUND_WOD_LAUGH2] = 0,
+    [SOUND_WOD_FEAR1] = 0,
 };
 
 typedef struct {
@@ -88,6 +94,12 @@ typedef struct {
 } SoundChannel;
 
 static SoundChannel sound_channels[31];
+static short sound_channels_order[31] = {
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1
+};
+
 static unsigned short next_free_sound_channel = 17;
 static short house_music_loaded = -1;
 static short music_loaded = -1;
@@ -164,17 +176,32 @@ void NFHSoundPlay(int sound) {
             current_sound_channel = next_free_sound_channel;
             next_free_sound_channel++;
         } else {
-            printf("Код красный! ёбаный насрал нехватка звуковых каналов!\n");
-            printf("Ладно, загрузимся в канал где не играет звук\n");
-            for (int i = 0; i < 31; i++) {
-                printf("Аааааа напишите dntrnk чтобы он сделал так чтобы звуки делали unload при смене сцены\nили при нехватке каналов грузились на те, которые не играют\n");
+            short new_sound_channel = sound_channels_order[30];
+
+            // Сбросить биндинг вытесняемого звука
+            for (int i = 0; i < sizeof(sound_channels_bindings) / sizeof(sound_channels_bindings[0]); i++) {
+                if (sound_channels_bindings[i] == new_sound_channel) {
+                    sound_channels_bindings[i] = 0;
+                    break;
+                }
             }
+
+            AalibStop(new_sound_channel);
+            AalibUnload(new_sound_channel);
+            NFHSoundLoad(sound, new_sound_channel);
+
+            current_sound_channel = new_sound_channel;
         }
     }
 
     if (current_sound_channel != 0) {
         AalibSetAutoloop(current_sound_channel, 0);
         AalibPlay(current_sound_channel);
+
+        for (int i = 30; i > 0; i--) {
+            sound_channels_order[i] = sound_channels_order[i-1];
+        }
+        sound_channels_order[0] = current_sound_channel;
     }
 }
 
@@ -184,14 +211,26 @@ void NFHSoundPreload(int sound) {
     if (current_sound_channel == 0) {
         if (next_free_sound_channel < 48) {
             NFHSoundLoad(sound, next_free_sound_channel);
-            current_sound_channel = next_free_sound_channel;
             next_free_sound_channel++;
         } else {
-            printf("Код красный! ёбаный насрал нехватка звуковых каналов!\n");
-            printf("Ладно, загрузимся в канал где не играет звук\n");
-            for (int i = 0; i < 31; i++) {
-                printf("Аааааа напишите dntrnk чтобы он сделал так чтобы звуки делали unload при смене сцены\nили при нехватке каналов грузились на те, которые не играют\n");
+            short new_sound_channel = sound_channels_order[30];
+
+            for (int i = 0; i < sizeof(sound_channels_bindings) / sizeof(sound_channels_bindings[0]); i++) {
+                if (sound_channels_bindings[i] == new_sound_channel) {
+                    sound_channels_bindings[i] = 0;
+                    break;
+                }
             }
+
+            AalibStop(new_sound_channel);
+            AalibUnload(new_sound_channel);
+            NFHSoundLoad(sound, new_sound_channel);
+
+             for (int i = 30; i > 0; i--) {
+                sound_channels_order[i] = sound_channels_order[i-1]; 
+            }
+
+            sound_channels_order[0] = new_sound_channel;
         }
     }
 }
@@ -214,4 +253,8 @@ void NFHSoundUnloadAll(void) {
     }
 
     next_free_sound_channel = 17;
+
+    for (int i = 0; i < 31; i++) {
+        sound_channels_order[i] = -1;
+    }
 }
