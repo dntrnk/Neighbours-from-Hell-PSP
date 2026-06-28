@@ -5,7 +5,7 @@
 #include "../../objects/scene_manager.h"
 
 static const char* const music_bindings[] = {
-    [MUSIC_DNTRNK] = "assets/music/dntrnk.at3",
+    [MUSIC_DNTRNK] = "assets_my/music/dntrnk.at3",
     [MUSIC_TITEL] = "assets_thq/music/titel.at3",
     [MUSIC_JINGLE_LEVELSTART] = "assets_thq/music/jingle_levelstart.at3",
     [MUSIC_INGAME1_NORMAL] = "assets_thq/music/ingame1_normal.at3",
