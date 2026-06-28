@@ -64,16 +64,16 @@ static void update(void) {
 static void draw(void) {
     g2dClear(BLACK);
 
-    g2d_DrawImageEasy(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_BLUEHIGB_10, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_10, 0);
     intraFontPrint(Font_BLUEHIGB_10, 4, 262 + intraFontTextHeight(Font_BLUEHIGB_10), "Version 0.2.0 INDEV");
 
     if (is_jwd) {
-        g2d_DrawImage(jwd, 168, 80, 144, 68, WHITE, 0, 0, 144, 68, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(jwd, 168, 80, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Sprite_NFH_LOGO, 181, 48, 120, 84, WHITE, 0, 0, 120, 84, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_NFH_LOGO, 181, 48, WHITE, 0, 255, G2D_UP_LEFT);
 
         intraFontSetStyle(Font_ACMESA, 1, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
         intraFontActivate(Font_ACMESA, 0);

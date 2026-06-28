@@ -588,20 +588,20 @@ void neighbour_update(Neighbour* neighbour) {
 }
 
 void neighbour_draw(const Neighbour* neighbour) {
-    g2d_DrawImage(neighbour->spritelists[neighbour->current_spritelist], neighbour->x + neighbour->sprite_offset_x - camera_x, neighbour->y + neighbour->sprite_offset_y - camera_y, neighbour->sprite_w, neighbour->sprite_h, WHITE, neighbour->sprite_src_x, neighbour->sprite_src_y, neighbour->sprite_w, neighbour->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(neighbour->spritelists[neighbour->current_spritelist], neighbour->x + neighbour->sprite_offset_x - camera_x, neighbour->y + neighbour->sprite_offset_y - camera_y, neighbour->sprite_w, neighbour->sprite_h, WHITE, neighbour->sprite_src_x, neighbour->sprite_src_y, neighbour->sprite_w, neighbour->sprite_h, 0, 255, G2D_UP_LEFT);
 }
 
 void neighbour_door_draw(const Neighbour* neighbour) {
     // Enter Door
-    g2d_DrawImage(neighbour->spritelists[neighbour->current_spritelist], neighbour->x + neighbour->sprite_offset_x - camera_x, neighbour->y + neighbour->sprite_offset_y - camera_y, neighbour->sprite_w, neighbour->sprite_h, WHITE, neighbour->sprite_src_x, neighbour->sprite_src_y, neighbour->sprite_w, neighbour->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(neighbour->spritelists[neighbour->current_spritelist], neighbour->x + neighbour->sprite_offset_x - camera_x, neighbour->y + neighbour->sprite_offset_y - camera_y, neighbour->sprite_w, neighbour->sprite_h, WHITE, neighbour->sprite_src_x, neighbour->sprite_src_y, neighbour->sprite_w, neighbour->sprite_h, 0, 255, G2D_UP_LEFT);
 
     // Destination Door
-    g2d_DrawImage(neighbour->spritelists[neighbour->dest_door_current_spritelist], neighbour->dest_door_sprite_x + neighbour->dest_door_sprite_offset_x - camera_x, neighbour->dest_door_sprite_y + neighbour->dest_door_sprite_offset_y - camera_y, neighbour->dest_door_sprite_w, neighbour->dest_door_sprite_h, WHITE, neighbour->dest_door_sprite_src_x, neighbour->dest_door_sprite_src_y, neighbour->dest_door_sprite_w, neighbour->dest_door_sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(neighbour->spritelists[neighbour->dest_door_current_spritelist], neighbour->dest_door_sprite_x + neighbour->dest_door_sprite_offset_x - camera_x, neighbour->dest_door_sprite_y + neighbour->dest_door_sprite_offset_y - camera_y, neighbour->dest_door_sprite_w, neighbour->dest_door_sprite_h, WHITE, neighbour->dest_door_sprite_src_x, neighbour->dest_door_sprite_src_y, neighbour->dest_door_sprite_w, neighbour->dest_door_sprite_h, 0, 255, G2D_UP_LEFT);
 }
 
 void neighbour_draw_ui(const Neighbour* neighbour) {
     // Head Icon
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 3, 230, 47, 42, WHITE, neighbour->head_icon_src_x, 80, 47, 42, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 3, 230, 47, 42, WHITE, neighbour->head_icon_src_x, 80, 47, 42, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_ORANGE_BREAKDOWNS, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGC_24, 1);
@@ -609,7 +609,7 @@ void neighbour_draw_ui(const Neighbour* neighbour) {
 
     // Bubble Icon
     if (neighbour->bubble_show) {
-        g2d_DrawImage(SpriteList_BUBBLES, 0, 193, 46, 37, WHITE, neighbour->bubble_sprite_src_x, neighbour->bubble_sprite_src_y, 46, 37, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteList_BUBBLES, 0, 193, 46, 37, WHITE, neighbour->bubble_sprite_src_x, neighbour->bubble_sprite_src_y, 46, 37, 0, 255, G2D_UP_LEFT);
     }
 }
 

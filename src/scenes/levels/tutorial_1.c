@@ -482,10 +482,10 @@ static void draw(void) {
     g2dClear(BLACK);
 
     // Отрисовка дома
-    g2d_DrawImageEasy(houseBg1, -camera_x, -camera_y, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(houseBg1, -camera_x, -camera_y, WHITE, 0, 255, G2D_UP_LEFT);
 
     if (camera_x > 32)
-        g2d_DrawImageEasy(houseBg2, 512 - camera_x, -camera_y, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(houseBg2, 512 - camera_x, -camera_y, WHITE, 0, 255, G2D_UP_LEFT);
 
     // Отрисовка дверей
 
@@ -505,7 +505,7 @@ static void draw(void) {
                 current_door->sprite_y >= camera_bottom)
                 continue;
 
-            g2d_DrawImage(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
         }
     }
 
@@ -523,7 +523,7 @@ static void draw(void) {
                 current_door->sprite_y >= camera_bottom)
                 continue;
 
-            g2d_DrawImage(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
         }
     }
 
@@ -542,7 +542,7 @@ static void draw(void) {
                     current_door->sprite_y >= camera_bottom)
                     continue;
 
-                g2d_DrawImage(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
+                g2d_DrawImageExt(current_door->spritelist, current_door->sprite_x - camera_x, current_door->sprite_y - camera_y, current_door->sprite_w, current_door->sprite_h, WHITE, current_door->sprite_src_x, current_door->sprite_src_y, current_door->sprite_w, current_door->sprite_h, 0, 255, G2D_UP_LEFT);
             }
         }
     }
@@ -561,7 +561,7 @@ static void draw(void) {
                 current_look_object->sprite_y >= camera_bottom)
                 continue;
 
-            g2d_DrawImage(current_look_object->spritelist, current_look_object->sprite_x - camera_x, current_look_object->sprite_y - camera_y, current_look_object->sprite_w, current_look_object->sprite_h, WHITE, current_look_object->sprite_src_x, current_look_object->sprite_src_y, current_look_object->sprite_w, current_look_object->sprite_h, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(current_look_object->spritelist, current_look_object->sprite_x - camera_x, current_look_object->sprite_y - camera_y, current_look_object->sprite_w, current_look_object->sprite_h, WHITE, current_look_object->sprite_src_x, current_look_object->sprite_src_y, current_look_object->sprite_w, current_look_object->sprite_h, 0, 255, G2D_UP_LEFT);
         }
     }
 
@@ -582,7 +582,7 @@ static void draw(void) {
                 current_storage->sprite_y >= camera_bottom)
                 continue;
 
-            g2d_DrawImage(current_storage->spritelist, current_storage->sprite_x - camera_x, current_storage->sprite_y - camera_y, current_storage->sprite_w, current_storage->sprite_h, WHITE, current_storage->sprite_src_x, current_storage->sprite_src_y, current_storage->sprite_w, current_storage->sprite_h, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(current_storage->spritelist, current_storage->sprite_x - camera_x, current_storage->sprite_y - camera_y, current_storage->sprite_w, current_storage->sprite_h, WHITE, current_storage->sprite_src_x, current_storage->sprite_src_y, current_storage->sprite_w, current_storage->sprite_h, 0, 255, G2D_UP_LEFT);
         }
     }
 
@@ -599,7 +599,7 @@ static void draw(void) {
     // Отрисовка UI
 
     // UI BG
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 0, 192, 480, 80, WHITE, 0, 0, 480, 80, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 0, 192, 480, 80, WHITE, 0, 0, 480, 80, 0, 255, G2D_UP_LEFT);
 
     woody_draw_ui(woody);
 
@@ -607,7 +607,7 @@ static void draw(void) {
 
     if (pause_button_pressed && !intro->draw_intro) {
         // Pause Button
-        g2d_DrawImage(SpriteAtlas_INGAMEUI, 450, 208, 20, 20, WHITE, 480, 0, 20, 20, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 450, 208, 20, 20, WHITE, 480, 0, 20, 20, 0, 255, G2D_UP_LEFT);
     }
 
     if (tutorial_active)

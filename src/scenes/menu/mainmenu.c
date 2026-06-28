@@ -128,7 +128,7 @@ static void new_game_menu_update(void) {
 static void new_game_menu_draw(void) {
     g2dClear(BLACK);
 
-    g2d_DrawImage(BG_NEW_GAME, 0, 129, 480, 80, WHITE, 0, 129, 480, 80, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 0, 129, 480, 80, WHITE, 0, 129, 480, 80, 0, 255, G2D_UP_LEFT);
 
     // Описание уровня
     intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -164,8 +164,8 @@ static void new_game_menu_draw(void) {
         intraFontPrint(Font_BLUEHIGB_10, 253, 209 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "навестить соседушку...");
     }
 
-    g2d_DrawImage(BG_NEW_GAME, 0, 0, 480, 129, WHITE, 0, 0, 480, 129, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImage(BG_NEW_GAME, 0, 209, 480, 63, WHITE, 0, 209, 480, 63, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 0, 0, 480, 129, WHITE, 0, 0, 480, 129, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 0, 209, 480, 63, WHITE, 0, 209, 480, 63, 0, 255, G2D_UP_LEFT);
 
     // Подпись к иконке
     intraFontSetStyle(Font_BLUEHIGH_8, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -232,12 +232,12 @@ static void new_game_menu_draw(void) {
     intraFontPrint(Font_BLUEHIGB_10, 352, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0%");
 
     if (tutorial_selected) {
-        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 255, 240, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 260, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 265, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 270, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 255, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 260, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 265, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 270, 240, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
     // Квота
@@ -284,8 +284,8 @@ static void new_game_menu_draw(void) {
         intraFontPrint(Font_BLUEHIGH_8, 345, 104+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "пропускать.");
     }
 
-    g2d_DrawImage(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CROSS
-    g2d_DrawImage(SpriteList_BUTTONS, 71 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
+    g2d_DrawImageExt(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CROSS
+    g2d_DrawImageExt(SpriteList_BUTTONS, 71 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
 
 
     // Название уровня
@@ -301,17 +301,17 @@ static void new_game_menu_draw(void) {
     }
 
     if (tutorial_selected) {
-        g2d_DrawImage(Icon_tutorial_1, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_tutorial_1, 253, 55, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Icon_level_peep, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_level_peep, 253, 55, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
     if (tutorial_selected) {
-        g2d_DrawImage(Button_tut1_normal_pressed, 71, 39, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Button_peep_normal, 71, 84, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_tut1_normal_pressed, 71, 39, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_peep_normal, 71, 84, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Button_tut1_normal, 71, 39, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Button_peep_normal_pressed, 71, 84, 40, 29, WHITE, 0, 0, 40, 29, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_tut1_normal, 71, 39, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Button_peep_normal_pressed, 71, 84, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
     g2dFlip(G2D_VSYNC);
@@ -337,7 +337,7 @@ static void authors_menu_update(void) {
 static void authors_menu_draw(void) {
     g2dClear(BLACK);
 
-    g2d_DrawImageEasy(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_BLUEHIGB_18, 0.661f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 1);
@@ -345,7 +345,7 @@ static void authors_menu_draw(void) {
     intraFontPrint(Font_BLUEHIGB_18, 62, 56 + intraFontTextHeight(Font_BLUEHIGB_18), "Версию для PSP сделал: dntrnk");
 
     intraFontPrint(Font_BLUEHIGB_18, 326, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "вернуться в меню");
-    g2d_DrawImage(SpriteList_BUTTONS, 300, 35, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
+    g2d_DrawImageExt(SpriteList_BUTTONS, 300, 35, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
 
     intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_10, 0);
@@ -470,15 +470,15 @@ static void mainmenu_draw(void) {
     g2dClear(BLACK);
 
     // BG
-    g2d_DrawImage(SpriteAtlas_MENU_SPRITES, 0, 0, 480, 272, WHITE, 0, 72, 480, 272, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 0, 0, 480, 272, WHITE, 0, 72, 480, 272, 0, 255, G2D_UP_LEFT);
 
     // Logo
-    g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, 120, 84, WHITE, 0, 0, 120, 84, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
 
     // Отрисовка кнопок, состояние кнопки совпадает со спрайтом (не выбран/выбран/нажат)
-    g2d_DrawImage(SpriteAtlas_MENU_SPRITES, 173, 130, 150, 24, WHITE, ctx.menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImage(SpriteAtlas_MENU_SPRITES, 173, 155, 150, 24, WHITE, ctx.menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImage(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, ctx.menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 130, 150, 24, WHITE, ctx.menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 155, 150, 24, WHITE, ctx.menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, ctx.menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA, 1);

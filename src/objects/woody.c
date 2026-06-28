@@ -1287,11 +1287,11 @@ void woody_update(Woody* woody) {
 }
 
 void woody_draw(const Woody* woody) {
-    g2d_DrawImage(woody->spritelists[woody->current_spritelist], woody->x + woody->sprite_offset_x - 179 - camera_x, woody->y + woody->sprite_offset_y - 165 - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(woody->spritelists[woody->current_spritelist], woody->x + woody->sprite_offset_x - 179 - camera_x, woody->y + woody->sprite_offset_y - 165 - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
 
     if (woody->look_object_phrase_show) {
         // Bubble Bottom
-        g2d_DrawImage(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - 27, 120, 27, WHITE, 0, 398, 120, 27, 0, 235, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - 27, 120, 27, WHITE, 0, 398, 120, 27, 0, 235, G2D_UP_LEFT);
 
         // Bubble Center
         g2d_DrawRectFilled(woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
@@ -1303,7 +1303,7 @@ void woody_draw(const Woody* woody) {
         g2d_DrawRectFilled(woody->x - camera_x + 105, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
 
         // Bubble Top
-        g2d_DrawImage(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 39, 120, 12, WHITE, 275, 293, 120, 12, 0, 235, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 39, 120, 12, WHITE, 275, 293, 120, 12, 0, 235, G2D_UP_LEFT);
 
         for (int i = 0; i < 2; i++) {
             intraFontSetStyle(Font_ACMESA, 0.65, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
@@ -1315,10 +1315,10 @@ void woody_draw(const Woody* woody) {
 
 void woody_door_draw(const Woody* woody) {
     // Enter Door
-    g2d_DrawImage(woody->spritelists[woody->current_spritelist], woody->enter_door_sprite_x + woody->sprite_offset_x - camera_x, woody->enter_door_sprite_y + woody->sprite_offset_y - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(woody->spritelists[woody->current_spritelist], woody->enter_door_sprite_x + woody->sprite_offset_x - camera_x, woody->enter_door_sprite_y + woody->sprite_offset_y - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
 
     // Destination Door
-    g2d_DrawImage(woody->spritelists[woody->dest_door_current_spritelist], woody->dest_door_sprite_x + woody->dest_door_sprite_offset_x - camera_x, woody->dest_door_sprite_y + woody->dest_door_sprite_offset_y - camera_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, WHITE, woody->dest_door_sprite_src_x, woody->dest_door_sprite_src_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(woody->spritelists[woody->dest_door_current_spritelist], woody->dest_door_sprite_x + woody->dest_door_sprite_offset_x - camera_x, woody->dest_door_sprite_y + woody->dest_door_sprite_offset_y - camera_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, WHITE, woody->dest_door_sprite_src_x, woody->dest_door_sprite_src_y, woody->dest_door_sprite_w, woody->dest_door_sprite_h, 0, 255, G2D_UP_LEFT);
 }
 
 void woody_draw_ui(const Woody* woody) {
@@ -1338,15 +1338,15 @@ void woody_draw_ui(const Woody* woody) {
 
                 switch (current_hint.button_type) {
                     case SQUARE:
-                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 23, 23, 23, 0, 255, G2D_UP_LEFT);
+                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 23, 23, 23, 0, 255, G2D_UP_LEFT);
 
                         break;
                     case CROSS:
-                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT);
+                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT);
 
                         break;
                     case CIRCLE:
-                            g2d_DrawImage(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT);
+                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT);
 
                         break;
                 }
@@ -1391,7 +1391,7 @@ void woody_draw_ui(const Woody* woody) {
             }
             src_x %= 495;
 
-            g2d_DrawImage(current_spritelist, 99 + i * 45, 235, 45, 34, WHITE, src_x, src_y, 45, 34, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(current_spritelist, 99 + i * 45, 235, 45, 34, WHITE, src_x, src_y, 45, 34, 0, 255, G2D_UP_LEFT);
         }
     }
 

@@ -30,8 +30,8 @@ static void update(void) {
 static void draw(void) {
     g2dClear(BLACK);
 
-    g2d_DrawImageEasy(dntrnk, 176, 72, WHITE, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageEasy(dntrnk_text, 198, 216, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(dntrnk, 176, 72, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(dntrnk_text, 198, 216, WHITE, 0, 255, G2D_UP_LEFT);
 
     g2dFlip(G2D_VSYNC);
 }

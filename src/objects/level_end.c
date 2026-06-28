@@ -76,7 +76,7 @@ void level_end_update(LevelEnd* level_end) {
 void level_end_draw(const LevelEnd* level_end) {
     if (level_end->counter != 0) return;
 
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 103, 18, 275, 198, WHITE, 0, 122, 275, 198, 0, 240, G2D_UP_LEFT); // TV BG
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 103, 18, 275, 198, WHITE, 0, 122, 275, 198, 0, 240, G2D_UP_LEFT); // TV BG
 
     intraFontSetStyle(Font_ACMESA_17_9, 0.73, LEVEL_END_GREEN, 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA_17_9, 0);
@@ -105,14 +105,14 @@ void level_end_draw(const LevelEnd* level_end) {
 
     // Кнопки
     // Переснять
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 198, 173, 68, 12, level_end->buttons_colors[BUTTON_RESTART], 185, 80, 68, 12, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 198, 173, 68, 12, level_end->buttons_colors[BUTTON_RESTART], 185, 80, 68, 12, 0, 255, G2D_UP_LEFT);
         
     intraFontSetStyle(Font_ACMESA, 0.65, level_end->buttons_colors[BUTTON_RESTART], 0, 0, INTRAFONT_ALIGN_CENTER); // Потом на ALIGN_CENTER сменить надо бы
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 232, 175 + intraFontTextHeight(Font_ACMESA), "Переснять");
 
     // Ок
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 274, 173, 68, 12, level_end->buttons_colors[BUTTON_OK], 185, 80, 68, 12, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 274, 173, 68, 12, level_end->buttons_colors[BUTTON_OK], 185, 80, 68, 12, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_ACMESA, 0.65, level_end->buttons_colors[BUTTON_OK], 0, 0, INTRAFONT_ALIGN_CENTER); // Потом на ALIGN_CENTER сменить надо бы тоже
     intraFontPrint(Font_ACMESA, 308, 175 + intraFontTextHeight(Font_ACMESA), "Ок");

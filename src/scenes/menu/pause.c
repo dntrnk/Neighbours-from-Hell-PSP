@@ -92,7 +92,7 @@ static void draw(void) {
     g2dClear(BLACK);
 
     // Правая половина (копирка newgame)
-    g2d_DrawImage(BG_NEW_GAME, 240, 129, 240, 80, WHITE, 240, 129, 240, 80, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 240, 129, 240, 80, WHITE, 240, 129, 240, 80, 0, 255, G2D_UP_LEFT);
 
     // Описание уровня
     intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -128,8 +128,8 @@ static void draw(void) {
         intraFontPrint(Font_BLUEHIGB_10, 253, 209 + intraFontTextHeight(Font_BLUEHIGB_10) + scroll_y, "навестить соседушку...");
     }
 
-    g2d_DrawImage(BG_NEW_GAME, 240, 0, 240, 129, WHITE, 240, 0, 240, 129, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImage(BG_NEW_GAME, 240, 209, 240, 63, WHITE, 240, 209, 240, 63, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 240, 0, 240, 129, WHITE, 240, 0, 240, 129, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(BG_NEW_GAME, 240, 209, 240, 63, WHITE, 240, 209, 240, 63, 0, 255, G2D_UP_LEFT);
 
     // Подпись к иконке
     intraFontSetStyle(Font_BLUEHIGH_8, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -178,12 +178,12 @@ static void draw(void) {
     intraFontPrint(Font_BLUEHIGB_10, 352, 239 + intraFontTextHeight(Font_BLUEHIGB_10), "0%");
 
     if (tutorial_selected) {
-        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 255, 240, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Sprite_Punkt, 255, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 260, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 265, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
-        g2d_DrawImage(Sprite_Punkt, 270, 240, 4, 5, WHITE, 0, 0, 4, 5, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 255, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 260, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 265, 240, WHITE, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Sprite_Punkt, 270, 240, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
     // Квота
@@ -229,7 +229,7 @@ static void draw(void) {
         intraFontPrint(Font_BLUEHIGH_8, 345, 104+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "пропускать.");
     }
 
-    g2d_DrawImage(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
+    g2d_DrawImageExt(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
 
     // Название уровня
     intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -244,13 +244,13 @@ static void draw(void) {
     }
 
     if (tutorial_selected) {
-        g2d_DrawImage(Icon_tutorial_1, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_tutorial_1, 253, 55, WHITE, 0, 255, G2D_UP_LEFT);
     } else {
-        g2d_DrawImage(Icon_level_peep, 253, 55, 67, 64, WHITE, 0, 0, 67, 64, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImage(Icon_level_peep, 253, 55, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
     // Левая половина
-    g2d_DrawImageEasy(BG_INGAME_MENU, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(BG_INGAME_MENU, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_ACMESA, 1);

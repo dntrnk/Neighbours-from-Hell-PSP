@@ -90,18 +90,18 @@ void tutorial_update(Tutorial* tutorial) {
 
 void tutorial_draw(const Tutorial* tutorial) {
     // tutorial_base
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 0, 0, 480, 59, WHITE, 0, 320, 480, 59, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 0, 0, 480, 59, WHITE, 0, 320, 480, 59, 0, 255, G2D_UP_LEFT);
 
     // tutorial_center
     int draw_y = 36;
 
     for (int i = 0; i < tutorial->window_size; i++) {
-        g2d_DrawImage(SpriteAtlas_INGAMEUI, 62, draw_y, 418, 3, WHITE, 0, 379, 418, 3, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 62, draw_y, 418, 3, WHITE, 0, 379, 418, 3, 0, 255, G2D_UP_LEFT);
         draw_y += 3;
     }
 
     // tutorial_bottom
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 61, draw_y, 419, 16, WHITE, 0, 382, 419, 16, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 61, draw_y, 419, 16, WHITE, 0, 382, 419, 16, 0, 255, G2D_UP_LEFT);
 
     // Text
     intraFontSetStyle(Font_BLUEHIGB_10, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -113,7 +113,7 @@ void tutorial_draw(const Tutorial* tutorial) {
     }
 
     // Joe
-    g2d_DrawImage(SpriteAtlas_INGAMEUI, 8 + tutorial->sprite_offset_x, 2 + tutorial->sprite_offset_y, tutorial->sprite_w, tutorial->sprite_h, WHITE, tutorial->sprite_src_x, tutorial->sprite_src_y, tutorial->sprite_w, tutorial->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 8 + tutorial->sprite_offset_x, 2 + tutorial->sprite_offset_y, tutorial->sprite_w, tutorial->sprite_h, WHITE, tutorial->sprite_src_x, tutorial->sprite_src_y, tutorial->sprite_w, tutorial->sprite_h, 0, 255, G2D_UP_LEFT);
 }
 
 void tutorial_unload(Tutorial* tutorial) {

@@ -134,15 +134,15 @@ int intro_update(Intro* intro) {
 
 void intro_draw_loading(int progress) {
     // Loading BG
-    g2d_DrawImage(SpriteAtlas_INTRO, 0, 0, 480, 272, WHITE, 0, 0, 480, 272, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INTRO, 0, 0, 480, 272, WHITE, 0, 0, 480, 272, 0, 255, G2D_UP_LEFT);
 
     // Progressbar
-    g2d_DrawImage(SpriteAtlas_INTRO, 147, 216, 186, 26, WHITE, 0, 272, 186, 26, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_INTRO, 147, 216, 186, 26, WHITE, 0, 272, 186, 26, 0, 255, G2D_UP_LEFT);
 
     if (progress != 0)
-        g2d_DrawImage(SpriteAtlas_INTRO, 147, 216, progress, 26, WHITE, 0, 298, progress, 26, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INTRO, 147, 216, progress, 26, WHITE, 0, 298, progress, 26, 0, 255, G2D_UP_LEFT);
 
-    g2d_DrawImage(Sprite_LOADING_TEXT_DATA, 175, 250, 131, 11, WHITE, 0, 0, 131, 11, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(Sprite_LOADING_TEXT_DATA, 175, 250, WHITE, 0, 255, G2D_UP_LEFT);
 }
 
 void intro_draw(const Intro* intro) {
@@ -153,7 +153,7 @@ void intro_draw(const Intro* intro) {
 
         // JWD Logo
         if (intro->timer < 250) {
-            g2d_DrawImage(SpriteAtlas_INTRO, 120, intro->jwd_logo_y, 240, 129, WHITE, 0, 324, 240, 129, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImageExt(SpriteAtlas_INTRO, 120, intro->jwd_logo_y, 240, 129, WHITE, 0, 324, 240, 129, 0, 255, G2D_UP_LEFT);
 
             // in_episode shadow
             intraFontSetStyle(Font_ACMESAI_13, 0.7f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -176,7 +176,7 @@ void intro_draw(const Intro* intro) {
         }
 
         if (intro->timer > 192)
-            g2d_DrawImage(Sprite_NFH_LOGO, intro->nfh_logo_x, intro->nfh_logo_y, 120, 84, WHITE, 0, 0, 120, 84, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImage(Sprite_NFH_LOGO, intro->nfh_logo_x, intro->nfh_logo_y, WHITE, 0, 255, G2D_UP_LEFT);
 
         if (intro->timer > 340) {
             // а может всё-таки сделать функции-обёртки

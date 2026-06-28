@@ -215,7 +215,7 @@ void sign_draw(const Sign* sign) {
         sign->y + sign->sprite_h <= camera_y)
         return;
     
-    g2d_DrawImage(sign->spritelist, sign->x + sign->sprite_offset_x - camera_x, sign->y + sign->sprite_offset_y - camera_y, sign->sprite_w, sign->sprite_h, WHITE, sign->sprite_src_x, sign->sprite_src_y, sign->sprite_w, sign->sprite_h, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(sign->spritelist, sign->x + sign->sprite_offset_x - camera_x, sign->y + sign->sprite_offset_y - camera_y, sign->sprite_w, sign->sprite_h, WHITE, sign->sprite_src_x, sign->sprite_src_y, sign->sprite_w, sign->sprite_h, 0, 255, G2D_UP_LEFT);
 }
 
 void sign_unload(Sign* sign) {

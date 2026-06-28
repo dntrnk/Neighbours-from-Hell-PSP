@@ -9,7 +9,7 @@ void g2d_FreeImage(g2dImage* image) {
         g2dTexFree(&image);
 }
 
-void g2d_DrawImage(g2dImage* tex, int x, int y, int w, int h, g2dColor color, int srcx, int srcy, int srcw, int srch, int r, int a, g2dCoord_Mode mode) {
+void g2d_DrawImageExt(g2dImage* tex, int x, int y, int w, int h, g2dColor color, int srcx, int srcy, int srcw, int srch, int r, int a, g2dCoord_Mode mode) {
     g2dBeginRects(tex);
     g2dSetCoordMode(mode);
     g2dSetCoordXY(x, y);
@@ -23,7 +23,7 @@ void g2d_DrawImage(g2dImage* tex, int x, int y, int w, int h, g2dColor color, in
     g2dEnd();
 }
 
-void g2d_DrawImageEasy(g2dImage* tex, int x, int y, g2dColor color, int r, int a, g2dCoord_Mode mode) {
+void g2d_DrawImage(g2dImage* tex, int x, int y, g2dColor color, int r, int a, g2dCoord_Mode mode) {
     g2dBeginRects(tex);
     g2dSetCoordMode(mode);
     g2dSetCoordXY(x, y);
