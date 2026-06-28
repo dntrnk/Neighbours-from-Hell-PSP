@@ -11,8 +11,8 @@ static g2dImage* dntrnk_text;
 static int i;
 
 static void init(void) {
-    dntrnk = g2d_LoadImage("assets/sprites/ui/menu/dntrnk.png", G2D_CLUT4);
-    dntrnk_text = g2d_LoadImage("assets/sprites/ui/menu/dntrnkText.png", G2D_CLUT4);
+    dntrnk = g2d_LoadImage("assets_my/sprites/ui/menu/dntrnk.png", G2D_CLUT4);
+    dntrnk_text = g2d_LoadImage("assets_my/sprites/ui/menu/dntrnkText.png", G2D_CLUT4);
 
     i = 0;
 

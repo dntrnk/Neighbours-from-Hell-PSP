@@ -1,0 +1,184 @@
+{
+	"game_version": "0.2.0",
+
+	"episode_name": "Сделал гадость - сердцу радость",
+    "houseBg1": "assets_thq/sprites/house/house13a.png",
+    "houseBg2": "assets_thq/sprites/house/house13b.png",
+    
+    "rooms": [
+		{"room": "ROOM_KIT", "x1": 393, "x2": 599, "floor": 115},
+		{"room": "ROOM_LIR", "x1": 40, "x2": 336, "floor": 113},
+		{"room": "ROOM_ANC", "x1": 158, "x2": 532, "floor": 254},
+		{"room": "ROOM_FRO", "x1": 591, "x2": 900, "floor": 255},
+		{"room": "ROOM_TOI", "x1": 18, "x2": 92, "floor": 254}
+	],
+
+	"min_quota": 50,
+    "total_tricks": 4,
+
+	"camera_limit_x": 234,
+	"camera_limit_y": 147,
+
+	"woody_start_x": 756,
+	"woody_start_y": 255,
+
+	"hDoors": [
+		{
+			"sprite_x": 422,
+			"sprite_y": 76,
+			"sprite_src_x": 423,
+			"sprite_src_y": 287,
+			"sprite_w": 17,
+			"sprite_h": 94,
+			"room": "ROOM_KIT",
+			"side": 0,
+			"collision_x": 393,
+			"exit_x": 400,
+			"dest_door_room": "ROOM_LIR",
+			"dest_door_id": 1
+		},
+
+		{
+			"sprite_x": 401,
+			"sprite_y": 76,
+			"sprite_src_x": 423,
+			"sprite_src_y": 101,
+			"sprite_w": 14,
+			"sprite_h": 94,
+			"room": "ROOM_LIR",
+			"side": 1,
+			"collision_x": 336,
+			"exit_x": 332,
+			"dest_door_room": "ROOM_KIT",
+			"dest_door_id": 0
+		},
+
+		{
+			"sprite_x": 181,
+			"sprite_y": 218,
+			"sprite_src_x": 423,
+			"sprite_src_y": 287,
+			"sprite_w": 17,
+			"sprite_h": 94,
+			"room": "ROOM_ANC",
+			"side": 0,
+			"collision_x": 160,
+			"exit_x": 160,
+			"dest_door_room": "ROOM_TOI",
+			"dest_door_id": 1
+		},
+
+		{
+			"sprite_x": 599,
+			"sprite_y": 219,
+			"sprite_src_x": 423,
+			"sprite_src_y": 101,
+			"sprite_w": 14,
+			"sprite_h": 94,
+			"room": "ROOM_ANC",
+			"side": 1,
+			"collision_x": 532,
+			"exit_x": 526,
+			"dest_door_room": "ROOM_FRO",
+			"dest_door_id": 0
+		},
+
+		{
+			"sprite_x": 620,
+			"sprite_y": 218,
+			"sprite_src_x": 423,
+			"sprite_src_y": 287,
+			"sprite_w": 17,
+			"sprite_h": 94,
+			"room": "ROOM_FRO",
+			"side": 0,
+			"collision_x": 591,
+			"exit_x": 594,
+			"dest_door_room": "ROOM_ANC",
+			"dest_door_id": 1
+		},
+
+		{
+			"sprite_x": 161,
+			"sprite_y": 218,
+			"sprite_src_x": 423,
+			"sprite_src_y": 101,
+			"sprite_w": 14,
+			"sprite_h": 94,
+			"room": "ROOM_TOI",
+			"side": 1,
+			"collision_x": 92,
+			"exit_x": 92,
+			"dest_door_room": "ROOM_ANC",
+			"dest_door_id": 0
+		}
+	],
+
+	"vDoors": [
+		{
+			"sprite_x": 523,
+			"sprite_y": 69,
+			"sprite_src_x": 92,
+			"sprite_src_y": 77,
+			"sprite_w": 46,
+			"sprite_h": 67,
+			"room": "ROOM_KIT",
+			"collision_x": 494,
+			"collision_y": 92,
+			"dest_door_room": "ROOM_ANC",
+			"dest_door_id": 1
+		},
+
+		{
+			"sprite_x": 219,
+			"sprite_y": 66,
+			"sprite_src_x": 92,
+			"sprite_src_y": 77,
+			"sprite_w": 46,
+			"sprite_h": 67,
+			"room": "ROOM_LIR",
+			"collision_x": 190,
+			"collision_y": 88,
+			"dest_door_room": "ROOM_ANC",
+			"dest_door_id": 0
+		},
+
+		{
+			"sprite_x": 224,
+			"sprite_y": 208,
+			"sprite_src_x": 92,
+			"sprite_src_y": 77,
+			"sprite_w": 46,
+			"sprite_h": 67,
+			"room": "ROOM_ANC",
+			"collision_x": 195,
+			"collision_y": 230,
+			"dest_door_room": "ROOM_LIR",
+			"dest_door_id": 0
+		},
+
+		{
+			"sprite_x": 530,
+			"sprite_y": 208,
+			"sprite_src_x": 92,
+			"sprite_src_y": 77,
+			"sprite_w": 46,
+			"sprite_h": 67,
+			"room": "ROOM_ANC",
+			"collision_x": 501,
+			"collision_y": 230,
+			"dest_door_room": "ROOM_KIT",
+			"dest_door_id": 0
+		}
+	],
+
+	"hideouts": [
+		{
+			"room": "ROOM_ANC",
+			"collision_x": 303,
+			"collision_y": 240,
+			"hint_enter_text": "Спрятаться в шкафу",
+			"hint_exit_text": "Выйти из шкафа"
+		}
+	]
+}

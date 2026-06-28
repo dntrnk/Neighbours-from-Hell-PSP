@@ -117,49 +117,49 @@ int main(void) {
     controls_init();
     AalibInit();
 
-    SpriteAtlas_MENU_SPRITES = g2d_LoadImage("assets/sprites/ui/menu/menusprites.png", G2D_RGBA8888);
-    SpriteAtlas_INTRO = g2d_LoadImage("assets/sprites/ui/menu/intro.png", G2D_RGBA8888);
-    SpriteAtlas_INGAMEUI = g2d_LoadImage("assets/sprites/ui/ingame/ingameui.png", G2D_CLUT8); 
-    SpriteAtlas_STORAGES = g2d_LoadImage("assets/sprites/storages/storages.png", G2D_RGBA8888);
+    SpriteAtlas_MENU_SPRITES = g2d_LoadImage("assets_thq/sprites/ui/menu/menusprites.png", G2D_RGBA8888);
+    SpriteAtlas_INTRO = g2d_LoadImage("assets_thq/sprites/ui/menu/intro.png", G2D_RGBA8888);
+    SpriteAtlas_INGAMEUI = g2d_LoadImage("assets_thq/sprites/ui/ingame/ingameui.png", G2D_CLUT8); 
+    SpriteAtlas_STORAGES = g2d_LoadImage("assets_thq/sprites/storages/storages.png", G2D_RGBA8888);
 
-    BG_CINEMA = g2d_LoadImage("assets/sprites/ui/menu/credits.png", G2D_CLUT8);
-    BG_NEW_GAME = g2d_LoadImage("assets/sprites/ui/menu/newgame.png", G2D_RGBA8888);
-    BG_INGAME_MENU = g2d_LoadImage("assets/sprites/ui/menu/ingamemenu.png", G2D_RGBA8888);
+    BG_CINEMA = g2d_LoadImage("assets_thq/sprites/ui/menu/credits.png", G2D_CLUT8);
+    BG_NEW_GAME = g2d_LoadImage("assets_thq/sprites/ui/menu/newgame.png", G2D_RGBA8888);
+    BG_INGAME_MENU = g2d_LoadImage("assets_thq/sprites/ui/menu/ingamemenu.png", G2D_RGBA8888);
 
-    SpriteList_WOODY_GENERIC = g2d_LoadImage("assets/sprites/woody/generic.png", G2D_CLUT8); 
+    SpriteList_WOODY_GENERIC = g2d_LoadImage("assets_thq/sprites/woody/generic.png", G2D_CLUT8); 
 
-    SpriteList_NEIGHBOUR_GENERIC = g2d_LoadImage("assets/sprites/neighbour/generic.png", G2D_CLUT8); 
+    SpriteList_NEIGHBOUR_GENERIC = g2d_LoadImage("assets_thq/sprites/neighbour/generic.png", G2D_CLUT8); 
 
-    SpriteList_DOORLEFT = g2d_LoadImage("assets/sprites/doorleft/generic.png", G2D_CLUT8); 
-    SpriteList_DOORRIGHT = g2d_LoadImage("assets/sprites/doorright/generic.png", G2D_CLUT8); 
-    SpriteList_DOORBACK = g2d_LoadImage("assets/sprites/doorback/generic.png", G2D_CLUT8); 
+    SpriteList_DOORLEFT = g2d_LoadImage("assets_thq/sprites/doorleft/generic.png", G2D_CLUT8); 
+    SpriteList_DOORRIGHT = g2d_LoadImage("assets_thq/sprites/doorright/generic.png", G2D_CLUT8); 
+    SpriteList_DOORBACK = g2d_LoadImage("assets_thq/sprites/doorback/generic.png", G2D_CLUT8); 
 
-    SpriteList_BUBBLES = g2d_LoadImage("assets/sprites/ui/ingame/bubbles.png", G2D_CLUT8); 
-    SpriteList_BUTTONS = g2d_LoadImage("assets/sprites/ui/ingame/buttons.png", G2D_CLUT8); 
-    SpriteList_ITEMS_1 = g2d_LoadImage("assets/sprites/ui/ingame/items1.png", G2D_CLUT8); 
-    SpriteList_ITEMS_2 = g2d_LoadImage("assets/sprites/ui/ingame/items2.png", G2D_CLUT8); 
+    SpriteList_BUBBLES = g2d_LoadImage("assets_thq/sprites/ui/ingame/bubbles.png", G2D_CLUT8); 
+    SpriteList_BUTTONS = g2d_LoadImage("assets_thq/sprites/ui/ingame/buttons.png", G2D_CLUT8); 
+    SpriteList_ITEMS_1 = g2d_LoadImage("assets_thq/sprites/ui/ingame/items1.png", G2D_CLUT8); 
+    SpriteList_ITEMS_2 = g2d_LoadImage("assets_thq/sprites/ui/ingame/items2.png", G2D_CLUT8); 
 
-    Sprite_NFH_LOGO = g2d_LoadImage("assets/sprites/ui/menu/logo.png", G2D_CLUT8);
-    Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
-    Sprite_Punkt = g2d_LoadImage("assets/sprites/ui/menu/punkt.png", G2D_RGBA8888);
+    Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo.png", G2D_CLUT8);
+    Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets_thq/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
+    Sprite_Punkt = g2d_LoadImage("assets_thq/sprites/ui/menu/punkt.png", G2D_RGBA8888);
 
-    Icon_tutorial_1 = g2d_LoadImage("assets/sprites/ui/menu/tutorial_1.png", G2D_CLUT8);
-    Icon_level_peep = g2d_LoadImage("assets/sprites/ui/menu/level_peep.png", G2D_CLUT8);
+    Icon_tutorial_1 = g2d_LoadImage("assets_thq/sprites/ui/menu/tutorial_1.png", G2D_CLUT8);
+    Icon_level_peep = g2d_LoadImage("assets_thq/sprites/ui/menu/level_peep.png", G2D_CLUT8);
 
-    Button_tut1_normal = g2d_LoadImage("assets/sprites/ui/menu/button_tut1_normal.png", G2D_CLUT8);
-    Button_tut1_normal_pressed = g2d_LoadImage("assets/sprites/ui/menu/button_tut1_normal_pressed.png", G2D_CLUT8);
-    Button_peep_normal = g2d_LoadImage("assets/sprites/ui/menu/button_peep_normal.png", G2D_CLUT8);
-    Button_peep_normal_pressed = g2d_LoadImage("assets/sprites/ui/menu/button_peep_normal_pressed.png", G2D_CLUT8);
+    Button_tut1_normal = g2d_LoadImage("assets_thq/sprites/ui/menu/button_tut1_normal.png", G2D_CLUT8);
+    Button_tut1_normal_pressed = g2d_LoadImage("assets_thq/sprites/ui/menu/button_tut1_normal_pressed.png", G2D_CLUT8);
+    Button_peep_normal = g2d_LoadImage("assets_thq/sprites/ui/menu/button_peep_normal.png", G2D_CLUT8);
+    Button_peep_normal_pressed = g2d_LoadImage("assets_thq/sprites/ui/menu/button_peep_normal_pressed.png", G2D_CLUT8);
 
-    Font_BLUEHIGC_11 = intraFontLoadTTF("assets/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 11);
-    Font_BLUEHIGC_24 = intraFontLoadTTF("assets/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 24);
-    Font_BLUEHIGH_8 = intraFontLoadTTF("assets/fonts/bluehigh.ttf", INTRAFONT_STRING_UTF8, 8);
-    Font_BLUEHIGH_10 = intraFontLoadTTF("assets/fonts/bluehigh.ttf", INTRAFONT_STRING_UTF8, 10);
-    Font_BLUEHIGB_10 = intraFontLoadTTF("assets/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 10);
-    Font_BLUEHIGB_18 = intraFontLoadTTF("assets/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 18);
-    Font_ACMESA = intraFontLoadTTF("assets/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 11.f);
-    Font_ACMESA_17_9 = intraFontLoadTTF("assets/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 17.9);
-    Font_ACMESAI_13 = intraFontLoadTTF("assets/fonts/acmesai.ttf", INTRAFONT_STRING_UTF8, 13);
+    Font_BLUEHIGC_11 = intraFontLoadTTF("assets_thq/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 11);
+    Font_BLUEHIGC_24 = intraFontLoadTTF("assets_thq/fonts/bluehigc.ttf", INTRAFONT_STRING_UTF8, 24);
+    Font_BLUEHIGH_8 = intraFontLoadTTF("assets_thq/fonts/bluehigh.ttf", INTRAFONT_STRING_UTF8, 8);
+    Font_BLUEHIGH_10 = intraFontLoadTTF("assets_thq/fonts/bluehigh.ttf", INTRAFONT_STRING_UTF8, 10);
+    Font_BLUEHIGB_10 = intraFontLoadTTF("assets_thq/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 10);
+    Font_BLUEHIGB_18 = intraFontLoadTTF("assets_thq/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 18);
+    Font_ACMESA = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 11.f);
+    Font_ACMESA_17_9 = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 17.9);
+    Font_ACMESAI_13 = intraFontLoadTTF("assets_thq/fonts/acmesai.ttf", INTRAFONT_STRING_UTF8, 13);
 
     NFHSoundPreload(SOUND_BUT1);
     NFHSoundPreload(SOUND_BUT_HOVER1);

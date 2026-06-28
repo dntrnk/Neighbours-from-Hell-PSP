@@ -25,7 +25,7 @@ static int i2;
 static int start_text_y;
 
 static void init(void) {
-    jwd = g2d_LoadImage("assets/sprites/ui/menu/jowoodpresents.png", G2D_RGBA8888);
+    jwd = g2d_LoadImage("assets_thq/sprites/ui/menu/jowoodpresents.png", G2D_RGBA8888);
     
     is_jwd = true; // Показывать ли "JoWood представляет"
     is_press_start = false; // Показывать ли "Нажмите Start"

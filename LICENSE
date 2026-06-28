@@ -1,21 +1,36 @@
-MIT License
+Licensing Information for Neighbours-from-Hell-PSP
 
-Copyright (c) 2025 dntrnk
+This project uses different licenses for different components.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. Source Code (folder: src/)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+All source code written by the author is licensed under the MIT License.
+See src/LICENSE for the full text.
+
+
+2. THQ Nordic Assets (folder: build/assets_thq/)
+
+All files in this folder are the intellectual property of THQ Nordic.
+
+
+3. Original Assets by the Author (folder: build/assets_my/)
+
+These files were created by the author and are licensed under the MIT License.
+
+
+4. Data Files (folder: build/data/)
+
+JSON and configuration files created by the author.
+Licensed under the MIT License.
+
+
+5. EBOOT.PBP Resources (folder: res/)
+
+All files in this folder are the intellectual property of THQ Nordic.
+
+
+Disclaimer
+
+This project is not affiliated with or endorsed by THQ Nordic.
+All rights to the original game "Neighbours from Hell" belong to THQ Nordic.

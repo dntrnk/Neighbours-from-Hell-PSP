@@ -37,7 +37,7 @@ Sign* sign_create(
     sign->animation_frame_time = 0;
     sign->animation_length = 0;
 
-    sign->spritelist = g2d_LoadImage("assets/sprites/ui/ingame/sign.png", G2D_CLUT4);
+    sign->spritelist = g2d_LoadImage("assets_thq/sprites/ui/ingame/sign.png", G2D_CLUT4);
     sign->sprite_src_x = 0;
     sign->sprite_src_y = 0;
     sign->sprite_w = 0;

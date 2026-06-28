@@ -361,7 +361,7 @@ static void init(void) {
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
 
-    Sprite_BINOCULARS_MS = g2d_LoadImage("assets/sprites/kit/binoculars/binoculars_ms.png", G2D_CLUT8);
+    Sprite_BINOCULARS_MS = g2d_LoadImage("assets_thq/sprites/kit/binoculars/binoculars_ms.png", G2D_CLUT8);
 
     LookObject* new_look_object4 = malloc(sizeof(LookObject));
     if (new_look_object4) {
@@ -385,7 +385,7 @@ static void init(void) {
         look_objects[ROOM_KIT][1] = new_look_object4;
     }
 
-    Sprite_SOFA_MS = g2d_LoadImage("assets/sprites/lir/sofa/sofa_ms.png", G2D_CLUT8);
+    Sprite_SOFA_MS = g2d_LoadImage("assets_thq/sprites/lir/sofa/sofa_ms.png", G2D_CLUT8);
 
     LookObject* new_look_object5 = malloc(sizeof(LookObject));
     if (new_look_object5) {
@@ -523,7 +523,7 @@ static void init(void) {
     woody_spritelists[1] = SpriteList_DOORLEFT;
     woody_spritelists[2] = SpriteList_DOORRIGHT;
     woody_spritelists[3] = SpriteList_DOORBACK;
-    woody_spritelists[4] = g2d_LoadImage("assets/sprites/woody/generic2.png", G2D_CLUT8); 
+    woody_spritelists[4] = g2d_LoadImage("assets_thq/sprites/woody/generic2.png", G2D_CLUT8); 
 
     woody_gfxdata[0] = woody_generic_frames;
     woody_gfxdata[1] = woody_doorleft_frames;
@@ -565,8 +565,8 @@ static void init(void) {
     neighbour_spritelists[1] = SpriteList_DOORLEFT;
     neighbour_spritelists[2] = SpriteList_DOORRIGHT;
     // neighbour_spritelists[3] = SpriteList_DOORBACK;
-    neighbour_spritelists[4] = g2d_LoadImage("assets/sprites/lir/sofa/level_peep.png", G2D_CLUT8);
-    neighbour_spritelists[5] = g2d_LoadImage("assets/sprites/kit/binoculars/level_peep.png", G2D_CLUT8);
+    neighbour_spritelists[4] = g2d_LoadImage("assets_thq/sprites/lir/sofa/level_peep.png", G2D_CLUT8);
+    neighbour_spritelists[5] = g2d_LoadImage("assets_thq/sprites/kit/binoculars/level_peep.png", G2D_CLUT8);
 
     neighbour_gfxdata[0] = neighbour_generic_frames;
     neighbour_gfxdata[1] = neighbour_doorleft_frames;
