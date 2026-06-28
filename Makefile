@@ -45,6 +45,7 @@ OBJS = \
     src/gfxdata/ui/joe.o \
     src/animations/ui/joe.o \
     src/objects/level_end.o \
+    src/scenes/menu/disclaimer.o \
     src/scenes/menu/madebydntrnk.o \
     src/scenes/menu/cinemamenu.o \
     src/scenes/menu/mainmenu.o \
