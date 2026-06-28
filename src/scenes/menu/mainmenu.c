@@ -485,11 +485,9 @@ static void mainmenu_draw(void) {
     intraFontPrint(Font_ACMESA, 248, 137 + intraFontTextHeight(Font_ACMESA), "Начать игру");
 
     intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
-    // intraFontActivate(Font_ACMESA, 1); // Можно не делать
     intraFontPrint(Font_ACMESA, 248, 162 + intraFontTextHeight(Font_ACMESA), "Авторы");
 
     intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
-    // intraFontActivate(Font_ACMESA, 1); // Можно не делать
     intraFontPrint(Font_ACMESA, 248, 187 + intraFontTextHeight(Font_ACMESA), "Выход");
 
     g2dFlip(G2D_VSYNC);
