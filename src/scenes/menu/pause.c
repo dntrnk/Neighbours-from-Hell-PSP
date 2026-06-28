@@ -7,24 +7,33 @@
 #include "../../engine/fonts/intraFont.h"
 #include "../../engine/NFHSound/NFHSound.h"
 
+#define CG_MENU_GRAY G2D_RGBA(199, 199, 199, 255)
 #define MENU_BLUE G2D_RGBA(0, 96, 254, 255)
 
-extern Scene Tutorial1Scene;
+#define BUTTON_DEFAULT 0
+#define BUTTON_SELECTED 1
+#define BUTTON_PRESSED 2
+
 extern Scene MainMenuScene;
+extern Scene NewGameMenuScene;
+extern Scene Tutorial1Scene;
+
+extern g2dImage* SpriteAtlas_MENU_SPRITES;
+
+extern g2dImage* SpriteList_BUTTONS;
 
 extern g2dImage* BG_NEW_GAME;
 extern g2dImage* BG_INGAME_MENU;
-extern g2dImage* SpriteList_BUTTONS;
-
-extern intraFont* Font_ACMESA;
-extern intraFont* Font_BLUEHIGH_8;
-extern intraFont* Font_BLUEHIGH_10;
-extern intraFont* Font_BLUEHIGB_10;
 
 extern g2dImage* Sprite_Punkt;
 
 extern g2dImage* Icon_tutorial_1;
 extern g2dImage* Icon_level_peep;
+
+extern intraFont* Font_ACMESA;
+extern intraFont* Font_BLUEHIGH_8;
+extern intraFont* Font_BLUEHIGH_10;
+extern intraFont* Font_BLUEHIGB_10;
 
 static bool tutorial_selected;
 
@@ -32,6 +41,25 @@ static float new_scroll_y;
 static float new_scroll_y_target;
 static int scroll_y_limit;
 static int scroll_y;
+
+static int selected_button = 0;
+static int clicked_button = 1;
+
+static int menu_buttons[4] = {BUTTON_SELECTED, BUTTON_DEFAULT, BUTTON_DEFAULT, BUTTON_DEFAULT}; // Кнопка, выбранная посредством стрелочек
+static g2dColor menu_buttons_colors[4] = {WHITE, CG_MENU_GRAY, CG_MENU_GRAY, CG_MENU_GRAY}; // Кнопка, на которой нажали X
+
+/* ^^^ Что значит таблица menu_buttons ^^^
+Это состояния кнопок. Цифры также означают и спрайт для отрисовки:
+    0 - кнопка не выбрана
+    1 - кнопка выбрана
+    2 - кнопка нажата
+
+Индексы:
+    0 - Продолжить игру
+    1 - Начать съемку заново
+    2 - Снимать новую серию
+    3 - Вернуться в главное меню
+*/
 
 static inline int clamp(int x, int min, int max) {
     return (x < min) ? min : ((x > max) ? max : x);
@@ -52,6 +80,25 @@ static void init(void) {
     scroll_y_limit = -10;
 }
 
+static void pause_buttons_update(void) {
+    // Сначала обнуляем все значения
+    menu_buttons[0] = BUTTON_DEFAULT;
+    menu_buttons[1] = BUTTON_DEFAULT;
+    menu_buttons[2] = BUTTON_DEFAULT;
+    menu_buttons[3] = BUTTON_DEFAULT;
+
+    menu_buttons_colors[0] = CG_MENU_GRAY;
+    menu_buttons_colors[1] = CG_MENU_GRAY;
+    menu_buttons_colors[2] = CG_MENU_GRAY;
+    menu_buttons_colors[3] = CG_MENU_GRAY;
+
+    // А потом устанавливаем выбранной кнопке BUTTON_SELECTED (1) и белый цвет
+    menu_buttons[selected_button] = BUTTON_SELECTED;
+    menu_buttons_colors[selected_button] = WHITE;
+
+    NFHSoundPlay(SOUND_BUT_HOVER1);
+}
+
 static void update(void) {
     controls_read();
 
@@ -70,12 +117,58 @@ static void update(void) {
         scroll_y = floor(new_scroll_y);
     }
 
-    // if (controls_pressed(PSP_CTRL_CROSS)) {
-    //     NFHHouseMusicPause(); // Resume
-    //     NFHMusicStop();
-    //     scene_pop();
-    // } else if (controls_pressed(PSP_CTRL_CIRCLE)) {
-    //     scene_restart();
+    // Управление кнопками через стрелки вверх/вниз
+    if (controls_pressed(PSP_CTRL_UP)) {
+        if (selected_button != 0) {
+            selected_button--;
+            
+            pause_buttons_update();
+        }
+    } else if (controls_pressed(PSP_CTRL_DOWN)) {
+        if (selected_button != 3) {
+            selected_button++;
+
+            pause_buttons_update();
+        }
+    }
+
+    /*
+        Нажатие кнопки с "залипанием" как в оригинальной игре
+        Действие происходит если:
+            Кнопку Х только что отпустили
+            Положение кнопки не поменялось
+    */
+
+    if (controls_pressed(PSP_CTRL_CROSS)) {
+        menu_buttons[selected_button] = 2;
+        clicked_button = selected_button;
+        NFHSoundPlay(SOUND_BUT1);
+    } else if (controls_released(PSP_CTRL_CROSS) && menu_buttons[clicked_button] == BUTTON_PRESSED) {
+        switch (clicked_button) {
+            case 0: // Продолжить игру
+                NFHHouseMusicPause(); // Resume
+                NFHMusicStop();
+                scene_pop();
+
+                break;
+            case 1: // Начать съемку заново
+                scene_restart();
+
+                break;
+            case 2: // Снимать новую серию
+                scene_change(&MainMenuScene);
+                scene_handle_requests();
+                scene_push(&NewGameMenuScene);
+            
+                break;
+            case 3: // Вернуться в главное меню
+                scene_change(&MainMenuScene);
+            
+                break;
+        }
+
+        menu_buttons[clicked_button] = BUTTON_SELECTED;
+    }
 
     // Выход из меню по кнопке O
     if (controls_pressed(PSP_CTRL_CIRCLE)) {
@@ -256,6 +349,28 @@ static void draw(void) {
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
     intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
+
+    #define OFFSET_X -99
+    #define OFFSET_Y -53
+
+    // Отрисовка кнопок, состояние кнопки совпадает со спрайтом (не выбран/выбран/нажат)
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 130 + OFFSET_Y, 150, 24, WHITE, menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 155 + OFFSET_Y, 150, 24, WHITE, menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 180 + OFFSET_Y, 150, 24, WHITE, menu_buttons[2] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 205 + OFFSET_Y, 150, 24, WHITE, menu_buttons[3] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
+
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontActivate(Font_ACMESA, 1);
+    intraFontPrint(Font_ACMESA, 149, 137 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Продолжить игру");
+
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontPrint(Font_ACMESA, 149, 162 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Начать съемку заново");
+
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontPrint(Font_ACMESA, 149, 187 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Снимать новую серию");
+
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[3], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontPrint(Font_ACMESA, 149, 212 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Вернуться в меню");
 
     g2dFlip(G2D_VSYNC);
 }
