@@ -363,8 +363,8 @@ static void init(void) {
 
     int tutorial_phrases_count = cJSON_GetArraySize(tutorial_phrases);
 
-    if (tutorial_phrases_count > 32) {
-        scene_error("Количество фраз в туториале больше 32");
+    if (tutorial_phrases_count > TUTORIAL_MAX_PHRASES) {
+        scene_error("Количество фраз в туториале больше %d", TUTORIAL_MAX_PHRASES);
     }
 
     Phrase phrases[tutorial_phrases_count];
@@ -375,6 +375,10 @@ static void init(void) {
         // Отрабатываем фразы
         cJSON* current_phrase_texts = json_get_item_array(current_tutorial_phrase, "phrase_texts");
         int phrase_text_count = cJSON_GetArraySize(current_phrase_texts);
+
+        if (phrase_text_count > TUTORIAL_MAX_PHRASE_TEXTS) {
+            scene_error("Количество строк в фразе больше %d", TUTORIAL_MAX_PHRASE_TEXTS);
+        }
 
         Phrase* current_phrase = &phrases[i];
 

@@ -7,7 +7,8 @@
 
 #include "../animations/ui/joe.h"
 
-#define MAX_PHRASES 32
+#define TUTORIAL_MAX_PHRASE_TEXTS 8
+#define TUTORIAL_MAX_PHRASES 32
 
 typedef struct {
     char text[256];
@@ -15,7 +16,7 @@ typedef struct {
 } PhraseText;
 
 typedef struct {
-    PhraseText phrase_texts[8];
+    PhraseText phrase_texts[TUTORIAL_MAX_PHRASE_TEXTS];
     int phrase_text_count;
     int window_size;
 } Phrase;
@@ -34,7 +35,7 @@ typedef struct {
     int sprite_offset_x;
     int sprite_offset_y;
 
-    Phrase phrases[MAX_PHRASES];
+    Phrase phrases[TUTORIAL_MAX_PHRASES];
     int phrase_number;
     int phrase_count;
     int phrase_text_count;
