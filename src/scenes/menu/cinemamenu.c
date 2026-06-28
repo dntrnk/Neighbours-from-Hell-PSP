@@ -84,7 +84,7 @@ static void draw(void) {
             intraFontActivate(Font_BLUEHIGB_10, 0);
             intraFontPrint(Font_BLUEHIGB_10, 240.5, start_text_y + intraFontTextHeight(Font_BLUEHIGB_10), "Нажмите Start, чтобы продолжить игру");
 
-            g2d_DrawRectFilled(100, 178, 240, 21, WHITE);
+            g2d_DrawRectFilled(100, 178, 240, 21, WHITE, 255);
         }
     }
 

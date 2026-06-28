@@ -34,12 +34,12 @@ void g2d_DrawImage(g2dImage* tex, int x, int y, g2dColor color, int r, int a, g2
     g2dEnd();
 }
 
-void g2d_DrawRectFilled(int x, int y, int w, int h, g2dColor color) {
+void g2d_DrawRectFilled(int x, int y, int w, int h, g2dColor color, int a) {
     g2dBeginRects(NULL);
     g2dSetCoordXY(x, y);
     g2dSetScaleWH(w, h);
     g2dSetColor(color);
-    g2dResetAlpha();
+    g2dSetAlpha(a);
     g2dAdd();
     g2dEnd();
 }

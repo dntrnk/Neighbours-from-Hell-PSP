@@ -9,7 +9,6 @@
 #include "../engine/controls/controls.h"
 
 #define GRAY G2D_RGBA(128, 128, 128, 255)
-#define BLACK_ALPHA G2D_RGBA(0, 0, 0, 80)
 #define BLUE_EPISODE_NAME G2D_RGBA(65, 92, 134, 255)
 
 #define TIMER_LOGO_START_MOVE_IN 192
@@ -149,7 +148,7 @@ void intro_draw(const Intro* intro) {
     if (intro->song_timer < 80) {
         intro_draw_loading(186);
     } else if (intro->draw_intro) {
-        g2d_DrawRectFilled(0, 0, 480, 272, BLACK_ALPHA);
+        g2d_DrawRectFilled(0, 0, 480, 272, BLACK, 80);
 
         // JWD Logo
         if (intro->timer < 250) {

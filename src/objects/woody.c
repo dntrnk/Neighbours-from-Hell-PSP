@@ -13,9 +13,7 @@
 #define COLOR_GREEN_PERCENT G2D_RGBA(132, 175, 109, 255)
 #define COLOR_WHITE_PERCENT G2D_RGBA(254, 254, 254, 255)
 
-#define COLOR_BLACK_BUBBLE G2D_RGBA(0, 0, 0, 235)
-#define COLOR_GRAY_BUBBLE G2D_RGBA(158, 158, 158, 235)
-#define COLOR_WHITE_BUBBLE G2D_RGBA(255, 255, 255, 235)
+#define COLOR_GRAY_BUBBLE G2D_RGBA(158, 158, 158, 255)
 
 #define IS_LAST_ANIMATION_FRAME (woody->animation_frame == woody->animation_length - 1 && woody->animation_frame_time == 4)
 
@@ -1294,13 +1292,13 @@ void woody_draw(const Woody* woody) {
         g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - 27, 120, 27, WHITE, 0, 398, 120, 27, 0, 235, G2D_UP_LEFT);
 
         // Bubble Center
-        g2d_DrawRectFilled(woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
-        g2d_DrawRectFilled(woody->x - camera_x - 13, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE);
+        g2d_DrawRectFilled(woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, BLACK, 235);
+        g2d_DrawRectFilled(woody->x - camera_x - 13, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE, 235);
 
-        g2d_DrawRectFilled(woody->x - camera_x - 12, woody->y - camera_y - woody->look_object_bubble_size - 27, 116, woody->look_object_bubble_size, COLOR_WHITE_BUBBLE);
+        g2d_DrawRectFilled(woody->x - camera_x - 12, woody->y - camera_y - woody->look_object_bubble_size - 27, 116, woody->look_object_bubble_size, WHITE, 235);
 
-        g2d_DrawRectFilled(woody->x - camera_x + 104, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE);
-        g2d_DrawRectFilled(woody->x - camera_x + 105, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_BLACK_BUBBLE);
+        g2d_DrawRectFilled(woody->x - camera_x + 104, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, COLOR_GRAY_BUBBLE, 235);
+        g2d_DrawRectFilled(woody->x - camera_x + 105, woody->y - camera_y - woody->look_object_bubble_size - 27, 1, woody->look_object_bubble_size, BLACK, 235);
 
         // Bubble Top
         g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 39, 120, 12, WHITE, 275, 293, 120, 12, 0, 235, G2D_UP_LEFT);
