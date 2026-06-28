@@ -13,6 +13,7 @@
 #define LEVEL_END_YELLOW G2D_RGBA(239, 239, 0, 255)
 
 extern Scene MainMenuScene;
+extern Scene NewGameMenuScene;
 
 extern g2dImage* SpriteAtlas_INGAMEUI;
 
@@ -68,6 +69,8 @@ void level_end_update(LevelEnd* level_end) {
             scene_restart();
         } else {
             scene_change(&MainMenuScene);
+            scene_handle_requests();
+            scene_push(&NewGameMenuScene);
         }
         NFHSoundPlay(SOUND_BUT1);
     }
