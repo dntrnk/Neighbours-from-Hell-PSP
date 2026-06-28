@@ -8,8 +8,8 @@
 #include "../engine/NFHSound/NFHSound.h"
 #include "../engine/controls/controls.h"
 
-#define GRAY G2D_RGBA(128, 128, 128, 255)
-#define BLUE_EPISODE_NAME G2D_RGBA(65, 92, 134, 255)
+#define GRAY G2D_RGB(128, 128, 128)
+#define BLUE_EPISODE_NAME G2D_RGB(65, 92, 134)
 
 #define TIMER_LOGO_START_MOVE_IN 192
 #define TIMER_LOGO_STOP_MOVE_IN 250

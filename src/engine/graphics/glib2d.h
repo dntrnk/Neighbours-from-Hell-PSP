@@ -148,6 +148,24 @@ extern "C" {
                * \def G2D_GET_A(color)
                * \brief Get alpha channel value from a g2dColor.
                */
+#define G2D_RGB(r,g,b) ((r)|((g)<<8)|((b)<<16)|((255)<<24))
+
+           /**
+            * \def G2D_GET_R(color)
+            * \brief Get red channel value from a g2dColor.
+            */
+            /**
+             * \def G2D_GET_G(color)
+             * \brief Get green channel value from a g2dColor.
+             */
+             /**
+              * \def G2D_GET_B(color)
+              * \brief Get blue channel value from a g2dColor.
+              */
+              /**
+               * \def G2D_GET_A(color)
+               * \brief Get alpha channel value from a g2dColor.
+               */
 #define G2D_GET_R(color) (((color)    ) & 0xFF)
 #define G2D_GET_G(color) (((color)>>8 ) & 0xFF)
 #define G2D_GET_B(color) (((color)>>16) & 0xFF)

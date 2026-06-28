@@ -5,7 +5,7 @@
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 
-#define CG_ORANGE_BREAKDOWNS G2D_RGBA(254, 159, 0, 255)
+#define CG_ORANGE_BREAKDOWNS G2D_RGB(254, 159, 0)
 
 extern g2dImage* SpriteAtlas_INGAMEUI;
 extern g2dImage* SpriteList_BUBBLES;

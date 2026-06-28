@@ -7,8 +7,8 @@
 #include "../../engine/fonts/intraFont.h"
 #include "../../engine/NFHSound/NFHSound.h"
 
-#define CG_MENU_GRAY G2D_RGBA(199, 199, 199, 255)
-#define MENU_BLUE G2D_RGBA(0, 96, 254, 255)
+#define CG_MENU_GRAY G2D_RGB(199, 199, 199)
+#define MENU_BLUE G2D_RGB(0, 96, 254)
 
 #define BUTTON_DEFAULT 0
 #define BUTTON_SELECTED 1

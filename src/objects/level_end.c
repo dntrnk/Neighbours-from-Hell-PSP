@@ -9,8 +9,8 @@
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 
-#define LEVEL_END_GREEN G2D_RGBA(32, 240, 0, 255)
-#define LEVEL_END_YELLOW G2D_RGBA(239, 239, 0, 255)
+#define LEVEL_END_GREEN G2D_RGB(32, 240, 0)
+#define LEVEL_END_YELLOW G2D_RGB(239, 239, 0)
 
 extern Scene MainMenuScene;
 extern Scene NewGameMenuScene;

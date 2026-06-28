@@ -8,12 +8,11 @@
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 
-#define CG_YELLOW_TRICKS G2D_RGBA(239, 239, 0, 255)
-#define CG_BLUE_TIMER G2D_RGBA(121, 181, 181, 255)
-#define COLOR_GREEN_PERCENT G2D_RGBA(132, 175, 109, 255)
-#define COLOR_WHITE_PERCENT G2D_RGBA(254, 254, 254, 255)
-
-#define COLOR_GRAY_BUBBLE G2D_RGBA(158, 158, 158, 255)
+#define CG_YELLOW_TRICKS G2D_RGB(239, 239, 0)
+#define CG_BLUE_TIMER G2D_RGB(121, 181, 181)
+#define COLOR_GREEN_PERCENT G2D_RGB(132, 175, 109)
+#define COLOR_WHITE_PERCENT G2D_RGB(254, 254, 254)
+#define COLOR_GRAY_BUBBLE G2D_RGB(158, 158, 158)
 
 #define IS_LAST_ANIMATION_FRAME (woody->animation_frame == woody->animation_length - 1 && woody->animation_frame_time == 4)
 
