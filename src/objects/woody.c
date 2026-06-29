@@ -1343,78 +1343,71 @@ void woody_draw_ui(const Woody* woody) {
     // Подсказки
     if (!woody->in_door) {
         int hint_text_x = 93;
-        g2dColor hint_text_color;
 
         for (int i = 0; i < 3; i++) {
-            Hint current_hint = woody->hints[i];
-            if (current_hint.show) {
-                if (current_hint.is_active_goal) {
-                    hint_text_color = CG_YELLOW_TRICKS;
-                } else {
-                    hint_text_color = WHITE;
-                }
+            const Hint* current_hint = &woody->hints[i];
+            if (!current_hint->show) break;
 
-                switch (current_hint.button_type) {
-                    case SQUARE:
-                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 23, 23, 23, 0, 255, G2D_UP_LEFT);
+            const g2dColor hint_text_color = current_hint->is_active_goal ? CG_YELLOW_TRICKS : WHITE;
 
-                        break;
-                    case CROSS:
-                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 0, 0, 23, 23, 0, 255, G2D_UP_LEFT);
-
-                        break;
-                    case CIRCLE:
-                            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT);
-
-                        break;
-                }
-
-                intraFontSetStyle(Font_BLUEHIGC_11, 1, hint_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
-                intraFontActivate(Font_BLUEHIGC_11, 0);
-                intraFontPrint(Font_BLUEHIGC_11, hint_text_x, 224 + intraFontTextHeight(Font_BLUEHIGC_11), current_hint.text);
-                hint_text_x += floor(intraFontMeasureText(Font_BLUEHIGC_11, current_hint.text)) + 28;
-            } else {
-                break;
+            // Кнопка подсказки
+            int src_x, src_y = 0, 0;
+            switch (current_hint->button_type) {
+                case CROSS: src_x = 0; src_y = 0; break;
+                case CIRCLE: src_x = 23; src_y = 0; break;
+                case SQUARE: src_x = 0; src_y = 23; break;
             }
+
+            g2d_DrawImageExt(SpriteList_BUTTONS, hint_text_x - 23, 215, 23, 23, WHITE, src_x, src_y, 23, 23, 0, 255, G2D_UP_LEFT);
+
+            // Текст подсказки
+            intraFontSetStyle(Font_BLUEHIGC_11, 1, hint_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
+            intraFontActivate(Font_BLUEHIGC_11, 0);
+            intraFontPrint(Font_BLUEHIGC_11, hint_text_x, 224 + intraFontTextHeight(Font_BLUEHIGC_11), current_hint->text);
+            hint_text_x += floor(intraFontMeasureText(Font_BLUEHIGC_11, current_hint->text)) + 28;
         }
     }
 
     // Пакости
     if (woody->ui_tricks_counter_text_show) {
-        intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+        intraFontSetStyle(Font_BLUEHIGC_24, 0.583f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
         intraFontActivate(Font_BLUEHIGC_24, 1);
         intraFontPrint(Font_BLUEHIGC_24, woody->ui_tricks_counter_text_x, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_tricks_counter_text);
     }
 
     // Инвентарь
-    for (int i = 0; i < woody->item_count; i++) {
-        if (woody->inventory[i] == ITEM_NONE) {
-            break;
-        } else {
-            if (!woody->inventory_animation_items_show && woody->inventory_animation_first_index <= i && i <= woody->inventory_animation_last_index) {
-                continue;
-            }
+    if (woody->item_count > 0) {
+        const bool is_auto_moving = (woody->state == STATE_AUTO_H_MOVE || woody->state == STATE_AUTO_V_MOVE);
+        const bool is_targeted_action = (woody->auto_move_goal_type == GOAL_LOOK_OBJECT || woody->auto_move_goal_type == GOAL_HIDEOUT || woody->auto_move_goal_type == GOAL_STORAGE);
 
-            g2dImage* current_spritelist = SpriteList_ITEMS_1;
+        for (int i = 0; i < woody->item_count; i++) {
+            const int item = woody->inventory[i];
+            if (item == ITEM_NONE) break;
+
+            // Анимация новых предметов
+            if (!woody->inventory_animation_items_show && woody->inventory_animation_first_index <= i && i <= woody->inventory_animation_last_index) continue;
+
+            // Определение состояния предмета
             int item_state = 1;
             if (woody->inventory_using && i == woody->selected_item) {
-                if ((woody->state == STATE_AUTO_H_MOVE || woody->state == STATE_AUTO_V_MOVE) && (woody->auto_move_goal_type == GOAL_LOOK_OBJECT || woody->auto_move_goal_type == GOAL_HIDEOUT || woody->auto_move_goal_type == GOAL_STORAGE)) {
-                    item_state = 2;
-                } else {
-                    item_state = 0;
-                }
+                item_state = (is_auto_moving && is_targeted_action) ? 2 : 0;
             }
-            int src_x = (woody->inventory[i] * 3 + item_state) * 45;
-            int src_y = 0;
 
-            int sprite_index = src_x / 495;
+            // Вычисление позиции в спрайт-листе
+            const int base_src_x = (item * 3 + item_state) * 45;
+            const int src_x = base_src_x % 495;
+            const int sprite_index = base_src_x / 495;
+            
+            g2dImage* current_spritelist;
+            int src_y;
+            
             if (sprite_index >= 15) {
                 current_spritelist = SpriteList_ITEMS_2;
                 src_y = (sprite_index - 15) * 34;
             } else {
+                current_spritelist = SpriteList_ITEMS_1;
                 src_y = sprite_index * 34;
             }
-            src_x %= 495;
 
             g2d_DrawImageExt(current_spritelist, 99 + i * 45, 235, 45, 34, WHITE, src_x, src_y, 45, 34, 0, 255, G2D_UP_LEFT);
         }
