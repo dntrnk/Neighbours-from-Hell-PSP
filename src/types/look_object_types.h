@@ -18,6 +18,13 @@ typedef struct {
     char phrase_text[256];
     int phrase_y;
     int bubble_size;
+
+    bool tricked;
+    int item_to_trick;
+
+    char tricked_phrase_text[256];
+    int tricked_phrase_y;
+    int tricked_bubble_size;
 } LookObject;
 
 #endif // LOOK_OBJECT_TYPES_H

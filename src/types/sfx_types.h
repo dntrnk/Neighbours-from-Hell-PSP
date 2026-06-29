@@ -36,5 +36,7 @@
 #define SOUND_WOD_NONO 31
 #define SOUND_WOD_LAUGH2 32
 #define SOUND_WOD_FEAR1 33
+#define SOUND_INSTALL1 34
+#define SOUND_INSTALL2 35
 
 #endif // SFX_TYPES_H

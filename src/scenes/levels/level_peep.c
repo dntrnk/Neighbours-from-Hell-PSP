@@ -316,7 +316,12 @@ static void init(void) {
             .hint_id = get_unique_hint_id(),
             .phrase_text = "Эта дверь ведет в\n\n\nспальню. Туда мне не\n\n\nпройти.",
             .phrase_y = 0,
-            .bubble_size = 18
+            .bubble_size = 18,
+            .tricked = false,
+            .item_to_trick = ITEM_NONE,
+            .tricked_phrase_text = "",
+            .tricked_phrase_y = 0,
+            .tricked_bubble_size = 0
         };
         look_objects[ROOM_LIR][0] = new_look_object1;
     }
@@ -339,7 +344,12 @@ static void init(void) {
             .hint_id = get_unique_hint_id(),
             .phrase_text = "Эта дверь ведет в\n\n\nподвал. Мне туда не\n\n\nпройти.",
             .phrase_y = 0,
-            .bubble_size = 18
+            .bubble_size = 18,
+            .tricked = false,
+            .item_to_trick = ITEM_NONE,
+            .tricked_phrase_text = "",
+            .tricked_phrase_y = 0,
+            .tricked_bubble_size = 0
         };
         look_objects[ROOM_ANC][0] = new_look_object2;
     }
@@ -362,7 +372,12 @@ static void init(void) {
             .hint_id = get_unique_hint_id(),
             .phrase_text = "Микроволновка. Говорят,\n\n\nесли засунуть туда\n\n\nсырое яйцо, будет весело.",
             .phrase_y = 0,
-            .bubble_size = 18
+            .bubble_size = 18,
+            .tricked = false,
+            .item_to_trick = ITEM_EGG,
+            .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
+            .tricked_phrase_y = 0,
+            .tricked_bubble_size = 18
         };
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
@@ -387,7 +402,12 @@ static void init(void) {
             .hint_id = get_unique_hint_id(),
             .phrase_text = "В этот бинокль\n\n\nсоседушка следит за\n\n\nтем, как раздевается\n\n\nдевушка в окне напротив!",
             .phrase_y = -6,
-            .bubble_size = 22
+            .bubble_size = 22,
+            .tricked = false,
+            .item_to_trick = ITEM_SUPERGLUE,
+            .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
+            .tricked_phrase_y = -6,
+            .tricked_bubble_size = 22
         };
         look_objects[ROOM_KIT][1] = new_look_object4;
     }
@@ -412,7 +432,12 @@ static void init(void) {
             .hint_id = get_unique_hint_id(),
             .phrase_text = "Здесь он сидит и\n\n\nсмотрит телевизор.",
             .phrase_y = 8,
-            .bubble_size = 10
+            .bubble_size = 10,
+            .tricked = false,
+            .item_to_trick = ITEM_FARTBAG,
+            .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",
+            .tricked_phrase_y = 8,
+            .tricked_bubble_size = 10
         };
         look_objects[ROOM_LIR][1] = new_look_object5;
     }

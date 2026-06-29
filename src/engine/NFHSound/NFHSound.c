@@ -48,7 +48,9 @@ static const char* const sfx_bindings[] = {
     [SOUND_OBJ_PLOP1] = "assets_thq/sfx/obj_plop1.wav",
     [SOUND_WOD_NONO] = "assets_thq/sfx/wod_nono.wav",
     [SOUND_WOD_LAUGH2] = "assets_thq/sfx/wod_laugh2.wav",
-    [SOUND_WOD_FEAR1] = "assets_thq/sfx/wod_fear1.wav"
+    [SOUND_WOD_FEAR1] = "assets_thq/sfx/wod_fear1.wav",
+    [SOUND_INSTALL1] = "assets_thq/sfx/install1.wav",
+    [SOUND_INSTALL2] = "assets_thq/sfx/install2.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -86,6 +88,8 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_WOD_NONO] = 0,
     [SOUND_WOD_LAUGH2] = 0,
     [SOUND_WOD_FEAR1] = 0,
+    [SOUND_INSTALL1] = 0,
+    [SOUND_INSTALL2] = 0
 };
 
 typedef struct {
