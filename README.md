@@ -5,8 +5,8 @@
 Автор не претендует на права на оригинальные игровые ресурсы.
 
 <p>
-    <img src="images/screenshot1.png>" width="45%" />
-    <img src="images/screenshot2.png>" width="45%" />
+    <img src="images/screenshot1.png" width="45%" />
+    <img src="images/screenshot2.png" width="45%" />
 </p>
 
 ## Как собрать
