@@ -89,7 +89,7 @@ int intro_update(Intro* intro) {
         intro->nfh_logo_speed_y = -5;
     } else if (intro->timer == TIMER_INTRO_END) {
         intro->draw_intro = false;
-        NFHSoundPlay(SOUND_LEVEL_START);
+        NFHSoundPlay(SOUND_LEVELSTART);
         if (intro->move_woody) {
             exit_code = INTRO_WOODY_START_MOVE_TO_HOUSE;
         } else {
