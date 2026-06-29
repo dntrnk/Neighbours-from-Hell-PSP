@@ -632,9 +632,11 @@ void woody_update(Woody* woody) {
     }
 
     if (controls_pressed(PSP_CTRL_TRIANGLE) && woody->item_count != 0) {
-        woody->inventory_using = !woody->inventory_using;
-        if (woody->inventory_using) {
-            NFHSoundPlay(SOUND_BUT_HOVER1);
+        if (woody->state != STATE_AUTO_H_MOVE && woody->state != STATE_AUTO_V_MOVE && woody->state != STATE_STORAGE_CHECK && woody->state != STATE_HIDEOUT_ENTER && woody->state != STATE_HIDEOUT && woody->state != STATE_HIDEOUT_EXIT && woody->state != STATE_STORAGE_FOUND && woody->state != STATE_LEVEL_START && woody->state != STATE_LEVEL_ENDING && woody->state != STATE_STOP) {
+            woody->inventory_using = !woody->inventory_using;
+            if (woody->inventory_using) {
+                NFHSoundPlay(SOUND_BUT_HOVER1);
+            }
         }
     }
 
