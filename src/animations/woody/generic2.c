@@ -275,4 +275,41 @@ const Animation woody_generic2_animations[] = {
         .loop = false
     },
 
+    {
+        // use_mid
+        .frames = (const unsigned short[]) {
+            FRAME_WOODY_USE_MID_0,
+            FRAME_WOODY_USE_MID_2,
+            FRAME_WOODY_USE_MID_4,
+            FRAME_WOODY_USE_MID_6,
+            FRAME_WOODY_USE_MID_8,
+            FRAME_WOODY_USE_MID_10,
+            FRAME_WOODY_USE_MID_12,
+            FRAME_WOODY_USE_MID_14,
+            FRAME_WOODY_USE_MID_16,
+            FRAME_WOODY_USE_MID_18,
+            FRAME_WOODY_USE_MID_20,
+            FRAME_WOODY_USE_MID_22,
+        },
+
+        .sfx = (const short[]) {
+            SOUND_NONE,
+            SOUND_USE1,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE,
+            SOUND_NONE
+        },
+
+        .frame_count = 12,
+
+        .loop = true
+    },
+
 };
