@@ -28,6 +28,8 @@ LevelEnd* level_end_create(void) {
 
     level_end->counter = 117;
 
+    strcpy(level_end->end_text, "Отлично!");
+
     level_end->selected_button = BUTTON_OK;
     level_end->clicked_button = BUTTON_RESTART;
 
@@ -93,7 +95,7 @@ void level_end_draw(const LevelEnd* level_end) {
 
     intraFontSetStyle(Font_ACMESA_17_9, 0.73, LEVEL_END_GREEN, 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA_17_9, 0);
-    intraFontPrint(Font_ACMESA_17_9, 273, 80 + intraFontTextHeight(Font_ACMESA_17_9), "Отлично!");
+    intraFontPrint(Font_ACMESA_17_9, 273, 80 + intraFontTextHeight(Font_ACMESA_17_9), level_end->end_text);
 
     // Статистика
     intraFontSetStyle(Font_ACMESA, 0.65, LEVEL_END_GREEN, 0, 0, INTRAFONT_ALIGN_LEFT); // Потом на ALIGN_CENTER сменить надо бы

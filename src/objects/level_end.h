@@ -11,6 +11,8 @@ typedef struct {
     int selected_button;
     int clicked_button;
 
+    char end_text[64];
+    
     char tricks_text[32];
     char quota_text[32];
 

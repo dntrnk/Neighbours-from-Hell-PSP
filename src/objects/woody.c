@@ -8,6 +8,8 @@
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 
+#include "../objects/scene_manager.h"
+
 #define CG_YELLOW_TRICKS G2D_RGB(239, 239, 0)
 #define CG_BLUE_TIMER G2D_RGB(121, 181, 181)
 #define COLOR_GREEN_PERCENT G2D_RGB(132, 175, 109)
@@ -15,6 +17,8 @@
 #define COLOR_GRAY_BUBBLE G2D_RGB(158, 158, 158)
 
 #define IS_LAST_ANIMATION_FRAME (woody->animation_frame == woody->animation_length - 1 && woody->animation_frame_time == 4)
+
+extern Scene Tutorial1Scene;
 
 extern g2dImage* SpriteAtlas_INGAMEUI;
 
@@ -1141,7 +1145,13 @@ void woody_update(Woody* woody) {
                         woody->state = STATE_LEVEL_ENDING;
 
                         NFHHouseMusicStop();
-                        NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+
+                        if (woody->quota >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
+                            NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+                        } else {
+                            strcpy(woody->level_end->end_text, "Провал");
+                            NFHMusicPlay(MUSIC_JINGLE_FAILED, 0);
+                        }
                     }
                 } else {
                     woody_dest_door_animation_update_frame(woody);
@@ -1267,12 +1277,16 @@ void woody_update(Woody* woody) {
         case STATE_LEVEL_ENDING: {
             if (woody->is_on_floor) {
                 if (!*woody->level_end_active) {
-                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_TRIUMPH);
+                    if (woody->quota >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_TRIUMPH);
+                    }
                     *woody->level_end_active = true;
                 }
 
                 if (woody->level_end->counter == 1) {
-                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                    if (woody->quota >= woody->min_quota) {
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                    }
                     woody->animation_loop = false;
                     woody->state = STATE_STOP;
 
