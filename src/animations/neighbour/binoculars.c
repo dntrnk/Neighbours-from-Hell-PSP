@@ -340,10 +340,10 @@ const Animation neighbour_binoculars_animations[] = {
 			SOUND_NONE,
 			SOUND_NONE,
 			SOUND_NONE,
-			SOUND_OBJ_PLOP1
+			SOUND_OBJ_PLOP1,
 			SOUND_NONE,
 			SOUND_NONE,
-			SOUND_NONE,
+			SOUND_NONE
         },
 
         .frame_count = 89,
