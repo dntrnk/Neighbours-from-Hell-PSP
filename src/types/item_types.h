@@ -68,4 +68,6 @@ typedef enum {
     ITEM_WRENCH
 } Item;
 
+extern const char* const item_use_names[];
+
 #endif // ITEM_TYPES_H

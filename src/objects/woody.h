@@ -60,7 +60,7 @@ typedef enum {
 } HintButton;
 
 typedef struct {
-    char* text;
+    char text[256];
     HintButton button_type;
     bool is_active_goal;
     bool show;

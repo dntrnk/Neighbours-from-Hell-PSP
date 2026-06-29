@@ -491,7 +491,11 @@ static void woody_hints_update(Woody* woody) {
                 woody->hints[1] = woody->hints[0];
 
                 Hint* current_hint = &woody->hints[0];
-                current_hint->text = current_look_object->hint_text;
+                if (woody->inventory_using) {
+                    sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_look_object->use_hint_text);
+                } else {
+                    strcpy(current_hint->text, current_look_object->hint_text);
+                }
                 current_hint->button_type = SQUARE;
                 current_hint->show = true;
                 current_hint->is_active_goal = false;
@@ -513,7 +517,11 @@ static void woody_hints_update(Woody* woody) {
             woody->hints[1] = woody->hints[0];
 
             Hint* current_hint = &woody->hints[0];
-            current_hint->text = current_hideout->hint_enter_text;
+            if (woody->inventory_using) {
+                sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_hideout->use_hint_text);
+            } else {
+                strcpy(current_hint->text, current_hideout->hint_enter_text);
+            }
             current_hint->button_type = CIRCLE;
             current_hint->show = true;
             current_hint->is_active_goal = false;
@@ -522,10 +530,10 @@ static void woody_hints_update(Woody* woody) {
                 current_hint->is_active_goal = true;
             } else {
                 if (woody->state == STATE_HIDEOUT) {
-                    current_hint->text = current_hideout->hint_exit_text;
+                    strcpy(current_hint->text, current_hideout->hint_exit_text);
                     current_hint->is_active_goal = false;
                 } else if (woody->state == STATE_HIDEOUT_EXIT) {
-                    current_hint->text = current_hideout->hint_exit_text;
+                    strcpy(current_hint->text, current_hideout->hint_exit_text);
                     current_hint->is_active_goal = true;
                 }
             }
@@ -541,7 +549,11 @@ static void woody_hints_update(Woody* woody) {
                 woody->hints[1] = woody->hints[0];
 
                 Hint* current_hint = &woody->hints[0];
-                current_hint->text = current_storage->hint_text;
+                if (woody->inventory_using) {
+                    sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_storage->use_hint_text);
+                } else {
+                    strcpy(current_hint->text, current_storage->hint_text);
+                }
                 current_hint->button_type = CROSS;
                 current_hint->show = true;
                 current_hint->is_active_goal = false;
@@ -1384,7 +1396,14 @@ void woody_draw_ui(const Woody* woody) {
             }
 
             g2dImage* current_spritelist = SpriteList_ITEMS_1;
-            int item_state = (woody->inventory_using && i == woody->selected_item) ? 0 : 1;
+            int item_state = 1;
+            if (woody->inventory_using && i == woody->selected_item) {
+                if ((woody->state == STATE_AUTO_H_MOVE || woody->state == STATE_AUTO_V_MOVE) && (woody->auto_move_goal_type == GOAL_LOOK_OBJECT || woody->auto_move_goal_type == GOAL_HIDEOUT || woody->auto_move_goal_type == GOAL_STORAGE)) {
+                    item_state = 2;
+                } else {
+                    item_state = 0;
+                }
+            }
             int src_x = (woody->inventory[i] * 3 + item_state) * 45;
             int src_y = 0;
 

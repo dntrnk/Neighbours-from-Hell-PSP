@@ -14,6 +14,7 @@ OBJS = \
 	src/engine/NFHSound/NFHSound.o \
 	src/engine/json/cJSON.o \
 	src/engine/json/json_helper.o \
+	src/types/item_use_names.o \
 	src/objects/scene_manager.o \
 	src/objects/woody.o \
 	src/gfxdata/woody/generic.o \

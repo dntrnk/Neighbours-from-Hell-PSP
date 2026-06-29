@@ -12,6 +12,7 @@ typedef struct {
 
     int collision_x, collision_y;
     char hint_text[256];
+    char use_hint_text[128];
     unsigned short hint_id;
 
     char phrase_text[256];
