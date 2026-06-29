@@ -376,8 +376,8 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_EGG,
             .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
-            .tricked_phrase_y = 0,
-            .tricked_bubble_size = 18
+            .tricked_phrase_y = 8,
+            .tricked_bubble_size = 10
         };
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
@@ -406,8 +406,8 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_SUPERGLUE,
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
-            .tricked_phrase_y = -6,
-            .tricked_bubble_size = 22
+            .tricked_phrase_y = 2,
+            .tricked_bubble_size = 14
         };
         look_objects[ROOM_KIT][1] = new_look_object4;
     }
