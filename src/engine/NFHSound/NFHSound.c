@@ -143,6 +143,10 @@ void NFHHouseMusicLoad(void) {
 }
 
 void NFHHouseMusicPlay(void) {
+    if (AalibGetStatus(6) != -1) {
+        AalibStop(6);
+    }
+    
     AalibSetAutoloop(6, 1);
     AalibPlay(6);
 }
