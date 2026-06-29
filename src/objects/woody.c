@@ -616,6 +616,38 @@ static void woody_hints_update(Woody* woody) {
             break;
         }
     }
+
+    // Сдвиг active_goal в начало подсказок
+    for (int i = 0; i < 3; i++) {
+        Hint* current_hint = &woody->hints[i];
+        if (current_hint->is_active_goal) {
+            switch (i) {
+                case 0: {
+
+                    break;
+                }
+                
+                case 1: {
+                    Hint active_goal = *current_hint;
+
+                    woody->hints[1] = woody->hints[0];
+                    woody->hints[0] = active_goal;
+
+                    break;
+                }
+
+                case 2: {
+                    Hint active_goal = *current_hint;
+
+                    woody->hints[2] = woody->hints[1];
+                    woody->hints[1] = woody->hints[0];
+                    woody->hints[0] = active_goal;
+
+                    break;
+                }
+            }
+        }
+    }
     
 }
 
