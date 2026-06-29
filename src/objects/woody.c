@@ -434,6 +434,8 @@ static void woody_auto_move_complete(Woody* woody) {
                                 woody->state = STATE_NONO;
                                 woody->inventory_using = false;
 
+                                woody->auto_move_goal_type = GOAL_NONE;
+
                                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
 
                             }
@@ -455,6 +457,8 @@ static void woody_auto_move_complete(Woody* woody) {
             } else {
                 woody->state = STATE_NONO;
                 woody->inventory_using = false;
+
+                woody->auto_move_goal_type = GOAL_NONE;
 
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
             }
@@ -529,9 +533,17 @@ static void woody_hints_update(Woody* woody) {
 
                 Hint* current_hint = &woody->hints[0];
                 if (woody->inventory_using) {
-                    sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_look_object->use_hint_text);
+                    if (current_look_object->tricked) {
+                        sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_look_object->tricked_use_hint_text);
+                    } else {
+                        sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_look_object->use_hint_text);
+                    }
                 } else {
-                    strcpy(current_hint->text, current_look_object->hint_text);
+                    if (current_look_object->tricked) {
+                        strcpy(current_hint->text, current_look_object->tricked_hint_text);
+                    } else {
+                        strcpy(current_hint->text, current_look_object->hint_text);
+                    }
                 }
                 current_hint->button_type = SQUARE;
                 current_hint->show = true;
