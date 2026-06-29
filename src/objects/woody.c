@@ -1351,7 +1351,8 @@ void woody_draw_ui(const Woody* woody) {
             const g2dColor hint_text_color = current_hint->is_active_goal ? CG_YELLOW_TRICKS : WHITE;
 
             // Кнопка подсказки
-            int src_x, src_y = 0, 0;
+            int src_x = 0;
+            int src_y = 0;
             switch (current_hint->button_type) {
                 case CROSS: src_x = 0; src_y = 0; break;
                 case CIRCLE: src_x = 23; src_y = 0; break;
