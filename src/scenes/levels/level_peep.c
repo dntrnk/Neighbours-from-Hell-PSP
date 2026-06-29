@@ -129,6 +129,10 @@ static bool neighbour_active;
 
 static bool pause_button_pressed;
 
+static inline int clamp(int x, int min, int max) {
+    return (x < min) ? min : ((x > max) ? max : x);
+}
+
 static int get_unique_hint_id(void) {
     new_hint_id++;
     return new_hint_id - 1;
@@ -156,7 +160,8 @@ static void init(void) {
 
     intro = intro_create(
         current_episode_name, // episode_name
-        true // move_woody
+        true, // move_woody
+        -234, -147 // camera_extra_x, camera_extra_y
     );
 
     intro_active = true;
@@ -713,10 +718,14 @@ static void update(void) {
                 break;
             }
         }
+
+        camera_x = clamp(camera_x + intro->camera_extra_x, 0, woody->camera_limit_x);
+        camera_y = clamp(camera_y + intro->camera_extra_y, 0, woody->camera_limit_y);
     }
 
-    if (level_end_active)
+    if (level_end_active) {
         level_end_update(level_end);
+    }
         
     camera_right = camera_x + 480;
     camera_bottom = camera_y + 272;

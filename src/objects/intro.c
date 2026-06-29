@@ -26,7 +26,7 @@ extern g2dImage* Sprite_LOADING_TEXT_DATA;
 extern intraFont* Font_ACMESA_17_9;
 extern intraFont* Font_ACMESAI_13;
 
-Intro* intro_create(const char* episode_name, bool move_woody) {
+Intro* intro_create(const char* episode_name, bool move_woody, int camera_extra_x, int camera_extra_y) {
     Intro* intro = malloc(sizeof(Intro));
     memset(intro, 0, sizeof(Intro));
 
@@ -58,6 +58,9 @@ Intro* intro_create(const char* episode_name, bool move_woody) {
 
     intraFontSetStyle(Font_ACMESA_17_9, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intro->text2_offset = (int) (intraFontMeasureText(Font_ACMESA_17_9, intro->episode_name) * 0.5);
+
+    intro->camera_extra_x = camera_extra_x;
+    intro->camera_extra_y = camera_extra_y;
 
     return intro;
 }
@@ -103,6 +106,21 @@ int intro_update(Intro* intro) {
             exit_code = INTRO_WOODY_START_ANIMATION;
         } else if (intro->timer == 801) {
             exit_code = INTRO_WOODY_CAN_MOVE;
+        }
+    }
+
+    if (intro->timer > TIMER_INTRO_END) {
+        if (intro->camera_extra_x < 0) {
+            intro->camera_extra_x += 10;
+            if (intro->camera_extra_x > 0) {
+                intro->camera_extra_x = 0;
+            }
+        }
+        if (intro->camera_extra_y < 0) {
+            intro->camera_extra_y += 10;
+            if (intro->camera_extra_y > 0) {
+                intro->camera_extra_y = 0;
+            }
         }
     }
 

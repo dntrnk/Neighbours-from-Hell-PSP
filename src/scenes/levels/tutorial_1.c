@@ -137,7 +137,8 @@ static void init(void) {
 
     intro = intro_create(
         current_episode_name, // episode_name
-        false // move_woody
+        false, // move_woody
+        0, 0 // camera_extra_x, camera_extra_y
     );
 
     intro_active = true;

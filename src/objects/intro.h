@@ -33,9 +33,15 @@ typedef struct {
 
     int text1_offset;
     int text2_offset;
+
+    int camera_extra_x;
+    int camera_extra_y;
+
+    int camera_limit_x;
+    int camera_limit_y;
 } Intro;
 
-Intro* intro_create(const char* episode_name, bool move_woody);
+Intro* intro_create(const char* episode_name, bool move_woody, int camera_extra_x, int camera_extra_y);
 int intro_update(Intro* intro);
 void intro_draw_loading(int progress);
 void intro_draw(const Intro* intro);
