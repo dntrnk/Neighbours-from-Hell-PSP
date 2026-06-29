@@ -27,7 +27,9 @@ typedef enum {
     START_USING_H_DOOR,
     END_USING_H_DOOR,
     ANIMATION_PLAY_TILL_THE_END,
-    LOOK_OBJECT_VISIBILITY_SET
+    LOOK_OBJECT_VISIBILITY_SET,
+    LOOK_OBJECT_CHECK_TO_TRICK,
+    LOOK_OBJECT_MAKE_UNTRICKED
 } ActionType;
 
 typedef struct {
@@ -72,6 +74,17 @@ typedef struct {
     bool visibility;
     int next_state;
 } LookObjectVisibilitySetArgs;
+
+typedef struct {
+    int room, id;
+    int trick_state;
+    int no_trick_state;
+} LookObjectCheckToTrickArgs;
+
+typedef struct {
+    int room, id;
+    int next_state;
+} LookObjectMakeUntrickedArgs;
 
 typedef struct {
     ActionType action;
@@ -120,25 +133,38 @@ static const PositionSetArgs action_args_21 = {208, -54, 22};
 // Идти к биноклю
 static const WalkToXArgs action_args_22 = {410, 23};
 
-// Смотреть в бинокль
-static const PositionSetArgs action_args_23 = {309, -50, 24};
-static const LookObjectVisibilitySetArgs action_args_24 = {ROOM_KIT, 1, false, 25};
-static const AnimationPlayTillTheEndArgs action_args_25 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 26};
-static const LookObjectVisibilitySetArgs action_args_26 = {ROOM_KIT, 1, true, 27};
-static const PositionSetArgs action_args_27 = {410, -54, 28};
+// Проверить, есть ли пакость на бинокле
+static const LookObjectCheckToTrickArgs action_args_23 = {ROOM_KIT, 1, 29, 24};
+
+// ---
+// Смотреть в бинокль (без пакости)
+static const PositionSetArgs action_args_24 = {309, -50, 25};
+static const LookObjectVisibilitySetArgs action_args_25 = {ROOM_KIT, 1, false, 26};
+static const AnimationPlayTillTheEndArgs action_args_26 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 27};
+static const LookObjectVisibilitySetArgs action_args_27 = {ROOM_KIT, 1, true, 28};
+static const PositionSetArgs action_args_28 = {410, -54, 35};
+
+// Смотреть в бинокль (пакость)
+static const PositionSetArgs action_args_29 = {309, -50, 30};
+static const LookObjectVisibilitySetArgs action_args_30 = {ROOM_KIT, 1, false, 31};
+static const AnimationPlayTillTheEndArgs action_args_31 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP_GLUE, 32};
+static const LookObjectVisibilitySetArgs action_args_32 = {ROOM_KIT, 1, true, 33};
+static const PositionSetArgs action_args_33 = {410, -54, 34};
+static const LookObjectMakeUntrickedArgs action_args_34 = {ROOM_KIT, 1, 35};
+// ---
 
 // Идти к двери с кухни в гостиную
-static const BubbleSetArgs action_args_28 = {BUBBLE_SOFA, 29};
-static const WalkToXArgs action_args_29 = {210, 30};
+static const BubbleSetArgs action_args_35 = {BUBBLE_SOFA, 36};
+static const WalkToXArgs action_args_36 = {210, 37};
 
 // Начать использовать дверь с кухни на гостиную
-static const StartUsingHDoorArgs action_args_30 = {ROOM_KIT, 0, 31};
-static const PositionSetArgs action_args_31 = {248, -53, 32};
-static const AnimationPlayTillTheEndArgs action_args_32 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 33};
+static const StartUsingHDoorArgs action_args_37 = {ROOM_KIT, 0, 38};
+static const PositionSetArgs action_args_38 = {248, -53, 39};
+static const AnimationPlayTillTheEndArgs action_args_39 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 40};
 
 // Закончить использовать дверь с кухни на гостиную
-static const EndUsingHDoorArgs action_args_33 = {ROOM_KIT, 0, 34};
-static const PositionSetArgs action_args_34 = {148, -56, 1};
+static const EndUsingHDoorArgs action_args_40 = {ROOM_KIT, 0, 41};
+static const PositionSetArgs action_args_41 = {148, -56, 1};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -182,25 +208,38 @@ const Action actions[] = {
     // Идти к биноклю
     {WALK_TO_X, &action_args_22, false},
 
-    // Смотреть в бинокль
-    {POSITION_SET, &action_args_23, true},
-    {LOOK_OBJECT_VISIBILITY_SET, &action_args_24, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_25, false},
-    {LOOK_OBJECT_VISIBILITY_SET, &action_args_26, true},
-    {POSITION_SET, &action_args_27, true},
+    // Проверить, есть ли пакость на бинокле
+    {LOOK_OBJECT_CHECK_TO_TRICK, &action_args_23, true},
+
+    // --
+    // Смотреть в бинокль (без пакости)
+    {POSITION_SET, &action_args_24, true},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_25, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_26, false},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_27, true},
+    {POSITION_SET, &action_args_28, true},
+
+    // Смотреть в бинокль (пакость)
+    {POSITION_SET, &action_args_29, true},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_30, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_31, false},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_32, true},
+    {POSITION_SET, &action_args_33, true},
+    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_34, true},
+    // --
 
     // Идти к двери с кухни в гостиную
-    {BUBBLE_SET, &action_args_28, true},
-    {WALK_TO_X, &action_args_29, false},
+    {BUBBLE_SET, &action_args_35, true},
+    {WALK_TO_X, &action_args_36, false},
 
     // Начать использовать дверь с кухни на гостиную
-    {START_USING_H_DOOR, &action_args_30, true},
-    {POSITION_SET, &action_args_31, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_32, false},
+    {START_USING_H_DOOR, &action_args_37, true},
+    {POSITION_SET, &action_args_38, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_39, false},
 
     // Закончить использовать дверь с кухни на гостиную
-    {END_USING_H_DOOR, &action_args_33, true},
-    {POSITION_SET, &action_args_34, true}
+    {END_USING_H_DOOR, &action_args_40, true},
+    {POSITION_SET, &action_args_41, true}
 };
 
 Neighbour* neighbour_create(
@@ -560,6 +599,27 @@ void neighbour_update(Neighbour* neighbour) {
                 const LookObjectVisibilitySetArgs* args = (const LookObjectVisibilitySetArgs*) current_action.args;
 
                 neighbour->look_objects[args->room][args->id]->sprite_show = args->visibility;
+
+                neighbour->action_state = args->next_state;
+
+                break;
+            }
+
+            case LOOK_OBJECT_CHECK_TO_TRICK: {
+                const LookObjectCheckToTrickArgs* args = (const LookObjectCheckToTrickArgs*) current_action.args;
+
+                const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
+
+                break;
+            }
+
+            case LOOK_OBJECT_MAKE_UNTRICKED: {
+                const LookObjectMakeUntrickedArgs* args = (const LookObjectMakeUntrickedArgs*) current_action.args;
+
+                neighbour->look_objects[args->room][args->id]->tricked = false;
+                neighbour->look_objects[args->room][args->id]->on_untrick();
 
                 neighbour->action_state = args->next_state;
 

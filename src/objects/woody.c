@@ -416,6 +416,8 @@ static void woody_auto_move_complete(Woody* woody) {
                 woody->state = STATE_LOOK_OBJECT;
                 woody->look_object_phrase_show = true;
 
+                woody->auto_move_goal_type = GOAL_NONE;
+
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
             } else {
                 // Ищем текущий LookObject
@@ -424,35 +426,10 @@ static void woody_auto_move_complete(Woody* woody) {
                     if (current_look_object != NULL) {
                         if (current_look_object->collision_x == woody->x) {
                             if (current_look_object->item_to_trick == woody->inventory[woody->selected_item]) {
-                                // Удаляем предмет из инвентаря
-                                woody->inventory[woody->selected_item] = ITEM_NONE;
-                                if (woody->selected_item != 15) {
-                                    woody->inventory[woody->selected_item] = woody->inventory[woody->selected_item+1];
-                                }
-                                for (int item = woody->selected_item+1; item < 15; item++) {
-                                    if (woody->inventory[item] == ITEM_NONE) break;
-                                    woody->inventory[item] = woody->inventory[item+1];
-                                }
-                                woody->inventory[15] = ITEM_NONE;
-                                woody->item_count--;
-                                
-                                if (woody->selected_item > woody->item_count - 1) {
-                                    woody->selected_item = woody->item_count - 1;
-                                }
+                                woody->state = STATE_MAKING_TRICK;
+                                // woody->inventory_using = false;
 
-                                if (woody->selected_item < 0) {
-                                    woody->selected_item = 0;
-                                }
-
-                                current_look_object->tricked = true;
-
-                                int install_sound = (rand() % 2) ? SOUND_INSTALL1 : SOUND_INSTALL2;
-                                NFHSoundPlay(install_sound);
-
-                                woody->state = STATE_SMILE;
-                                woody->inventory_using = false;
-
-                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_LAUGH);
+                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID); // потом будут другие анимации кроме этой
                             } else {
                                 woody->state = STATE_NONO;
                                 woody->inventory_using = false;
@@ -482,9 +459,13 @@ static void woody_auto_move_complete(Woody* woody) {
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
             }
 
+            woody->auto_move_goal_type = GOAL_NONE;
+
             break;
         case GOAL_FLOOR:
             woody->state = STATE_H_MOVE;
+
+            woody->auto_move_goal_type = GOAL_NONE;
 
             break;
         case GOAL_STORAGE:
@@ -511,10 +492,14 @@ static void woody_auto_move_complete(Woody* woody) {
                         break;
                     }
                 }
+                woody->auto_move_goal_type = GOAL_NONE;
+
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
             } else {
                 woody->state = STATE_NONO;
                 woody->inventory_using = false;
+
+                woody->auto_move_goal_type = GOAL_NONE;
 
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
             }
@@ -524,8 +509,6 @@ static void woody_auto_move_complete(Woody* woody) {
 
             break;
     }
-
-    woody->auto_move_goal_type = GOAL_NONE;
 }
 
 static void woody_hints_update(Woody* woody) {
@@ -1232,6 +1215,84 @@ void woody_update(Woody* woody) {
             break;
         }
 
+        case STATE_MAKING_TRICK: {
+            if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
+                woody->state = STATE_AUTO_V_MOVE;
+                woody->auto_move_goal_type = GOAL_FLOOR;
+                woody->auto_move_goal_y = woody->floor_y;
+            }
+
+            woody_auto_move_check(woody);
+
+            if (IS_LAST_ANIMATION_FRAME) { // if trick is made!!!
+                woody->state = STATE_SMILE;
+
+                // Удаляем предмет из инвентаря
+                woody->inventory[woody->selected_item] = ITEM_NONE;
+                if (woody->selected_item != 15) {
+                    woody->inventory[woody->selected_item] = woody->inventory[woody->selected_item+1];
+                }
+                for (int item = woody->selected_item+1; item < 15; item++) {
+                    if (woody->inventory[item] == ITEM_NONE) break;
+                    woody->inventory[item] = woody->inventory[item+1];
+                }
+                woody->inventory[15] = ITEM_NONE;
+                woody->item_count--;
+                                
+                if (woody->selected_item > woody->item_count - 1) {
+                    woody->selected_item = woody->item_count - 1;
+                }
+
+                if (woody->selected_item < 0) {
+                    woody->selected_item = 0;
+                }
+
+                switch (woody->auto_move_goal_type) {
+                    case GOAL_LOOK_OBJECT:
+                        // Ищем текущий LookObject
+                        for (int i = 0; i < 8; i++) {
+                            LookObject* current_look_object = woody->look_objects[woody->room][i];
+                            if (current_look_object != NULL) {
+                                if (current_look_object->collision_x == woody->x) {
+                                    current_look_object->tricked = true;
+
+                                    if (current_look_object->on_trick != NULL) {
+                                        current_look_object->on_trick();
+                                    }
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        break;
+                    case GOAL_HIDEOUT:
+                        // Пока что нет пакостей, связанных с укрытиями
+
+                        break;
+                    case GOAL_FLOOR:
+
+                        break;
+                    case GOAL_STORAGE:
+                        // Пока что нет пакостей, связанных с храналищами
+
+                        break;
+                    case GOAL_NONE:
+
+                        break;
+                }
+
+                woody->inventory_using = false;
+                woody->auto_move_goal_type = GOAL_NONE;
+
+                int install_sound = (rand() % 2) ? SOUND_INSTALL1 : SOUND_INSTALL2;
+                NFHSoundPlay(install_sound);
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_LAUGH);
+            }
+
+            break;
+        }
+
         case STATE_SMILE: {
             if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
                 woody->state = STATE_AUTO_V_MOVE;
@@ -1283,9 +1344,10 @@ void woody_update(Woody* woody) {
                     *woody->level_end_active = true;
                 }
 
-                if (woody->level_end->counter == 1) {
+                if (woody->level_end->counter == 0) {
                     if (woody->quota >= woody->min_quota) {
                         woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+                        NFHSoundPlay(SOUND_APPLAUSE);
                     }
                     woody->animation_loop = false;
                     woody->state = STATE_STOP;

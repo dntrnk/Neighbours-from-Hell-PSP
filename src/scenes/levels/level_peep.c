@@ -105,6 +105,7 @@ static vDoor* v_doors[9][3];
 static unsigned short new_hint_id;
 
 static g2dImage* Sprite_BINOCULARS_MS;
+static g2dImage* Sprite_BINOCULARS_GLUE_MS;
 static g2dImage* Sprite_SOFA_MS;
 
 static LookObject* look_objects[9][8];
@@ -128,6 +129,14 @@ static Neighbour* neighbour;
 static bool neighbour_active;
 
 static bool pause_button_pressed;
+
+static void binoculars_on_trick(void) {
+    look_objects[ROOM_KIT][1]->spritelist = Sprite_BINOCULARS_GLUE_MS;
+}
+
+static void binoculars_on_untrick(void) {
+    look_objects[ROOM_KIT][1]->spritelist = Sprite_BINOCULARS_MS;
+}
 
 static inline int clamp(int x, int min, int max) {
     return (x < min) ? min : ((x > max) ? max : x);
@@ -326,7 +335,9 @@ static void init(void) {
             .item_to_trick = ITEM_NONE,
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
-            .tricked_bubble_size = 0
+            .tricked_bubble_size = 0,
+            .on_trick = NULL,
+            .on_untrick = NULL
         };
         look_objects[ROOM_LIR][0] = new_look_object1;
     }
@@ -354,7 +365,9 @@ static void init(void) {
             .item_to_trick = ITEM_NONE,
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
-            .tricked_bubble_size = 0
+            .tricked_bubble_size = 0,
+            .on_trick = NULL,
+            .on_untrick = NULL
         };
         look_objects[ROOM_ANC][0] = new_look_object2;
     }
@@ -382,12 +395,15 @@ static void init(void) {
             .item_to_trick = ITEM_EGG,
             .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
             .tricked_phrase_y = 8,
-            .tricked_bubble_size = 10
+            .tricked_bubble_size = 10,
+            .on_trick = NULL,
+            .on_untrick = NULL
         };
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
 
     Sprite_BINOCULARS_MS = g2d_LoadImage("assets_thq/sprites/kit/binoculars/binoculars_ms.png", G2D_CLUT8);
+    Sprite_BINOCULARS_GLUE_MS = g2d_LoadImage("assets_thq/sprites/kit/binoculars/binoculars_glue_ms.png", G2D_CLUT8);
 
     LookObject* new_look_object4 = malloc(sizeof(LookObject));
     if (new_look_object4) {
@@ -412,7 +428,9 @@ static void init(void) {
             .item_to_trick = ITEM_SUPERGLUE,
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
             .tricked_phrase_y = 2,
-            .tricked_bubble_size = 14
+            .tricked_bubble_size = 14,
+            .on_trick = binoculars_on_trick,
+            .on_untrick = binoculars_on_untrick
         };
         look_objects[ROOM_KIT][1] = new_look_object4;
     }
@@ -442,7 +460,9 @@ static void init(void) {
             .item_to_trick = ITEM_FARTBAG,
             .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",
             .tricked_phrase_y = 8,
-            .tricked_bubble_size = 10
+            .tricked_bubble_size = 10,
+            .on_trick = NULL,
+            .on_untrick = NULL
         };
         look_objects[ROOM_LIR][1] = new_look_object5;
     }
@@ -912,6 +932,7 @@ static void unload(void) {
     }
 
     g2d_FreeImage(Sprite_BINOCULARS_MS);
+    g2d_FreeImage(Sprite_BINOCULARS_GLUE_MS);
     g2d_FreeImage(Sprite_SOFA_MS);
 
     // look_objects_unload

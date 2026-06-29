@@ -25,6 +25,9 @@ typedef struct {
     char tricked_phrase_text[256];
     int tricked_phrase_y;
     int tricked_bubble_size;
+
+    void (*on_trick)(void);
+    void (*on_untrick)(void);
 } LookObject;
 
 #endif // LOOK_OBJECT_TYPES_H
