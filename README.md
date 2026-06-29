@@ -16,7 +16,7 @@
 git clone https://github.com/dntrnk/Neighbours-from-Hell-PSP
 ```
 3. Откройте папку в терминале и запустите сборку:
-```
+```bash
 make clean && make
 ```
 4. Скопируйте папку `build/`, переименуйте по желанию и перенесите в `F:/PSP/GAME/`
