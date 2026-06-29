@@ -1,13 +1,13 @@
 ВНИМАНИЕ: ФАНАТСКИЙ ПРОЕКТ
 
-Все права на игру "Neighbours from Hell"
-принадлежат THQ Nordic.
+Все права на игру "Neighbours from Hell" принадлежат THQ Nordic.
+Проект не связан с THQ Nordic и не одобрен компанией.
+Автор не претендует на права на оригинальные игровые ресурсы.
 
-Проект не связан с THQ Nordic
-и не одобрен компанией.
-
-Автор не претендует на права
-на оригинальные игровые ресурсы.
+<p>
+    <img src="images/screenshot1.png>" width="45%" />
+    <img src="images/screenshot2.png>" width="45%" />
+</p>
 
 ## Как собрать
 1. Установите [PSPSDK](https://pspdev.github.io/installation.html)
