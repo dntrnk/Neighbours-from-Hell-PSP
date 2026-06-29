@@ -20,7 +20,7 @@ static const char* const sfx_bindings[] = {
     [SOUND_DOOR_CLOSE1] = "assets_thq/sfx/door_close1.wav",
     [SOUND_DOOR_OPEN1] = "assets_thq/sfx/door_open1.wav",
     [SOUND_ILLEGAL] = "assets_thq/sfx/illegal.wav",
-    [SOUND_LEVEL_START] = "assets_thq/sfx/level_start.wav",
+    [SOUND_LEVELSTART] = "assets_thq/sfx/levelstart.wav",
     [SOUND_WOD_JUHU1] = "assets_thq/sfx/wod_juhu1.wav",
     [SOUND_WOD_LAUGH1] = "assets_thq/sfx/wod_laugh1.wav",
     [SOUND_WOD_STEP1A] = "assets_thq/sfx/wod_step1a.wav",
@@ -50,7 +50,9 @@ static const char* const sfx_bindings[] = {
     [SOUND_WOD_LAUGH2] = "assets_thq/sfx/wod_laugh2.wav",
     [SOUND_WOD_FEAR1] = "assets_thq/sfx/wod_fear1.wav",
     [SOUND_INSTALL1] = "assets_thq/sfx/install1.wav",
-    [SOUND_INSTALL2] = "assets_thq/sfx/install2.wav"
+    [SOUND_INSTALL2] = "assets_thq/sfx/install2.wav",
+    [SOUND_USE1] = "assets_thq/sfx/use1.wav",
+    [SOUND_APPLAUSE] = "assets_thq/sfx/applause.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -59,7 +61,7 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_DOOR_CLOSE1] = 0,
     [SOUND_DOOR_OPEN1] = 0,
     [SOUND_ILLEGAL] = 0,
-    [SOUND_LEVEL_START] = 0,
+    [SOUND_LEVELSTART] = 0,
     [SOUND_WOD_JUHU1] = 0,
     [SOUND_WOD_LAUGH1] = 0,
     [SOUND_WOD_STEP1A] = 0,
@@ -89,7 +91,9 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_WOD_LAUGH2] = 0,
     [SOUND_WOD_FEAR1] = 0,
     [SOUND_INSTALL1] = 0,
-    [SOUND_INSTALL2] = 0
+    [SOUND_INSTALL2] = 0,
+    [SOUND_USE1] = 0,
+    [SOUND_APPLAUSE] = 0
 };
 
 typedef struct {
