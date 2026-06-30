@@ -20,5 +20,5 @@ const Frame neighbour_doorright_frames[] = {
     {187, 101, 65, 100, 243, 129, 2}, // doorright_16
     {252, 101, 65, 99, 243, 129, 2}, // doorright_17
     {317, 101, 56, 98, 252, 129, 2}, // doorright_18
-    {373, 101, 50, 97, 258, 129, 2}, // doorright_19
+    {373, 101, 50, 97, 258, 129, 2} // doorright_19
 };

@@ -349,5 +349,5 @@ const Animation neighbour_binoculars_animations[] = {
         .frame_count = 89,
 
         .loop = false
-    },
+    }
 };

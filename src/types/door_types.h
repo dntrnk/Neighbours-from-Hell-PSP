@@ -3,6 +3,8 @@
 
 #include "../types/room_types.h"
 
+#define MAX_V_DOORS_IN_ROOM 3
+
 typedef enum {
     USING_NONE,
     USING_WOODY,

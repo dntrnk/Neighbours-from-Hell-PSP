@@ -26,7 +26,12 @@ extern g2dImage* Sprite_LOADING_TEXT_DATA;
 extern intraFont* Font_ACMESA_17_9;
 extern intraFont* Font_ACMESAI_13;
 
-Intro* intro_create(const char* episode_name, bool move_woody, int camera_extra_x, int camera_extra_y) {
+Intro* intro_create(
+    const char* episode_name,
+    bool move_woody,
+    int camera_extra_x,
+    int camera_extra_y
+) {
     Intro* intro = malloc(sizeof(Intro));
     memset(intro, 0, sizeof(Intro));
 

@@ -208,9 +208,9 @@ static void init(void) {
     g2dFlip(G2D_VSYNC);
 
     // Горизонтальные двери
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 2; j++) {
-            h_doors[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < 2; i++) {
+            h_doors[room][i] = NULL;
         }
     }
 
@@ -255,9 +255,9 @@ static void init(void) {
     }
 
     // Вертикальные двери
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 3; j++) {
-            v_doors[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
+            v_doors[room][i] = NULL;
         }
     }
 
@@ -273,7 +273,7 @@ static void init(void) {
 
         int index = 0;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
             if (v_doors[room][i] == NULL) {
                 index = i;
                 break;
@@ -306,9 +306,9 @@ static void init(void) {
     // Интерактивные объекты
     new_hint_id = 0;
 
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 8; j++) {
-            look_objects[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
+            look_objects[room][i] = NULL;
         }
     }
 
@@ -507,9 +507,9 @@ static void init(void) {
     }
 
     // Хранилища
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 8; j++) {
-            storages[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
+            storages[room][i] = NULL;
         }
     }
 
@@ -812,7 +812,7 @@ static void draw(void) {
 
     // v_doors
     for (int room = 0; room < room_count; room++) {
-        for (int door = 0; door < 3; door++) {
+        for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
             vDoor* current_door = v_doors[room][door];
 
             if (current_door == NULL)
@@ -840,11 +840,11 @@ static void draw(void) {
 
     // look_objects
     for (int room = 0; room < room_count; room++) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_objects[room][i];
 
             if (current_look_object == NULL)
-                break; // Важно, чтобы look_objects по порядку ставили
+                break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
             
             if (current_look_object->spritelist == NULL)
                 continue;
@@ -864,7 +864,7 @@ static void draw(void) {
 
     // storages
     for (int room = 0; room < room_count; room++) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             Storage* current_storage = storages[room][i];
 
             if (current_storage == NULL)
@@ -922,21 +922,21 @@ static void unload(void) {
     g2d_FreeImage(houseBg2);
 
     // h_doors_unload
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 2; j++) {
-            if (h_doors[i][j] != NULL) {
-                free(h_doors[i][j]);
-                h_doors[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < 2; i++) {
+            if (h_doors[room][i] != NULL) {
+                free(h_doors[room][i]);
+                h_doors[room][i] = NULL;
             }
         }
     }
 
     // v_doors_unload
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (v_doors[i][j] != NULL) {
-                free(v_doors[i][j]);
-                v_doors[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
+            if (v_doors[room][i] != NULL) {
+                free(v_doors[room][i]);
+                v_doors[room][i] = NULL;
             }
         }
     }
@@ -946,11 +946,11 @@ static void unload(void) {
     g2d_FreeImage(Sprite_SOFA_MS);
 
     // look_objects_unload
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (look_objects[i][j] != NULL) {
-                free(look_objects[i][j]);
-                look_objects[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
+            if (look_objects[room][i] != NULL) {
+                free(look_objects[room][i]);
+                look_objects[room][i] = NULL;
             }
         }
     }
@@ -963,11 +963,11 @@ static void unload(void) {
     }
 
     // storages unload
-    for (int i = 0; i < room_count; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (storages[i][j] != NULL) {
-                free(storages[i][j]);
-                storages[i][j] = NULL;
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
+            if (storages[room][i] != NULL) {
+                free(storages[room][i]);
+                storages[room][i] = NULL;
             }
         }
     }

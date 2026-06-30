@@ -16,6 +16,9 @@
 #define COLOR_WHITE_PERCENT G2D_RGB(254, 254, 254)
 #define COLOR_GRAY_BUBBLE G2D_RGB(158, 158, 158)
 
+#define MAX_HINTS 3
+#define MAX_ITEMS_IN_INVENTORY 16
+
 #define IS_LAST_ANIMATION_FRAME (woody->animation_frame == woody->animation_length - 1 && woody->animation_frame_time == 4)
 
 extern Scene Tutorial1Scene;
@@ -168,7 +171,7 @@ Woody* woody_create(
     woody->total_tricks = total_tricks;
 
     // Инвентарь
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < MAX_ITEMS_IN_INVENTORY; i++) {
         woody->inventory[i] = ITEM_NONE;
     }
 
@@ -177,7 +180,7 @@ Woody* woody_create(
     woody->inventory_using = false;
 
     // Интерфейс
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < MAX_HINTS; i++) {
         woody->hints[i].show = false;
         woody->hints[i].is_active_goal = false;
     }
@@ -346,7 +349,7 @@ static void woody_auto_move_check(Woody* woody) {
     // Авто-движение к LookObject
     if (controls_pressed(PSP_CTRL_SQUARE)) {
         LookObject** look_object_in_room = woody->look_objects[woody->room];
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_object_in_room[i];
             if (current_look_object != NULL) {
                 if (((abs(current_look_object->collision_x - woody->x) < 36) && woody->y == woody->floor_y) || (current_look_object->collision_x == woody->x)) {
@@ -390,7 +393,7 @@ static void woody_auto_move_check(Woody* woody) {
     // Авто-движение к Storages
     if (controls_pressed(PSP_CTRL_CROSS)) {
         Storage** storages_in_room = woody->storages[woody->room];
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             Storage* current_storage = storages_in_room[i];
             if (current_storage != NULL) {
                 if (((abs(current_storage->collision_x - woody->x) < 36) && woody->y == woody->floor_y) || (current_storage->collision_x == woody->x)) {
@@ -421,13 +424,12 @@ static void woody_auto_move_complete(Woody* woody) {
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
             } else {
                 // Ищем текущий LookObject
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
                     if (current_look_object != NULL) {
                         if (current_look_object->collision_x == woody->x) {
                             if (current_look_object->item_to_trick == woody->inventory[woody->selected_item]) {
                                 woody->state = STATE_MAKING_TRICK;
-                                // woody->inventory_using = false;
 
                                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID); // потом будут другие анимации кроме этой
                             } else {
@@ -478,7 +480,7 @@ static void woody_auto_move_complete(Woody* woody) {
                 woody->state = STATE_STORAGE_CHECK;
 
                 Storage** storages_in_room = woody->storages[woody->room];
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     Storage* current_storage = storages_in_room[i];
                     if (current_storage != NULL) {
                         if (woody->x == current_storage->collision_x) {
@@ -517,14 +519,14 @@ static void woody_auto_move_complete(Woody* woody) {
 
 static void woody_hints_update(Woody* woody) {
     // Отключаем существующие подсказки
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < MAX_HINTS; i++) {
         Hint* current_hint = &woody->hints[i];
         current_hint->show = false;
         current_hint->is_active_goal = false;
     }
 
     // Смотрим LookObjects
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
         LookObject* current_look_object = woody->look_objects[woody->room][i];
         if (current_look_object != NULL) {
             if (abs(current_look_object->collision_x - woody->x) < 36) {
@@ -590,7 +592,7 @@ static void woody_hints_update(Woody* woody) {
     }
 
     // Смотрим Storages
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
         Storage* current_storage = woody->storages[woody->room][i];
         if (current_storage != NULL) {
             if (abs(current_storage->collision_x - woody->x) < 36) {
@@ -617,7 +619,7 @@ static void woody_hints_update(Woody* woody) {
     }
 
     // Сдвиг active_goal в начало подсказок
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < MAX_HINTS; i++) {
         Hint* current_hint = &woody->hints[i];
         if (current_hint->is_active_goal) {
             switch (i) {
@@ -714,7 +716,7 @@ void woody_update(Woody* woody) {
 
             // Ассист движения к вертикальным дверям
             if (controls_held(PSP_CTRL_UP)) {
-                for (int door = 0; door < 3; door++) {
+                for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
                     if (woody->v_doors[woody->room][door] != NULL) {
                         int current_collision_x = woody->v_doors[woody->room][door]->collision_x;
                         int distance = abs(current_collision_x - woody->x);
@@ -789,7 +791,7 @@ void woody_update(Woody* woody) {
             woody->y += woody->velocity_y;
 
             // Вход в вертикальную дверь
-            for (int door = 0; door < 3; door++) {
+            for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
                 vDoor* current_door = woody->v_doors[woody->room][door];
                 if (current_door != NULL) {
                     if (current_door->using_by == USING_NONE && woody->x == current_door->collision_x && woody->y <= current_door->collision_y) {
@@ -951,7 +953,7 @@ void woody_update(Woody* woody) {
                 Storage* current_storage = NULL;
 
                 Storage** storages_in_room = woody->storages[woody->room];
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     current_storage = storages_in_room[i];
                     if (current_storage != NULL) {
                         if (woody->x == current_storage->collision_x) {
@@ -1004,14 +1006,14 @@ void woody_update(Woody* woody) {
                 Storage* current_storage = NULL;
 
                 Storage** storages_in_room = woody->storages[woody->room];
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     current_storage = storages_in_room[i];
                     if (current_storage != NULL) {
                         if (woody->x == current_storage->collision_x) {
                             int first_item_index = woody->item_count;
                             woody->inventory_animation_first_index = first_item_index;
                             woody->inventory_animation_last_index = first_item_index;
-                            for (int i = 0; i < 4; i++) { // 4 - макисмальное кол-во предметов в Storage
+                            for (int i = 0; i < MAX_ITEMS_IN_STORAGE; i++) {
                                 Item current_item = current_storage->items[i];
                                 if (current_item != ITEM_NONE) {
                                     woody->inventory[first_item_index + i] = current_item;
@@ -1073,7 +1075,7 @@ void woody_update(Woody* woody) {
                 Storage* current_storage = NULL;
 
                 Storage** storages_in_room = woody->storages[woody->room];
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     current_storage = storages_in_room[i];
                     if (current_storage != NULL) {
                         if (woody->x == current_storage->collision_x) {
@@ -1161,8 +1163,8 @@ void woody_update(Woody* woody) {
             vDoor* dest_door = (vDoor*)woody->dest_door;
 
             if (woody->dest_door_animation_frame >= 10) {
-                woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, dest_door->collision_x - woody->x, 0.92);
-                woody->camera_door_offset_y = lerp(woody->camera_door_offset_y, woody->room_collisions[woody->room].floor - woody->floor_y, 0.92);
+                woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, dest_door->collision_x - woody->x, 0.92f);
+                woody->camera_door_offset_y = lerp(woody->camera_door_offset_y, woody->room_collisions[woody->room].floor - woody->floor_y, 0.92f);
             }
 
             // Анимация Dest Door
@@ -1244,7 +1246,7 @@ void woody_update(Woody* woody) {
                 if (woody->selected_item != 15) {
                     woody->inventory[woody->selected_item] = woody->inventory[woody->selected_item+1];
                 }
-                for (int item = woody->selected_item+1; item < 15; item++) {
+                for (int item = woody->selected_item+1; item < (MAX_ITEMS_IN_INVENTORY - 1); item++) {
                     if (woody->inventory[item] == ITEM_NONE) break;
                     woody->inventory[item] = woody->inventory[item+1];
                 }
@@ -1262,7 +1264,7 @@ void woody_update(Woody* woody) {
                 switch (woody->auto_move_goal_type) {
                     case GOAL_LOOK_OBJECT:
                         // Ищем текущий LookObject
-                        for (int i = 0; i < 8; i++) {
+                        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                             LookObject* current_look_object = woody->look_objects[woody->room][i];
                             if (current_look_object != NULL) {
                                 if (current_look_object->collision_x == woody->x) {
@@ -1379,9 +1381,7 @@ void woody_update(Woody* woody) {
         }
     }
 
-    // if (previous_x != woody->x) { // If Woody Moved
     woody_hints_update(woody);
-    // }
 
     // Анимации
     woody->animation_frame_time++;
@@ -1470,13 +1470,13 @@ void woody_update(Woody* woody) {
     if (abs(woody->camera_offset_x - woody->new_camera_offset_x) < 1) {
         woody->camera_offset_x = woody->new_camera_offset_x;
     } else {
-        woody->camera_offset_x = lerp(woody->camera_offset_x, woody->new_camera_offset_x, 0.8);
+        woody->camera_offset_x = lerp(woody->camera_offset_x, woody->new_camera_offset_x, 0.8f);
     }
 
     if (abs(woody->camera_offset_y - woody->new_camera_offset_y) < 1) {
         woody->camera_offset_y = woody->new_camera_offset_y;
     } else {
-        woody->camera_offset_y = lerp(woody->camera_offset_y, woody->new_camera_offset_y, 0.8);
+        woody->camera_offset_y = lerp(woody->camera_offset_y, woody->new_camera_offset_y, 0.8f);
     }
 
     // Clamp камеры по Вуди
@@ -1507,11 +1507,10 @@ void woody_draw(const Woody* woody) {
         // Bubble Top
         g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - woody->look_object_bubble_size - 39, 120, 12, WHITE, 275, 293, 120, 12, 0, 235, G2D_UP_LEFT);
 
-        for (int i = 0; i < 2; i++) {
-            intraFontSetStyle(Font_ACMESA, 0.65, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
-            intraFontActivate(Font_ACMESA, 1);
-            intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
-        }
+        intraFontSetStyle(Font_ACMESA, 0.65f, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
+        intraFontActivate(Font_ACMESA, 1);
+        intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
+        intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
     }
 }
 
@@ -1528,7 +1527,7 @@ void woody_draw_ui(const Woody* woody) {
     if (!woody->in_door) {
         int hint_text_x = 93;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < MAX_HINTS; i++) {
             const Hint* current_hint = &woody->hints[i];
             if (!current_hint->show) break;
 
@@ -1610,11 +1609,11 @@ void woody_draw_ui(const Woody* woody) {
 
     // Над-проценты
     if (woody->ui_quota_delta_text_show && woody->ui_tricks_counter_text_show) {
-        intraFontSetStyle(Font_BLUEHIGC_24, 0.7, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_RIGHT);
+        intraFontSetStyle(Font_BLUEHIGC_24, 0.7f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_RIGHT);
         intraFontActivate(Font_BLUEHIGC_24, 0);
         intraFontPrint(Font_BLUEHIGC_24, 418, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_quota_delta_text);
 
-        intraFontSetStyle(Font_BLUEHIGB_18, 0.8, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+        intraFontSetStyle(Font_BLUEHIGB_18, 0.8f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
         intraFontActivate(Font_BLUEHIGB_18, 0);
         intraFontPrint(Font_BLUEHIGB_18, 419, 238 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
     }
@@ -1630,7 +1629,7 @@ void woody_tricks_counter_update(Woody* woody, int trick_quota) {
 
     sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
 
-    intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontSetStyle(Font_BLUEHIGC_24, 0.583f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
     woody->ui_tricks_counter_text_x = 460 - floor(intraFontMeasureText(Font_BLUEHIGC_24, woody->ui_tricks_counter_text) * 0.5);
     woody->ui_tricks_counter_text_show = false;
 

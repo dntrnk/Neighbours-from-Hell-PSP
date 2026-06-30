@@ -324,5 +324,4 @@ const Animation woody_generic_animations[] = {
 
         .loop = false
     }
-
 };

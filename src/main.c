@@ -158,7 +158,7 @@ int main(void) {
     Font_BLUEHIGB_10 = intraFontLoadTTF("assets_thq/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 10);
     Font_BLUEHIGB_18 = intraFontLoadTTF("assets_thq/fonts/bluehigb.ttf", INTRAFONT_STRING_UTF8, 18);
     Font_ACMESA = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 11.f);
-    Font_ACMESA_17_9 = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 17.9);
+    Font_ACMESA_17_9 = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 17.9f);
     Font_ACMESAI_13 = intraFontLoadTTF("assets_thq/fonts/acmesai.ttf", INTRAFONT_STRING_UTF8, 13);
 
     scene_change(&DisclaimerScene);

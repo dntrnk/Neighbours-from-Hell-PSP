@@ -234,12 +234,12 @@ static void draw(void) {
         intraFontPrint(Font_BLUEHIGH_8, 253, 120 + intraFontTextHeight(Font_BLUEHIGH_8), "Любопытный сосед");
     }
 
-    intraFontSetStyle(Font_ACMESA, 0.65, WHITE, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontSetStyle(Font_ACMESA, 0.65f, WHITE, 0, 0, INTRAFONT_ALIGN_RIGHT);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 409, 7 + intraFontTextHeight(Font_ACMESA), "Описание серии");
     intraFontPrint(Font_ACMESA, 409, 7 + intraFontTextHeight(Font_ACMESA), "Описание серии");
 
-    intraFontSetStyle(Font_ACMESA, 0.65, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontSetStyle(Font_ACMESA, 0.65f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 270, 217 + intraFontTextHeight(Font_ACMESA), "Рекорд серии:");
     intraFontPrint(Font_ACMESA, 270, 217 + intraFontTextHeight(Font_ACMESA), "Рекорд серии:");

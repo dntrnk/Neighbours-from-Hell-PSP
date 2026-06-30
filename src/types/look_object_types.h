@@ -3,6 +3,8 @@
 
 #include "../engine/graphics/g2d.h"
 
+#define MAX_LOOK_OBJECTS_IN_ROOM 8
+
 typedef struct {
     g2dImage* spritelist;
     int sprite_x, sprite_y;

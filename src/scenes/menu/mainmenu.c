@@ -363,27 +363,22 @@ Scene AuthorsMenuScene = {
 
 // mainmenu //
 
-typedef struct {
-    int clicked_button;
-    int selected_button;
-
-    int menu_buttons[3];
-    g2dColor menu_buttons_colors[3];
-} MainMenuContext;
-
-static MainMenuContext ctx;
+static int clicked_button;
+static int selected_button;
+static int menu_buttons[3];
+static g2dColor menu_buttons_colors[3];
 
 static void mainmenu_init(void) {
-    ctx.selected_button = 0; // Кнопка, выбранная посредством стрелочек
-    ctx.clicked_button = 1; // Кнопка, на которой нажали X
+    selected_button = 0; // Кнопка, выбранная посредством стрелочек
+    clicked_button = 1; // Кнопка, на которой нажали X
 
-    ctx.menu_buttons[0] = BUTTON_SELECTED;
-    ctx.menu_buttons[1] = BUTTON_DEFAULT;
-    ctx.menu_buttons[2] = BUTTON_DEFAULT;
+    menu_buttons[0] = BUTTON_SELECTED;
+    menu_buttons[1] = BUTTON_DEFAULT;
+    menu_buttons[2] = BUTTON_DEFAULT;
 
-    ctx.menu_buttons_colors[0] = WHITE;
-    ctx.menu_buttons_colors[1] = CG_MENU_GRAY;
-    ctx.menu_buttons_colors[2] = CG_MENU_GRAY;
+    menu_buttons_colors[0] = WHITE;
+    menu_buttons_colors[1] = CG_MENU_GRAY;
+    menu_buttons_colors[2] = CG_MENU_GRAY;
 
     /* ^^^ Что значит таблица menu_buttons ^^^
     Это состояния кнопок. Цифры также означают и спрайт для отрисовки:
@@ -402,17 +397,17 @@ static void mainmenu_init(void) {
 
 static void mainmenu_buttons_update(void) {
     // Сначала обнуляем все значения
-    ctx.menu_buttons[0] = BUTTON_DEFAULT;
-    ctx.menu_buttons[1] = BUTTON_DEFAULT;
-    ctx.menu_buttons[2] = BUTTON_DEFAULT;
+    menu_buttons[0] = BUTTON_DEFAULT;
+    menu_buttons[1] = BUTTON_DEFAULT;
+    menu_buttons[2] = BUTTON_DEFAULT;
 
-    ctx.menu_buttons_colors[0] = CG_MENU_GRAY;
-    ctx.menu_buttons_colors[1] = CG_MENU_GRAY;
-    ctx.menu_buttons_colors[2] = CG_MENU_GRAY;
+    menu_buttons_colors[0] = CG_MENU_GRAY;
+    menu_buttons_colors[1] = CG_MENU_GRAY;
+    menu_buttons_colors[2] = CG_MENU_GRAY;
 
     // А потом устанавливаем выбранной кнопке BUTTON_SELECTED (1) и белый цвет
-    ctx.menu_buttons[ctx.selected_button] = BUTTON_SELECTED;
-    ctx.menu_buttons_colors[ctx.selected_button] = WHITE;
+    menu_buttons[selected_button] = BUTTON_SELECTED;
+    menu_buttons_colors[selected_button] = WHITE;
 
     NFHSoundPlay(SOUND_BUT_HOVER1);
 }
@@ -422,14 +417,14 @@ static void mainmenu_update(void) {
 
     // Управление кнопками через стрелки вверх/вниз
     if (controls_pressed(PSP_CTRL_UP)) {
-        if (ctx.selected_button != 0) {
-            ctx.selected_button--;
+        if (selected_button != 0) {
+            selected_button--;
             
             mainmenu_buttons_update();
         }
     } else if (controls_pressed(PSP_CTRL_DOWN)) {
-        if (ctx.selected_button != 2) {
-            ctx.selected_button++;
+        if (selected_button != 2) {
+            selected_button++;
 
             mainmenu_buttons_update();
         }
@@ -443,11 +438,11 @@ static void mainmenu_update(void) {
     */
 
     if (controls_pressed(PSP_CTRL_CROSS)) {
-        ctx.menu_buttons[ctx.selected_button] = 2;
-        ctx.clicked_button = ctx.selected_button;
+        menu_buttons[selected_button] = 2;
+        clicked_button = selected_button;
         NFHSoundPlay(SOUND_BUT1);
-    } else if (controls_released(PSP_CTRL_CROSS) && ctx.menu_buttons[ctx.clicked_button] == BUTTON_PRESSED) {
-        switch (ctx.clicked_button) {
+    } else if (controls_released(PSP_CTRL_CROSS) && menu_buttons[clicked_button] == BUTTON_PRESSED) {
+        switch (clicked_button) {
             case 0: // Играть
                 scene_push(&NewGameMenuScene);
 
@@ -462,7 +457,7 @@ static void mainmenu_update(void) {
                 break;
         }
 
-        ctx.menu_buttons[ctx.clicked_button] = BUTTON_SELECTED;
+        menu_buttons[clicked_button] = BUTTON_SELECTED;
     }
 }
 
@@ -476,18 +471,18 @@ static void mainmenu_draw(void) {
     g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
 
     // Отрисовка кнопок, состояние кнопки совпадает со спрайтом (не выбран/выбран/нажат)
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 130, 150, 24, WHITE, ctx.menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 155, 150, 24, WHITE, ctx.menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, ctx.menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 130, 150, 24, WHITE, menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 155, 150, 24, WHITE, menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
-    intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 248, 137 + intraFontTextHeight(Font_ACMESA), "Начать игру");
 
-    intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 248, 162 + intraFontTextHeight(Font_ACMESA), "Авторы");
 
-    intraFontSetStyle(Font_ACMESA, 0.8, ctx.menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 248, 187 + intraFontTextHeight(Font_ACMESA), "Выход");
 
     g2dFlip(G2D_VSYNC);

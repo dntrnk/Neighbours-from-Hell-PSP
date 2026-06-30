@@ -7,6 +7,9 @@
 
 #include "../engine/graphics/g2d.h"
 
+#define MAX_STORAGES_IN_ROOM 8
+#define MAX_ITEMS_IN_STORAGE 4
+
 typedef enum {
     SPRITE_TYPE_OPENS,
     SPRITE_TYPE_DISAPPEARS
@@ -37,7 +40,7 @@ typedef struct {
     char use_hint_text[128];
     unsigned short hint_id;
 
-    Item items[4];
+    Item items[MAX_ITEMS_IN_STORAGE];
     bool opened;
     StorageSide side;
 } Storage;

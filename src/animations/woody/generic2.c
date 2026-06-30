@@ -310,6 +310,5 @@ const Animation woody_generic2_animations[] = {
         .frame_count = 12,
 
         .loop = true
-    },
-
+    }
 };
