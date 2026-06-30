@@ -456,7 +456,7 @@ static void init(void) {
             .item_to_trick = ITEM_SUPERGLUE,
             .alt_action = false,
             .trick_making_length = 108,
-            .trick_tv_rating = 33,
+            .trick_tv_rating = 30,
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
             .tricked_phrase_y = 2,
             .tricked_bubble_size = 14,
