@@ -144,7 +144,9 @@ static void binoculars_on_trick(void) {
 }
 
 static void binoculars_on_untrick(void) {
-    look_objects[ROOM_KIT][1]->spritelist = Sprite_BINOCULARS_MS;
+    look_objects[ROOM_KIT][1]->sprite_show = false;
+    look_objects[ROOM_KIT][1]->collision_x = 2048;
+    look_objects[ROOM_KIT][1]->alt_action = true;
 }
 
 static inline int clamp(int x, int min, int max) {
@@ -344,6 +346,7 @@ static void init(void) {
             .bubble_size = 18,
             .tricked = false,
             .item_to_trick = ITEM_NONE,
+            .alt_action = false,
             .trick_making_length = 0,
             .trick_tv_rating = 0,
             .tricked_phrase_text = "",
@@ -378,6 +381,7 @@ static void init(void) {
             .bubble_size = 18,
             .tricked = false,
             .item_to_trick = ITEM_NONE,
+            .alt_action = false,
             .trick_making_length = 0,
             .trick_tv_rating = 0,
             .tricked_phrase_text = "",
@@ -412,6 +416,7 @@ static void init(void) {
             .bubble_size = 18,
             .tricked = false,
             .item_to_trick = ITEM_EGG,
+            .alt_action = false,
             .trick_making_length = 108,
             .trick_tv_rating = 16,
             .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
@@ -449,6 +454,7 @@ static void init(void) {
             .bubble_size = 22,
             .tricked = false,
             .item_to_trick = ITEM_SUPERGLUE,
+            .alt_action = false,
             .trick_making_length = 108,
             .trick_tv_rating = 33,
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
@@ -485,6 +491,7 @@ static void init(void) {
             .bubble_size = 10,
             .tricked = false,
             .item_to_trick = ITEM_FARTBAG,
+            .alt_action = false,
             .trick_making_length = 108,
             .trick_tv_rating = 25,
             .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",

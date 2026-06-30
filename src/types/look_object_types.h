@@ -25,6 +25,7 @@ typedef struct {
 
     bool tricked;
     int item_to_trick;
+    bool alt_action;
 
     int trick_making_length;
     int trick_tv_rating;
