@@ -328,6 +328,9 @@ Neighbour* neighbour_create(
 
     // Интерфейс
     neighbour->head_icon_src_x = 47 * neighbour->emotion;
+    neighbour->head_icon_show = true;
+    neighbour->head_icon_animation_play = false;
+    neighbour->head_icon_animation_frame = 0;
     // local breakdownsText = tostring(breakdowns)
     neighbour->current_bubble = start_bubble;
 
@@ -610,6 +613,11 @@ void neighbour_update(Neighbour* neighbour) {
 
                 const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
 
+                if (current_look_object->tricked) {
+                    neighbour->head_icon_animation_frame = 0;
+                    neighbour->head_icon_animation_play = true;
+                }
+
                 neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
 
                 break;
@@ -645,6 +653,17 @@ void neighbour_update(Neighbour* neighbour) {
         }
         neighbour_dest_door_animation_update_frame(neighbour);
     }
+
+    if (neighbour->head_icon_animation_play) {
+        neighbour->head_icon_animation_frame++;
+        if (neighbour->head_icon_animation_frame % 2 == 0) {
+            neighbour->head_icon_show = !neighbour->head_icon_show;
+        }
+
+        if (neighbour->head_icon_animation_frame == 12) {
+            neighbour->head_icon_animation_play = false;
+        }
+    }
 }
 
 void neighbour_draw(const Neighbour* neighbour) {
@@ -661,7 +680,9 @@ void neighbour_door_draw(const Neighbour* neighbour) {
 
 void neighbour_draw_ui(const Neighbour* neighbour) {
     // Head Icon
-    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 3, 230, 47, 42, WHITE, neighbour->head_icon_src_x, 80, 47, 42, 0, 255, G2D_UP_LEFT);
+    if (neighbour->head_icon_show) {
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 3, 230, 47, 42, WHITE, neighbour->head_icon_src_x, 80, 47, 42, 0, 255, G2D_UP_LEFT);
+    }
 
     intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_ORANGE_BREAKDOWNS, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGC_24, 1);

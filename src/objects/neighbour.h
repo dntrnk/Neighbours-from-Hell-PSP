@@ -86,6 +86,10 @@ typedef struct {
     // local cWhite = Color.new(255, 255, 255)
     
     unsigned short head_icon_src_x;
+    bool head_icon_show;
+    bool head_icon_animation_play;
+    int head_icon_animation_frame;
+
     // local breakdownsText = tostring(breakdowns)
     Bubble current_bubble;
     unsigned short bubble_sprite_src_x, bubble_sprite_src_y;
