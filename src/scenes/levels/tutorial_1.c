@@ -356,7 +356,8 @@ static void init(void) {
         ROOM_LIR, // start_room
         BUBBLE_SOFA, // start_bubble
         NULL, NULL, // h_doors, v_doors
-        NULL // look_objects
+        NULL, // look_objects
+        woody
     );
 
     // Туториал

@@ -345,6 +345,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_NONE,
             .trick_making_length = 0,
+            .trick_quota = 0,
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
             .tricked_bubble_size = 0,
@@ -378,6 +379,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_NONE,
             .trick_making_length = 0,
+            .trick_quota = 0,
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
             .tricked_bubble_size = 0,
@@ -411,6 +413,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_EGG,
             .trick_making_length = 108,
+            .trick_quota = 16,
             .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
             .tricked_phrase_y = 8,
             .tricked_bubble_size = 10,
@@ -447,6 +450,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_SUPERGLUE,
             .trick_making_length = 108,
+            .trick_quota = 33,
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
             .tricked_phrase_y = 2,
             .tricked_bubble_size = 14,
@@ -482,6 +486,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_FARTBAG,
             .trick_making_length = 108,
+            .trick_quota = 25,
             .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",
             .tricked_phrase_y = 8,
             .tricked_bubble_size = 10,
@@ -689,7 +694,8 @@ static void init(void) {
         ROOM_LIR, // start_room
         BUBBLE_SOFA, // start_bubble
         h_doors, v_doors, // h_doors, v_doors
-        look_objects // look_objects
+        look_objects, // look_objects
+        woody // woody
     );
     neighbour_active = false;
 

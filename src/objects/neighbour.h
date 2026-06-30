@@ -18,6 +18,8 @@
 #include "../animations/neighbour/generic3.h"
 #include "../animations/neighbour/look.h"
 
+typedef struct Woody Woody;
+
 typedef struct {
     // Анимации
     g2dImage* spritelists[16];
@@ -77,6 +79,8 @@ typedef struct {
 
     RoomID room;
 
+    Woody* woody;
+
     // Прохождение уровня
     int emotion;
     int breakdowns;
@@ -109,7 +113,8 @@ Neighbour* neighbour_create(
     int start_bubble,
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
-    LookObject* (*look_objects)[8]
+    LookObject* (*look_objects)[8],
+    Woody* woody
 );
 
 void neighbour_animation_update_frame(Neighbour* neighbour);
