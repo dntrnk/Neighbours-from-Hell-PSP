@@ -37,7 +37,7 @@ LevelEnd* level_end_create(void) {
     level_end->buttons_colors[1] = LEVEL_END_YELLOW;
 
     strcpy(level_end->tricks_text, "");
-    strcpy(level_end->quota_text, "");
+    strcpy(level_end->tv_rating_text, "");
 
     return level_end;
 }
@@ -112,7 +112,7 @@ void level_end_draw(const LevelEnd* level_end) {
     // Квота
     // При ALIGN_RIGHT текст выглядит "ломаным", поэтому я сделал отрисовку через ALIGN_CENTER, но с вычислением X, как будто это ALIGN_RIGHT (мда)
     intraFontSetStyle(Font_BLUEHIGC_24, 0.926, LEVEL_END_GREEN, 0, 0, INTRAFONT_ALIGN_CENTER);
-    intraFontPrint(Font_BLUEHIGC_24, 279 - (int) ((intraFontMeasureText(Font_BLUEHIGC_24, level_end->quota_text) * 0.5) + 0.5), 153 + intraFontTextHeight(Font_BLUEHIGC_24), level_end->quota_text);
+    intraFontPrint(Font_BLUEHIGC_24, 279 - (int) ((intraFontMeasureText(Font_BLUEHIGC_24, level_end->tv_rating_text) * 0.5) + 0.5), 153 + intraFontTextHeight(Font_BLUEHIGC_24), level_end->tv_rating_text);
 
     intraFontSetStyle(Font_BLUEHIGB_18, 0.975, LEVEL_END_GREEN, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 0);

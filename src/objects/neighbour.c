@@ -656,7 +656,7 @@ void neighbour_update(Neighbour* neighbour) {
 
                 neighbour->head_icon_src_x = 94;
 
-                woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_quota);
+                woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
 
                 neighbour->action_state = args->next_state;
 

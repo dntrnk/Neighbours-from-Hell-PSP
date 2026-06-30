@@ -27,7 +27,7 @@ typedef struct {
     int item_to_trick;
 
     int trick_making_length;
-    int trick_quota;
+    int trick_tv_rating;
 
     char tricked_phrase_text[256];
     int tricked_phrase_y;

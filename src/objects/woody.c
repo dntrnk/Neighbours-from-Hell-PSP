@@ -166,7 +166,7 @@ Woody* woody_create(
     woody->level_end_active = level_end_active;
 
     // Прохождение уровня
-    woody->quota = 0;
+    woody->tv_rating = 0;
     woody->min_quota = min_quota;
 
     woody->tricks = 0;
@@ -190,14 +190,14 @@ Woody* woody_create(
         woody->hints[i].is_active_goal = false;
     }
 
-    woody->ui_quota = 0.0f;
-    sprintf(woody->ui_quota_text, "%d", (int) woody->ui_quota);
-    woody->ui_quota_animation_play = false;
-    woody->ui_quota_animation_frame = 0;
-    woody->ui_quota_delta = 0.0f;
-    strcpy(woody->ui_quota_delta_text, "+0");
-    woody->ui_quota_delta_text_show = false;
-    woody->ui_quota_text_color = COLOR_GREEN_PERCENT;
+    woody->ui_tv_rating = 0.0f;
+    sprintf(woody->ui_tv_rating_text, "%d", (int) woody->ui_tv_rating);
+    woody->ui_tv_rating_animation_play = false;
+    woody->ui_tv_rating_animation_frame = 0;
+    woody->ui_tv_rating_delta = 0.0f;
+    strcpy(woody->ui_tv_rating_delta_text, "+0");
+    woody->ui_tv_rating_delta_text_show = false;
+    woody->ui_tv_rating_text_color = COLOR_GREEN_PERCENT;
 
     sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
     intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -1149,7 +1149,7 @@ void woody_update(Woody* woody) {
 
                         NFHHouseMusicStop();
 
-                        if (woody->quota >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
+                        if (woody->tv_rating >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
                             NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
                         } else {
                             strcpy(woody->level_end->end_text, "Провал");
@@ -1360,14 +1360,14 @@ void woody_update(Woody* woody) {
         case STATE_LEVEL_ENDING: {
             if (woody->is_on_floor) {
                 if (!*woody->level_end_active) {
-                    if (woody->quota >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
+                    if (woody->tv_rating >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
                         woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_TRIUMPH);
                     }
                     *woody->level_end_active = true;
                 }
 
                 if (woody->level_end->counter == 0) {
-                    if (woody->quota >= woody->min_quota) {
+                    if (woody->tv_rating >= woody->min_quota) {
                         woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
                         NFHSoundPlay(SOUND_APPLAUSE);
                     }
@@ -1375,7 +1375,7 @@ void woody_update(Woody* woody) {
                     woody->state = STATE_STOP;
 
                     strcpy(woody->level_end->tricks_text, woody->ui_tricks_counter_text);
-                    sprintf(woody->level_end->quota_text, "%d", woody->quota);
+                    sprintf(woody->level_end->tv_rating_text, "%d", woody->tv_rating);
                 }
             } else {
                 // потом
@@ -1429,8 +1429,8 @@ void woody_update(Woody* woody) {
             woody->ui_tricks_counter_animation_frame++;
             
             if (woody->ui_tricks_counter_animation_frame == 6) {
-                woody->ui_quota_animation_play = true;
-                woody->ui_quota_animation_frame = 0;
+                woody->ui_tv_rating_animation_play = true;
+                woody->ui_tv_rating_animation_frame = 0;
                 woody->ui_tricks_counter_animation_play = false;
             } else {
                 woody->ui_tricks_counter_text_show = !woody->ui_tricks_counter_text_show;
@@ -1438,29 +1438,29 @@ void woody_update(Woody* woody) {
         }
     }
 
-    if (woody->ui_quota_animation_play) {
-        float add = woody->ui_quota_delta / (60 - woody->ui_quota_animation_frame);
+    if (woody->ui_tv_rating_animation_play) {
+        float add = woody->ui_tv_rating_delta / (60 - woody->ui_tv_rating_animation_frame);
 
-        woody->ui_quota += add;
-        woody->ui_quota_delta -= add;
+        woody->ui_tv_rating += add;
+        woody->ui_tv_rating_delta -= add;
 
-        woody->ui_quota_animation_frame++;
+        woody->ui_tv_rating_animation_frame++;
 
-        if (woody->ui_quota_animation_frame == 60) {
-            woody->ui_quota_animation_play = false;
-            woody->ui_quota = woody->quota;
-            woody->ui_quota_delta = 0;
-            woody->ui_quota_animation_frame = 0;
-            woody->ui_quota_delta_text_show = false;
+        if (woody->ui_tv_rating_animation_frame == 60) {
+            woody->ui_tv_rating_animation_play = false;
+            woody->ui_tv_rating = woody->tv_rating;
+            woody->ui_tv_rating_delta = 0;
+            woody->ui_tv_rating_animation_frame = 0;
+            woody->ui_tv_rating_delta_text_show = false;
         }
 
-        int ui_quota_round = (int) (woody->ui_quota);
+        int ui_tv_rating_round = (int) (woody->ui_tv_rating);
 
-        if (ui_quota_round >= woody->min_quota)
-            woody->ui_quota_text_color = COLOR_WHITE_PERCENT;
+        if (ui_tv_rating_round >= woody->min_quota)
+            woody->ui_tv_rating_text_color = COLOR_WHITE_PERCENT;
 
-        sprintf(woody->ui_quota_text, "%d", ui_quota_round);
-        sprintf(woody->ui_quota_delta_text, "+%d", woody->quota - ui_quota_round);
+        sprintf(woody->ui_tv_rating_text, "%d", ui_tv_rating_round);
+        sprintf(woody->ui_tv_rating_delta_text, "+%d", woody->tv_rating - ui_tv_rating_round);
     }
     
     // Движение камерой на стик
@@ -1641,29 +1641,29 @@ void woody_draw_ui(const Woody* woody) {
     intraFontPrint(Font_BLUEHIGC_24, 438, 209 + intraFontTextHeight(Font_BLUEHIGC_24), "--:--");
 
     // Проценты
-    intraFontSetStyle(Font_BLUEHIGC_24, 1, woody->ui_quota_text_color, 0, 0, INTRAFONT_ALIGN_RIGHT);
+    intraFontSetStyle(Font_BLUEHIGC_24, 1, woody->ui_tv_rating_text_color, 0, 0, INTRAFONT_ALIGN_RIGHT);
     intraFontActivate(Font_BLUEHIGC_24, 0);
-    intraFontPrint(Font_BLUEHIGC_24, 419, 249 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_quota_text);
+    intraFontPrint(Font_BLUEHIGC_24, 419, 249 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_tv_rating_text);
 
     // Над-проценты
-    if (woody->ui_quota_delta_text_show && woody->ui_tricks_counter_text_show) {
+    if (woody->ui_tv_rating_delta_text_show && woody->ui_tricks_counter_text_show) {
         intraFontSetStyle(Font_BLUEHIGC_24, 0.7f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_RIGHT);
         intraFontActivate(Font_BLUEHIGC_24, 0);
-        intraFontPrint(Font_BLUEHIGC_24, 418, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_quota_delta_text);
+        intraFontPrint(Font_BLUEHIGC_24, 418, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_tv_rating_delta_text);
 
         intraFontSetStyle(Font_BLUEHIGB_18, 0.8f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
         intraFontActivate(Font_BLUEHIGB_18, 0);
         intraFontPrint(Font_BLUEHIGB_18, 419, 238 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
     }
 
-    intraFontSetStyle(Font_BLUEHIGB_18, 1, woody->ui_quota_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontSetStyle(Font_BLUEHIGB_18, 1, woody->ui_tv_rating_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 0);
     intraFontPrint(Font_BLUEHIGB_18, 418, 253 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
 }
 
-void woody_tricks_counter_update(Woody* woody, int trick_quota) {
+void woody_tricks_counter_update(Woody* woody, int trick_tv_rating) {
     woody->tricks++;
-    woody->quota += trick_quota;
+    woody->tv_rating += trick_tv_rating;
 
     sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
 
@@ -1675,9 +1675,9 @@ void woody_tricks_counter_update(Woody* woody, int trick_quota) {
     woody->ui_tricks_counter_animation_frame_time = 0;
     woody->ui_tricks_counter_animation_frame = 0;
 
-    woody->ui_quota_delta = (float) trick_quota;
-    sprintf(woody->ui_quota_delta_text, "+%d", trick_quota);
-    woody->ui_quota_delta_text_show = true;
+    woody->ui_tv_rating_delta = (float) trick_tv_rating;
+    sprintf(woody->ui_tv_rating_delta_text, "+%d", trick_tv_rating);
+    woody->ui_tv_rating_delta_text_show = true;
 }
 
 bool woody_check_sign_collision(const Woody* woody, const Sign* sign) {

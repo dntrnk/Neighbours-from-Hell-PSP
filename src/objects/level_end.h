@@ -14,7 +14,7 @@ typedef struct {
     char end_text[64];
     
     char tricks_text[32];
-    char quota_text[32];
+    char tv_rating_text[32];
 
     g2dColor buttons_colors[2];
 } LevelEnd;

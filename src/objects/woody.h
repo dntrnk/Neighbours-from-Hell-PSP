@@ -152,7 +152,7 @@ typedef struct Woody {
     RoomCollision* room_collisions;
 
     // Прохождение уровня
-    int quota;
+    int tv_rating;
     int min_quota;
 
     int tricks;
@@ -170,14 +170,14 @@ typedef struct Woody {
     // Интерфейс
     Hint hints[3];
 
-    float ui_quota;
-    char ui_quota_text[32];
-    bool ui_quota_animation_play;
-    int ui_quota_animation_frame;
-    float ui_quota_delta;
-    char ui_quota_delta_text[32];
-    bool ui_quota_delta_text_show;
-    g2dColor ui_quota_text_color;
+    float ui_tv_rating;
+    char ui_tv_rating_text[32];
+    bool ui_tv_rating_animation_play;
+    int ui_tv_rating_animation_frame;
+    float ui_tv_rating_delta;
+    char ui_tv_rating_delta_text[32];
+    bool ui_tv_rating_delta_text_show;
+    g2dColor ui_tv_rating_text_color;
 
     char ui_tricks_counter_text[32];
     int ui_tricks_counter_text_x;
@@ -242,7 +242,7 @@ void woody_update(Woody* woody);
 void woody_draw(const Woody* woody);
 void woody_door_draw(const Woody* woody);
 void woody_draw_ui(const Woody* woody);
-void woody_tricks_counter_update(Woody* woody, int trick_quota);
+void woody_tricks_counter_update(Woody* woody, int trick_tv_rating);
 bool woody_check_sign_collision(const Woody* woody, const Sign* sign);
 void woody_unload(Woody* woody);
 
