@@ -60,7 +60,12 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_RUN2] = "assets_thq/sfx/na_run2.wav",
     [SOUND_NA_USE1] = "assets_thq/sfx/na_use1.wav",
     [SOUND_NA_PEEP5] = "assets_thq/sfx/na_peep5.wav",
-    [SOUND_JINGLE_JOKE] = "assets_thq/sfx/jingle_joke.wav"
+    [SOUND_JINGLE_JOKE] = "assets_thq/sfx/jingle_joke.wav",
+    [SOUND_NA_AAA_LONG4] = "assets_thq/sfx/na_aaa_long4.wav",
+    [SOUND_NA_BACKBREAK1] = "assets_thq/sfx/na_backbreak1.wav",
+    [SOUND_NA_AAA_WHINE1] = "assets_thq/sfx/na_aaa_whine1.wav",
+    [SOUND_NA_WHEEZE3] = "assets_thq/sfx/na_wheeze3.wav",
+    [SOUND_NA_WHEEZE3] = "assets_thq/sfx/na_wheeze4.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -109,7 +114,12 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_NA_RUN2] = 0,
     [SOUND_NA_USE1] = 0,
     [SOUND_NA_PEEP5] = 0,
-    [SOUND_JINGLE_JOKE] = 0
+    [SOUND_JINGLE_JOKE] = 0,
+    [SOUND_NA_AAA_LONG4] = 0,
+    [SOUND_NA_BACKBREAK1] = 0,
+    [SOUND_NA_AAA_WHINE1] = 0,
+    [SOUND_NA_WHEEZE3] = 0,
+    [SOUND_NA_WHEEZE4] = 0,
 };
 
 typedef struct {
