@@ -28,8 +28,10 @@ extern g2dImage* SpriteAtlas_INGAMEUI;
 extern g2dImage* SpriteList_BUTTONS;
 extern g2dImage* SpriteList_ITEMS_1;
 extern g2dImage* SpriteList_ITEMS_2;
+extern g2dImage* SpriteList_PROGRESSBAR;
 
 extern intraFont* Font_ACMESA;
+extern intraFont* Font_BLUEHIGH_8;
 extern intraFont* Font_BLUEHIGC_11;
 extern intraFont* Font_BLUEHIGC_24;
 extern intraFont* Font_BLUEHIGB_18;
@@ -178,6 +180,9 @@ Woody* woody_create(
     woody->selected_item = 0;
     woody->item_count = 0;
     woody->inventory_using = false;
+
+    // Пакости
+    woody->trick_making_length = 0;
 
     // Интерфейс
     for (int i = 0; i < MAX_HINTS; i++) {
@@ -430,6 +435,7 @@ static void woody_auto_move_complete(Woody* woody) {
                         if (current_look_object->collision_x == woody->x) {
                             if (current_look_object->item_to_trick == woody->inventory[woody->selected_item]) {
                                 woody->state = STATE_MAKING_TRICK;
+                                woody->trick_making_length = current_look_object->trick_making_length;
 
                                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID); // потом будут другие анимации кроме этой
                             } else {
@@ -1230,15 +1236,9 @@ void woody_update(Woody* woody) {
         }
 
         case STATE_MAKING_TRICK: {
-            if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
-                woody->state = STATE_AUTO_V_MOVE;
-                woody->auto_move_goal_type = GOAL_FLOOR;
-                woody->auto_move_goal_y = woody->floor_y;
-            }
+            woody->trick_making_length--;
 
-            woody_auto_move_check(woody);
-
-            if (IS_LAST_ANIMATION_FRAME) { // if trick is made!!!
+            if (woody->trick_making_length == 0) { // if trick is made!!!
                 woody->state = STATE_SMILE;
 
                 // Удаляем предмет из инвентаря
@@ -1302,6 +1302,14 @@ void woody_update(Woody* woody) {
                 int install_sound = (rand() % 2) ? SOUND_INSTALL1 : SOUND_INSTALL2;
                 NFHSoundPlay(install_sound);
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_LAUGH);
+            } else {
+                if (controls_held(PSP_CTRL_LEFT) || controls_held(PSP_CTRL_DOWN) || controls_held(PSP_CTRL_RIGHT)) {
+                    woody->state = STATE_AUTO_V_MOVE;
+                    woody->auto_move_goal_type = GOAL_FLOOR;
+                    woody->auto_move_goal_y = woody->floor_y;
+                }
+
+                woody_auto_move_check(woody);
             }
 
             break;
@@ -1491,6 +1499,7 @@ void woody_update(Woody* woody) {
 void woody_draw(const Woody* woody) {
     g2d_DrawImageExt(woody->spritelists[woody->current_spritelist], woody->x + woody->sprite_offset_x - 179 - camera_x, woody->y + woody->sprite_offset_y - 165 - camera_y, woody->sprite_w, woody->sprite_h, WHITE, woody->sprite_src_x, woody->sprite_src_y, woody->sprite_w, woody->sprite_h, 0, 255, G2D_UP_LEFT);
 
+    // Мысли Вуди
     if (woody->look_object_phrase_show) {
         // Bubble Bottom
         g2d_DrawImageExt(SpriteAtlas_INGAMEUI, woody->x - camera_x - 14, woody->y - camera_y - 27, 120, 27, WHITE, 0, 398, 120, 27, 0, 235, G2D_UP_LEFT);
@@ -1511,6 +1520,35 @@ void woody_draw(const Woody* woody) {
         intraFontActivate(Font_ACMESA, 1);
         intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
         intraFontPrint(Font_ACMESA, woody->x - camera_x + 46, woody->y - camera_y - 48 + woody->look_object_phrase_y + intraFontTextHeight(Font_ACMESA), woody->look_object_phrase_text);
+    }
+
+    // Прогрессбар пакости
+    if (woody->state == STATE_MAKING_TRICK) {
+        // BG
+        g2d_DrawImageExt(SpriteList_PROGRESSBAR, woody->x - camera_x + 33, woody->y - camera_y - 19, 49, 12, WHITE, 0, 0, 49, 12, 0, 235, G2D_UP_LEFT);
+
+        // Прогресс
+        int progressbar_width = 49 - (49.0f * woody->trick_making_length / 108.0f);
+        g2d_DrawImageExt(SpriteList_PROGRESSBAR, woody->x - camera_x + 33, woody->y - camera_y - 19, progressbar_width, 12, WHITE, 0, 12, progressbar_width, 12, 0, 235, G2D_UP_LEFT);
+
+        int percentage = 100 - (100.0f * woody->trick_making_length / 108.0f);
+
+        char percentage_text[8];
+        sprintf(percentage_text, "%d%%", percentage);
+
+        // Outline
+        intraFontSetStyle(Font_BLUEHIGB_18, 0.4f, BLACK, 0, 0, INTRAFONT_ALIGN_CENTER);
+        intraFontActivate(Font_BLUEHIGB_18, 0);
+
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+                intraFontPrint(Font_BLUEHIGB_18, woody->x - camera_x + 57-i, woody->y - camera_y - 15-j + intraFontTextHeight(Font_BLUEHIGB_18), percentage_text);
+        }
+
+        // Main Text
+        intraFontSetStyle(Font_BLUEHIGB_18, 0.4f, WHITE, 0, 0, INTRAFONT_ALIGN_CENTER);
+        intraFontPrint(Font_BLUEHIGB_18, woody->x - camera_x + 57, woody->y - camera_y - 15 + intraFontTextHeight(Font_BLUEHIGB_18), percentage_text);
     }
 }
 

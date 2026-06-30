@@ -58,6 +58,7 @@ g2dImage* SpriteList_BUBBLES = NULL;
 g2dImage* SpriteList_BUTTONS = NULL;
 g2dImage* SpriteList_ITEMS_1 = NULL;
 g2dImage* SpriteList_ITEMS_2 = NULL;
+g2dImage* SpriteList_PROGRESSBAR = NULL;
 
 g2dImage* Sprite_NFH_LOGO = NULL;
 g2dImage* Sprite_LOADING_TEXT_DATA = NULL;
@@ -138,6 +139,7 @@ int main(void) {
     SpriteList_BUTTONS = g2d_LoadImage("assets_thq/sprites/ui/ingame/buttons.png", G2D_CLUT8); 
     SpriteList_ITEMS_1 = g2d_LoadImage("assets_thq/sprites/ui/ingame/items1.png", G2D_CLUT8); 
     SpriteList_ITEMS_2 = g2d_LoadImage("assets_thq/sprites/ui/ingame/items2.png", G2D_CLUT8); 
+    SpriteList_PROGRESSBAR = g2d_LoadImage("assets_thq/sprites/ui/ingame/progressbar.png", G2D_RGBA8888); 
 
     Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo.png", G2D_CLUT8);
     Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets_thq/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
@@ -191,6 +193,7 @@ int main(void) {
     g2d_FreeImage(SpriteList_BUTTONS);
     g2d_FreeImage(SpriteList_ITEMS_1);
     g2d_FreeImage(SpriteList_ITEMS_2);
+    g2d_FreeImage(SpriteList_PROGRESSBAR);
 
     g2d_FreeImage(Sprite_NFH_LOGO);
     g2d_FreeImage(Sprite_LOADING_TEXT_DATA);

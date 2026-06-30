@@ -164,6 +164,9 @@ typedef struct Woody {
     int item_count;
     bool inventory_using;
 
+    // Пакости
+    int trick_making_length;
+
     // Интерфейс
     Hint hints[3];
 

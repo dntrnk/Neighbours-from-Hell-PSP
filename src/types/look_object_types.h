@@ -26,6 +26,8 @@ typedef struct {
     bool tricked;
     int item_to_trick;
 
+    int trick_making_length;
+
     char tricked_phrase_text[256];
     int tricked_phrase_y;
     int tricked_bubble_size;
