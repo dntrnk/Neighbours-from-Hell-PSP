@@ -41,6 +41,12 @@ OBJS = \
 	src/animations/neighbour/sofa.o \
 	src/gfxdata/neighbour/binoculars.o \
 	src/animations/neighbour/binoculars.o \
+	src/gfxdata/neighbour/generic2.o \
+	src/animations/neighbour/generic2.o \
+	src/gfxdata/neighbour/generic3.o \
+	src/animations/neighbour/generic3.o \
+	src/gfxdata/neighbour/look.o \
+	src/animations/neighbour/look.o \
 	src/objects/sign.o \
 	src/gfxdata/ui/sign.o \
 	src/animations/ui/sign.o \

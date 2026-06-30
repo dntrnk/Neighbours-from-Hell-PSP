@@ -52,7 +52,14 @@ static const char* const sfx_bindings[] = {
     [SOUND_INSTALL1] = "assets_thq/sfx/install1.wav",
     [SOUND_INSTALL2] = "assets_thq/sfx/install2.wav",
     [SOUND_USE1] = "assets_thq/sfx/use1.wav",
-    [SOUND_APPLAUSE] = "assets_thq/sfx/applause.wav"
+    [SOUND_APPLAUSE] = "assets_thq/sfx/applause.wav",
+    [SOUND_NA_SHOUT1] = "assets_thq/sfx/na_shout1.wav",
+    [SOUND_NA_HUH1] = "assets_thq/sfx/na_huh1.wav",
+    [SOUND_NA_SUP_HUH1] = "assets_thq/sfx/na_sup_huh1.wav",
+    [SOUND_NA_RUN1] = "assets_thq/sfx/na_run1.wav",
+    [SOUND_NA_RUN2] = "assets_thq/sfx/na_run2.wav",
+    [SOUND_NA_USE1] = "assets_thq/sfx/na_use1.wav",
+    [SOUND_NA_PEEP5] = "assets_thq/sfx/na_peep5.wav",
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -93,7 +100,14 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_INSTALL1] = 0,
     [SOUND_INSTALL2] = 0,
     [SOUND_USE1] = 0,
-    [SOUND_APPLAUSE] = 0
+    [SOUND_APPLAUSE] = 0,
+    [SOUND_NA_SHOUT1] = 0,
+    [SOUND_NA_HUH1] = 0,
+    [SOUND_NA_SUP_HUH1] = 0,
+    [SOUND_NA_RUN1] = 0,
+    [SOUND_NA_RUN2] = 0,
+    [SOUND_NA_USE1] = 0,
+    [SOUND_NA_PEEP5] = 0
 };
 
 typedef struct {

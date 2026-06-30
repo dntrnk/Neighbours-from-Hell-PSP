@@ -14,6 +14,9 @@
 // doorback
 #include "../animations/neighbour/sofa.h"
 #include "../animations/neighbour/binoculars.h"
+#include "../animations/neighbour/generic2.h"
+#include "../animations/neighbour/generic3.h"
+#include "../animations/neighbour/look.h"
 
 typedef struct {
     // Анимации

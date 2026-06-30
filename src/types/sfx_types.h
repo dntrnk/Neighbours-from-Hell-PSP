@@ -40,5 +40,12 @@
 #define SOUND_INSTALL2 35
 #define SOUND_USE1 36
 #define SOUND_APPLAUSE 37
+#define SOUND_NA_SHOUT1 38
+#define SOUND_NA_HUH1 39
+#define SOUND_NA_SUP_HUH1 40
+#define SOUND_NA_RUN1 41
+#define SOUND_NA_RUN2 42
+#define SOUND_NA_USE1 43
+#define SOUND_NA_PEEP5 44
 
 #endif // SFX_TYPES_H
