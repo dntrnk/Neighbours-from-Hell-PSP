@@ -366,6 +366,9 @@ Neighbour* neighbour_create(
     neighbour->emotion = 0;
     neighbour->breakdowns = 0;
 
+    neighbour->jingle_joke_playing = false;
+    neighbour->jingle_joke_timer = 0;
+
     // Интерфейс
     neighbour->head_icon_src_x = 47 * neighbour->emotion;
     neighbour->head_icon_show = true;
@@ -681,6 +684,12 @@ void neighbour_update(Neighbour* neighbour) {
                 neighbour->head_icon_src_x = 47 * neighbour->emotion;
 
                 woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                NFHHouseMusicPause();
+                NFHSoundPlay(SOUND_JINGLE_JOKE);
+
+                neighbour->jingle_joke_playing = true;
+                neighbour->jingle_joke_timer = 120;
 
                 neighbour->action_state = args->next_state;
 

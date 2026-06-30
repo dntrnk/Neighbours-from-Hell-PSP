@@ -60,6 +60,7 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_RUN2] = "assets_thq/sfx/na_run2.wav",
     [SOUND_NA_USE1] = "assets_thq/sfx/na_use1.wav",
     [SOUND_NA_PEEP5] = "assets_thq/sfx/na_peep5.wav",
+    [SOUND_JINGLE_JOKE] = "assets_thq/sfx/jingle_joke.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -107,7 +108,8 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_NA_RUN1] = 0,
     [SOUND_NA_RUN2] = 0,
     [SOUND_NA_USE1] = 0,
-    [SOUND_NA_PEEP5] = 0
+    [SOUND_NA_PEEP5] = 0,
+    [SOUND_JINGLE_JOKE] = 0
 };
 
 typedef struct {
@@ -170,7 +172,14 @@ void NFHHouseMusicPlay(void) {
 }
 
 void NFHHouseMusicPause(void) {
-    AalibPause(6);
+    if (AalibGetStatus(6) == -3) {
+        AalibPause(6);
+    }
+}
+
+void NFHHouseMusicResume(void) {
+    if (AalibGetStatus(6) == -2)
+        AalibPause(6);
 }
 
 void NFHHouseMusicStop(void) {

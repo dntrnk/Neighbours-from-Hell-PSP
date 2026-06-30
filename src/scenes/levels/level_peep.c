@@ -730,6 +730,13 @@ static void update(void) {
         logic_frame = 0;
     }
 
+    if (neighbour->jingle_joke_playing) {
+        neighbour->jingle_joke_timer--;
+        if (neighbour->jingle_joke_timer == 0) {
+            NFHHouseMusicResume();
+        }
+    }
+
     // Пауза
     if (controls_released(PSP_CTRL_START)) {
         if (!intro->draw_intro) {

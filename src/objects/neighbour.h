@@ -85,6 +85,9 @@ typedef struct {
     int emotion;
     int breakdowns;
 
+    bool jingle_joke_playing;
+    int jingle_joke_timer;
+
     // Интерфейс
     // local spriteatlasUI = SpriteAtlas_INGAMEUI
     // local uiFont = Font_BLUEHIGC_24

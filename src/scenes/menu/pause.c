@@ -70,7 +70,7 @@ static inline float lerp(float a, float b, float t) {
 }
 
 static void init(void) {
-    NFHHouseMusicPause(); // Pause
+    NFHHouseMusicPause();
     NFHMusicPlay(MUSIC_TITEL, 1);
 
     tutorial_selected = is_this_scene(&Tutorial1Scene);
@@ -146,7 +146,7 @@ static void update(void) {
     } else if (controls_released(PSP_CTRL_CROSS) && menu_buttons[clicked_button] == BUTTON_PRESSED) {
         switch (clicked_button) {
             case 0: // Продолжить игру
-                NFHHouseMusicPause(); // Resume
+                NFHHouseMusicResume();
                 NFHMusicStop();
                 scene_pop();
 
@@ -174,7 +174,7 @@ static void update(void) {
     if (controls_pressed(PSP_CTRL_CIRCLE)) {
         NFHSoundPlay(SOUND_BUT1);
     } else if (controls_released(PSP_CTRL_CIRCLE)) {
-        NFHHouseMusicPause(); // Resume
+        NFHHouseMusicResume();
         NFHMusicStop();
         scene_pop();
     }

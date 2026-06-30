@@ -47,5 +47,6 @@
 #define SOUND_NA_RUN2 42
 #define SOUND_NA_USE1 43
 #define SOUND_NA_PEEP5 44
+#define SOUND_JINGLE_JOKE 45
 
 #endif // SFX_TYPES_H

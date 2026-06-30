@@ -9,6 +9,7 @@ void NFHMusicStop(void);
 void NFHHouseMusicLoad(void);
 void NFHHouseMusicPlay(void);
 void NFHHouseMusicPause(void);
+void NFHHouseMusicResume(void);
 void NFHHouseMusicStop(void);
 void NFHSoundLoad(int sound, int channel);
 void NFHSoundPlay(int sound);
