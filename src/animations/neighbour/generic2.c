@@ -166,7 +166,7 @@ const Animation neighbour_generic2_animations[] = {
         },
 
         .sfx = (const short[]) {
-			SOUND_NA_SHOUT1
+			SOUND_NA_SHOUT1,
 			SOUND_NONE,
 			SOUND_NONE,
 			SOUND_NONE,
