@@ -192,12 +192,14 @@ Woody* woody_create(
 
     woody->ui_tv_rating = 0.0f;
     sprintf(woody->ui_tv_rating_text, "%d", (int) woody->ui_tv_rating);
+    woody->ui_tv_rating_text_color = COLOR_GREEN_PERCENT;
     woody->ui_tv_rating_animation_play = false;
     woody->ui_tv_rating_animation_frame = 0;
+
     woody->ui_tv_rating_delta = 0.0f;
     strcpy(woody->ui_tv_rating_delta_text, "+0");
+    woody->ui_tv_rating_delta_text_color = CG_YELLOW_TRICKS;
     woody->ui_tv_rating_delta_text_show = false;
-    woody->ui_tv_rating_text_color = COLOR_GREEN_PERCENT;
 
     sprintf(woody->ui_tricks_counter_text, "%d/%d", woody->tricks, woody->total_tricks);
     intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -1647,11 +1649,11 @@ void woody_draw_ui(const Woody* woody) {
 
     // Над-проценты
     if (woody->ui_tv_rating_delta_text_show && woody->ui_tricks_counter_text_show) {
-        intraFontSetStyle(Font_BLUEHIGC_24, 0.7f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_RIGHT);
+        intraFontSetStyle(Font_BLUEHIGC_24, 0.7f, woody->ui_tv_rating_delta_text_color, 0, 0, INTRAFONT_ALIGN_RIGHT);
         intraFontActivate(Font_BLUEHIGC_24, 0);
         intraFontPrint(Font_BLUEHIGC_24, 418, 236 + intraFontTextHeight(Font_BLUEHIGC_24), woody->ui_tv_rating_delta_text);
 
-        intraFontSetStyle(Font_BLUEHIGB_18, 0.8f, CG_YELLOW_TRICKS, 0, 0, INTRAFONT_ALIGN_LEFT);
+        intraFontSetStyle(Font_BLUEHIGB_18, 0.8f, woody->ui_tv_rating_delta_text_color, 0, 0, INTRAFONT_ALIGN_LEFT);
         intraFontActivate(Font_BLUEHIGB_18, 0);
         intraFontPrint(Font_BLUEHIGB_18, 419, 238 + intraFontTextHeight(Font_BLUEHIGB_18), "%");
     }
@@ -1678,6 +1680,7 @@ void woody_tricks_counter_update(Woody* woody, int trick_tv_rating) {
     woody->ui_tv_rating_delta = (float) trick_tv_rating;
     sprintf(woody->ui_tv_rating_delta_text, "+%d", trick_tv_rating);
     woody->ui_tv_rating_delta_text_show = true;
+    woody->ui_tv_rating_delta_text_color = CG_YELLOW_TRICKS;
 }
 
 bool woody_check_sign_collision(const Woody* woody, const Sign* sign) {

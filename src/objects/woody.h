@@ -173,11 +173,13 @@ typedef struct Woody {
     float ui_tv_rating;
     char ui_tv_rating_text[32];
     bool ui_tv_rating_animation_play;
+    g2dColor ui_tv_rating_text_color;
     int ui_tv_rating_animation_frame;
+    
     float ui_tv_rating_delta;
     char ui_tv_rating_delta_text[32];
     bool ui_tv_rating_delta_text_show;
-    g2dColor ui_tv_rating_text_color;
+    g2dColor ui_tv_rating_delta_text_color;
 
     char ui_tricks_counter_text[32];
     int ui_tricks_counter_text_x;

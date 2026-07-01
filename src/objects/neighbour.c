@@ -1,6 +1,7 @@
 #include "neighbour.h"
 
 #include <stdlib.h>
+#include <math.h>
 
 #include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
@@ -13,6 +14,8 @@ extern g2dImage* SpriteAtlas_INGAMEUI;
 extern g2dImage* SpriteList_BUBBLES;
 
 extern g2dImage* SpriteList_NEIGHBOUR_GENERIC;
+
+extern g2dImage* Sprite_Angrybar;
 
 extern intraFont* Font_BLUEHIGC_24;
 
@@ -92,7 +95,8 @@ typedef struct {
 
 typedef struct {
     int room, id;
-    int next_state;
+    int breakdown_state;
+    int no_breakdown_state;
 } LookObjectTrickCountArgs;
 
 typedef struct {
@@ -173,24 +177,25 @@ static const LookObjectVisibilitySetArgs action_args_32 = {ROOM_KIT, 1, false, 3
 static const AnimationPlayTillTheEndArgs action_args_33 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP_GLUE, 34};
 static const PositionSetArgs action_args_34 = {410, -54, 35};
 static const BubbleSetArgs action_args_35 = {BUBBLE_WUT, 36};
-static const LookObjectTrickCountArgs action_args_36 = {ROOM_KIT, 1, 37};
-static const AnimationPlayTillTheEndArgs action_args_37 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 38};
-static const LookObjectMakeUntrickedArgs action_args_38 = {ROOM_KIT, 1, 39};
-static const BubbleSetArgs action_args_39 = {BUBBLE_SOFA, 40};
+static const LookObjectTrickCountArgs action_args_36 = {ROOM_KIT, 1, 38, 37};
+static const AnimationPlayTillTheEndArgs action_args_37 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 39};
+static const AnimationPlayTillTheEndArgs action_args_38 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 39};
+static const LookObjectMakeUntrickedArgs action_args_39 = {ROOM_KIT, 1, 40};
+static const BubbleSetArgs action_args_40 = {BUBBLE_SOFA, 41};
 // --
 
 // Идти к двери с кухни в гостиную
-static const BubbleSetArgs action_args_40 = {BUBBLE_SOFA, 41};
-static const WalkToXArgs action_args_41 = {210, 42};
+static const BubbleSetArgs action_args_41 = {BUBBLE_SOFA, 42};
+static const WalkToXArgs action_args_42 = {210, 43};
 
 // Начать использовать дверь с кухни на гостиную
-static const StartUsingHDoorArgs action_args_42 = {ROOM_KIT, 0, 43};
-static const PositionSetArgs action_args_43 = {248, -53, 44};
-static const AnimationPlayTillTheEndArgs action_args_44 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 45};
+static const StartUsingHDoorArgs action_args_43 = {ROOM_KIT, 0, 44};
+static const PositionSetArgs action_args_44 = {248, -53, 45};
+static const AnimationPlayTillTheEndArgs action_args_45 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 46};
 
 // Закончить использовать дверь с кухни на гостиную
-static const EndUsingHDoorArgs action_args_45 = {ROOM_KIT, 0, 46};
-static const PositionSetArgs action_args_46 = {148, -56, 1};
+static const EndUsingHDoorArgs action_args_46 = {ROOM_KIT, 0, 47};
+static const PositionSetArgs action_args_47 = {148, -56, 1};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -261,22 +266,23 @@ const Action actions[] = {
     {BUBBLE_SET, &action_args_35, true},
     {LOOK_OBJECT_TRICK_COUNT, &action_args_36, true},
     {ANIMATION_PLAY_TILL_THE_END, &action_args_37, false},
-    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_38, true},
-    {BUBBLE_SET, &action_args_39, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_38, false},
+    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_39, true},
+    {BUBBLE_SET, &action_args_40, true},
     // --
 
     // Идти к двери с кухни в гостиную
-    {BUBBLE_SET, &action_args_40, true},
-    {WALK_TO_X, &action_args_41, false},
+    {BUBBLE_SET, &action_args_41, true},
+    {WALK_TO_X, &action_args_42, false},
 
     // Начать использовать дверь с кухни на гостиную
-    {START_USING_H_DOOR, &action_args_42, true},
-    {POSITION_SET, &action_args_43, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_44, false},
+    {START_USING_H_DOOR, &action_args_43, true},
+    {POSITION_SET, &action_args_44, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_45, false},
 
     // Закончить использовать дверь с кухни на гостиную
-    {END_USING_H_DOOR, &action_args_45, true},
-    {POSITION_SET, &action_args_46, true}
+    {END_USING_H_DOOR, &action_args_46, true},
+    {POSITION_SET, &action_args_47, true}
 };
 
 Neighbour* neighbour_create(
@@ -365,6 +371,8 @@ Neighbour* neighbour_create(
     // Прохождение уровня
     neighbour->emotion = 0;
     neighbour->breakdowns = 0;
+    neighbour->angry = 0.0f;
+    neighbour->angry_cooldown = 0;
 
     neighbour->jingle_joke_playing = false;
     neighbour->jingle_joke_timer = 0;
@@ -374,7 +382,7 @@ Neighbour* neighbour_create(
     neighbour->head_icon_show = true;
     neighbour->head_icon_animation_play = false;
     neighbour->head_icon_animation_frame = 0;
-    // local breakdownsText = tostring(breakdowns)
+    
     neighbour->current_bubble = start_bubble;
 
     {
@@ -389,6 +397,14 @@ Neighbour* neighbour_create(
     }
 
     neighbour->bubble_show = false;
+
+    strcpy(neighbour->ui_breakdowns_counter_text, "0");
+    neighbour->ui_breakdowns_counter_text_x = 459 - floor(intraFontMeasureText(Font_BLUEHIGC_24, neighbour->ui_breakdowns_counter_text) * 0.5);;
+    neighbour->ui_breakdowns_counter_text_show = true;
+
+    neighbour->ui_breakdowns_counter_animation_play = false;
+    neighbour->ui_breakdowns_counter_animation_frame_time = 0;
+    neighbour->ui_breakdowns_counter_animation_frame = 0;
 
     return neighbour;
 }
@@ -680,18 +696,31 @@ void neighbour_update(Neighbour* neighbour) {
             case LOOK_OBJECT_TRICK_COUNT: {
                 const LookObjectTrickCountArgs* args = (const LookObjectTrickCountArgs*) current_action.args;
 
-                neighbour->emotion = 2;
-                neighbour->head_icon_src_x = 47 * neighbour->emotion;
+                if (neighbour->angry == 0.0f) {
+                    woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
 
-                woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+                    neighbour->emotion = 2;
+                    neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                    neighbour->action_state = args->no_breakdown_state;
+                } else {
+                    woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                    neighbour->emotion = 3;
+                    neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                    neighbour_breakdown_counter_update(neighbour);
+                    neighbour->action_state = args->breakdown_state;
+                }
+                
+                neighbour->angry = 100.0f;
+                neighbour->angry_cooldown = 53;
 
                 NFHHouseMusicPause();
                 NFHSoundPlay(SOUND_JINGLE_JOKE);
 
                 neighbour->jingle_joke_playing = true;
                 neighbour->jingle_joke_timer = 120;
-
-                neighbour->action_state = args->next_state;
 
                 break;
             }
@@ -736,6 +765,24 @@ void neighbour_update(Neighbour* neighbour) {
             neighbour->head_icon_animation_play = false;
         }
     }
+
+    if (neighbour->angry_cooldown == 0) {
+        if (neighbour->angry != 0.0f) {
+            neighbour->angry -= 0.36f;
+            if (neighbour->angry <= 0.0f) {
+                neighbour->angry = 0.0f;
+
+                neighbour->emotion = 0;
+                neighbour->head_icon_src_x = 47 * neighbour->emotion;
+            }
+        }
+    } else {
+        neighbour->angry_cooldown--;
+        if (neighbour->angry_cooldown == 0) {
+            neighbour->emotion = 1;
+            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+        }
+    }
 }
 
 void neighbour_draw(const Neighbour* neighbour) {
@@ -753,17 +800,29 @@ void neighbour_door_draw(const Neighbour* neighbour) {
 void neighbour_draw_ui(const Neighbour* neighbour) {
     // Head Icon
     if (neighbour->head_icon_show) {
-        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 3, 230, 46, 42, WHITE, neighbour->head_icon_src_x, 80, 46, 42, 0, 255, G2D_UP_LEFT);
+        g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 3, 230, 44, 42, WHITE, neighbour->head_icon_src_x, 80, 44, 42, 0, 255, G2D_UP_LEFT);
     }
+
+    const int angrybar_height = 65 * (neighbour->angry * 0.01f);
+    g2d_DrawImageExt(Sprite_Angrybar, 51, 268 - angrybar_height, 16, angrybar_height, WHITE, 0, 65 - angrybar_height, 16, angrybar_height, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_BLUEHIGC_24, 0.583, CG_ORANGE_BREAKDOWNS, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGC_24, 1);
-    intraFontPrint(Font_BLUEHIGC_24, 457, 257 + intraFontTextHeight(Font_BLUEHIGC_24), "0");
+
+    if (neighbour->ui_breakdowns_counter_text_show) {
+        intraFontPrint(Font_BLUEHIGC_24, neighbour->ui_breakdowns_counter_text_x, 257 + intraFontTextHeight(Font_BLUEHIGC_24), neighbour->ui_breakdowns_counter_text);
+    }
 
     // Bubble Icon
     if (neighbour->bubble_show) {
         g2d_DrawImageExt(SpriteList_BUBBLES, 0, 193, 46, 37, WHITE, neighbour->bubble_sprite_src_x, neighbour->bubble_sprite_src_y, 46, 37, 0, 255, G2D_UP_LEFT);
     }
+}
+
+void neighbour_breakdown_counter_update(Neighbour* neighbour) {
+    neighbour->ui_breakdowns_counter_animation_play = true;
+    neighbour->ui_breakdowns_counter_animation_frame_time = 0;
+    neighbour->ui_breakdowns_counter_animation_frame = 0;
 }
 
 void neighbour_unload(Neighbour* neighbour) {

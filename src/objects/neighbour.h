@@ -84,6 +84,9 @@ typedef struct {
     // Прохождение уровня
     int emotion;
     int breakdowns;
+    float angry;
+    int angry_cooldown; // Время до того, пока angry будет уменьшаться
+
 
     bool jingle_joke_playing;
     int jingle_joke_timer;
@@ -100,10 +103,17 @@ typedef struct {
     bool head_icon_animation_play;
     int head_icon_animation_frame;
 
-    // local breakdownsText = tostring(breakdowns)
     Bubble current_bubble;
     unsigned short bubble_sprite_src_x, bubble_sprite_src_y;
     bool bubble_show;
+
+    char ui_breakdowns_counter_text[32];
+    int ui_breakdowns_counter_text_x;
+    bool ui_breakdowns_counter_text_show;
+
+    bool ui_breakdowns_counter_animation_play;
+    int ui_breakdowns_counter_animation_frame_time;
+    int ui_breakdowns_counter_animation_frame;
 } Neighbour;
 
 Neighbour* neighbour_create(
@@ -126,6 +136,7 @@ void neighbour_update(Neighbour* neighbour);
 void neighbour_draw(const Neighbour* neighbour);
 void neighbour_door_draw(const Neighbour* neighbour);
 void neighbour_draw_ui(const Neighbour* neighbour);
+void neighbour_breakdown_counter_update(Neighbour* neighbour);
 void neighbour_unload(Neighbour* neighbour);
 
 #endif // NEIGHBOUR_H

@@ -63,6 +63,7 @@ g2dImage* SpriteList_PROGRESSBAR = NULL;
 g2dImage* Sprite_NFH_LOGO = NULL;
 g2dImage* Sprite_LOADING_TEXT_DATA = NULL;
 g2dImage* Sprite_Punkt = NULL;
+g2dImage* Sprite_Angrybar = NULL;
 
 g2dImage* Icon_tutorial_1 = NULL;
 g2dImage* Icon_level_peep = NULL;
@@ -144,6 +145,7 @@ int main(void) {
     Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo.png", G2D_CLUT8);
     Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets_thq/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
     Sprite_Punkt = g2d_LoadImage("assets_thq/sprites/ui/menu/punkt.png", G2D_RGBA8888);
+    Sprite_Angrybar = g2d_LoadImage("assets_thq/sprites/ui/ingame/angrybar.png", G2D_RGBA8888);
 
     Icon_tutorial_1 = g2d_LoadImage("assets_thq/sprites/ui/menu/tutorial_1.png", G2D_CLUT8);
     Icon_level_peep = g2d_LoadImage("assets_thq/sprites/ui/menu/level_peep.png", G2D_CLUT8);
@@ -198,6 +200,7 @@ int main(void) {
     g2d_FreeImage(Sprite_NFH_LOGO);
     g2d_FreeImage(Sprite_LOADING_TEXT_DATA);
     g2d_FreeImage(Sprite_Punkt);
+    g2d_FreeImage(Sprite_Angrybar);
 
     g2d_FreeImage(Icon_tutorial_1);
     g2d_FreeImage(Icon_level_peep);
