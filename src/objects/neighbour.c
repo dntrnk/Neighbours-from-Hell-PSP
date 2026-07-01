@@ -763,6 +763,12 @@ void neighbour_update(Neighbour* neighbour) {
                 NFHHouseMusicPause();
                 NFHSoundPlay(SOUND_JINGLE_JOKE);
 
+                if (rand() % 2 == 0) {
+                    NFHSoundPlay(SOUND_BIG2);
+                } else {
+                    NFHSoundPlay(SOUND_BIG3);
+                }
+
                 neighbour->jingle_joke_playing = true;
                 neighbour->jingle_joke_timer = 120;
 

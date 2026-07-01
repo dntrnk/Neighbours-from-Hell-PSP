@@ -54,5 +54,8 @@
 #define SOUND_NA_WHEEZE3 49
 #define SOUND_NA_WHEEZE4 50
 #define SOUND_OBJ_MICRO_BEEP1 51
+#define SOUND_BIG1 52
+#define SOUND_BIG2 53
+#define SOUND_BIG3 54
 
 #endif // SFX_TYPES_H
