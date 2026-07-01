@@ -149,53 +149,75 @@ static const AnimationPlayTillTheEndArgs action_args_19 = {ANIMATION_PACK_NEIGHB
 static const EndUsingHDoorArgs action_args_20 = {ROOM_LIR, 1, 21};
 static const PositionSetArgs action_args_21 = {208, -54, 22};
 
+// Идти мимо микроволновки
+static const WalkToXArgs action_args_22 = {228, 23};
+
+// Проверить, грязная ли микроволновка
+static const LookObjectCheckToTrickArgs action_args_23 = {ROOM_KIT, 0, 24, 34};
+
+// Микроволновка грязная
+static const AnimationPlayTillTheEndArgs action_args_24 = {ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_DOUBLETAKE1, 25};
+static const BubbleSetArgs action_args_25 = {BUBBLE_WUT, 26};
+static const LookObjectTrickCountArgs action_args_26 = {ROOM_KIT, 0, 34, 27};
+static const AnimationPlayTillTheEndArgs action_args_27 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 29};
+static const AnimationPlayTillTheEndArgs action_args_28 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 29};
+
+// Подойти к микроволновке
+static const WalkToYArgs action_args_29 = {-66, 30};
+
+// Почистить микроволновку
+static const AnimationPlayTillTheEndArgs action_args_30 = {ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_USE_MID, 31};
+static const LookObjectMakeUntrickedArgs action_args_31 = {ROOM_KIT, 0, 32};
+static const BubbleSetArgs action_args_32 = {BUBBLE_SOFA, 33};
+
+// Уйти от микроволновки
+static const WalkToYArgs action_args_33 = {-54, 34};
+
 // Идти к биноклю
-static const WalkToXArgs action_args_22 = {410, 23};
+static const WalkToXArgs action_args_34 = {410, 35};
 
 // Проверить, есть ли пакость на бинокле
-static const LookObjectCheckToTrickArgs action_args_23 = {ROOM_KIT, 1, 31, 24};
+static const LookObjectCheckToTrickArgs action_args_35 = {ROOM_KIT, 1, 43, 36};
 
-// --
 // Смотреть в бинокль (без пакости)
-static const LookObjectCheckToAltActionArgs action_args_24 = {ROOM_KIT, 1, 30, 25};
+static const LookObjectCheckToAltActionArgs action_args_36 = {ROOM_KIT, 1, 42, 37};
 
 // Проверить, есть ли бинокль
 
 // Бинокль на месте
-static const PositionSetArgs action_args_25 = {309, -50, 26};
-static const LookObjectVisibilitySetArgs action_args_26 = {ROOM_KIT, 1, false, 27};
-static const AnimationPlayTillTheEndArgs action_args_27 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 28};
-static const LookObjectVisibilitySetArgs action_args_28 = {ROOM_KIT, 1, true, 29};
-static const PositionSetArgs action_args_29 = {410, -54, 40};
+static const PositionSetArgs action_args_37 = {309, -50, 38};
+static const LookObjectVisibilitySetArgs action_args_38 = {ROOM_KIT, 1, false, 39};
+static const AnimationPlayTillTheEndArgs action_args_39 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 40};
+static const LookObjectVisibilitySetArgs action_args_40 = {ROOM_KIT, 1, true, 41};
+static const PositionSetArgs action_args_41 = {410, -54, 53};
 
 // Бинокля нет
-static const AnimationPlayTillTheEndArgs action_args_30 = {ANIMATION_PACK_NEIGHBOUR_LOOK, ANIMATION_NEIGHBOUR_LOOK1, 40};
+static const AnimationPlayTillTheEndArgs action_args_42 = {ANIMATION_PACK_NEIGHBOUR_LOOK, ANIMATION_NEIGHBOUR_LOOK1, 53};
 
 // Смотреть в бинокль (пакость)
-static const PositionSetArgs action_args_31 = {309, -50, 32};
-static const LookObjectVisibilitySetArgs action_args_32 = {ROOM_KIT, 1, false, 33};
-static const AnimationPlayTillTheEndArgs action_args_33 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP_GLUE, 34};
-static const PositionSetArgs action_args_34 = {410, -54, 35};
-static const BubbleSetArgs action_args_35 = {BUBBLE_WUT, 36};
-static const LookObjectTrickCountArgs action_args_36 = {ROOM_KIT, 1, 38, 37};
-static const AnimationPlayTillTheEndArgs action_args_37 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 39};
-static const AnimationPlayTillTheEndArgs action_args_38 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 39};
-static const LookObjectMakeUntrickedArgs action_args_39 = {ROOM_KIT, 1, 40};
-static const BubbleSetArgs action_args_40 = {BUBBLE_SOFA, 41};
-// --
+static const PositionSetArgs action_args_43 = {309, -50, 44};
+static const LookObjectVisibilitySetArgs action_args_44 = {ROOM_KIT, 1, false, 45};
+static const AnimationPlayTillTheEndArgs action_args_45 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP_GLUE, 46};
+static const PositionSetArgs action_args_46 = {410, -54, 47};
+static const BubbleSetArgs action_args_47 = {BUBBLE_WUT, 48};
+static const LookObjectTrickCountArgs action_args_48 = {ROOM_KIT, 1, 50, 49};
+static const AnimationPlayTillTheEndArgs action_args_49 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 51};
+static const AnimationPlayTillTheEndArgs action_args_50 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 51};
+static const LookObjectMakeUntrickedArgs action_args_51 = {ROOM_KIT, 1, 52};
+static const BubbleSetArgs action_args_52 = {BUBBLE_SOFA, 53};
 
 // Идти к двери с кухни в гостиную
-static const BubbleSetArgs action_args_41 = {BUBBLE_SOFA, 42};
-static const WalkToXArgs action_args_42 = {210, 43};
+static const BubbleSetArgs action_args_53 = {BUBBLE_SOFA, 54};
+static const WalkToXArgs action_args_54 = {210, 55};
 
 // Начать использовать дверь с кухни на гостиную
-static const StartUsingHDoorArgs action_args_43 = {ROOM_KIT, 0, 44};
-static const PositionSetArgs action_args_44 = {248, -53, 45};
-static const AnimationPlayTillTheEndArgs action_args_45 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 46};
+static const StartUsingHDoorArgs action_args_55 = {ROOM_KIT, 0, 56};
+static const PositionSetArgs action_args_56 = {248, -53, 57};
+static const AnimationPlayTillTheEndArgs action_args_57 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 58};
 
 // Закончить использовать дверь с кухни на гостиную
-static const EndUsingHDoorArgs action_args_46 = {ROOM_KIT, 0, 47};
-static const PositionSetArgs action_args_47 = {148, -56, 1};
+static const EndUsingHDoorArgs action_args_58 = {ROOM_KIT, 0, 59};
+static const PositionSetArgs action_args_59 = {148, -56, 1};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -236,53 +258,75 @@ const Action actions[] = {
     {END_USING_H_DOOR, &action_args_20, true},
     {POSITION_SET, &action_args_21, true},
 
-    // Идти к биноклю
+    // Идти мимо микроволновки
     {WALK_TO_X, &action_args_22, false},
 
-    // Проверить, есть ли пакость на бинокле
+    // Проверить, грязная ли микроволновка
     {LOOK_OBJECT_CHECK_TO_TRICK, &action_args_23, true},
 
-    // --
+    // Микроволновка грязная
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_24, false},
+    {BUBBLE_SET, &action_args_25, true},
+    {LOOK_OBJECT_TRICK_COUNT, &action_args_26, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_27, false},
+    {ANIMATION_PLAY_TILL_THE_END ,&action_args_28, false},
+
+    // Подойти к микроволновке
+    {WALK_TO_Y, &action_args_29, false},
+
+    // Почистить микроволновку
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_30, false},
+    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_31, true},
+    {BUBBLE_SET, &action_args_32, true},
+
+    // Уйти от микроволновки
+    {WALK_TO_Y, &action_args_33, false},
+
+    // Идти к биноклю
+    {WALK_TO_X, &action_args_34, false},
+
+    // Проверить, есть ли пакость на бинокле
+    {LOOK_OBJECT_CHECK_TO_TRICK, &action_args_35, true},
+
     // Смотреть в бинокль (без пакости)
 
     // Проверить, есть ли бинокль
-    {LOOK_OBJECT_CHECK_TO_ALT_ACTION, &action_args_24, true},
+    {LOOK_OBJECT_CHECK_TO_ALT_ACTION, &action_args_36, true},
 
     // Бинокль на месте
-    {POSITION_SET, &action_args_25, true},
-    {LOOK_OBJECT_VISIBILITY_SET, &action_args_26, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_27, false},
-    {LOOK_OBJECT_VISIBILITY_SET, &action_args_28, true},
-    {POSITION_SET, &action_args_29, true},
+    {POSITION_SET, &action_args_37, true},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_38, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_39, false},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_40, true},
+    {POSITION_SET, &action_args_41, true},
 
     // Бинокля нет
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_30, false},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_42, false},
 
     // Смотреть в бинокль (пакость)
-    {POSITION_SET, &action_args_31, true},
-    {LOOK_OBJECT_VISIBILITY_SET, &action_args_32, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_33, false},
-    {POSITION_SET, &action_args_34, true},
-    {BUBBLE_SET, &action_args_35, true},
-    {LOOK_OBJECT_TRICK_COUNT, &action_args_36, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_37, false},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_38, false},
-    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_39, true},
-    {BUBBLE_SET, &action_args_40, true},
-    // --
+    {POSITION_SET, &action_args_43, true},
+    {LOOK_OBJECT_VISIBILITY_SET, &action_args_44, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_45, false},
+    {POSITION_SET, &action_args_46, true},
+    {BUBBLE_SET, &action_args_47, true},
+    {LOOK_OBJECT_TRICK_COUNT, &action_args_48, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_49, false},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_50, false},
+    {LOOK_OBJECT_MAKE_UNTRICKED, &action_args_51, true},
+    {BUBBLE_SET, &action_args_52, true},
 
     // Идти к двери с кухни в гостиную
-    {BUBBLE_SET, &action_args_41, true},
-    {WALK_TO_X, &action_args_42, false},
+    {BUBBLE_SET, &action_args_53, true},
+    {WALK_TO_X, &action_args_54, false},
 
     // Начать использовать дверь с кухни на гостиную
-    {START_USING_H_DOOR, &action_args_43, true},
-    {POSITION_SET, &action_args_44, true},
-    {ANIMATION_PLAY_TILL_THE_END, &action_args_45, false},
+    {START_USING_H_DOOR, &action_args_55, true},
+    {POSITION_SET, &action_args_56, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_57, false},
 
     // Закончить использовать дверь с кухни на гостиную
-    {END_USING_H_DOOR, &action_args_46, true},
-    {POSITION_SET, &action_args_47, true}
+    {END_USING_H_DOOR, &action_args_58, true},
+    {POSITION_SET, &action_args_59, true}
 };
 
 Neighbour* neighbour_create(

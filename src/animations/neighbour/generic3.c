@@ -160,6 +160,10 @@ const Animation neighbour_generic3_animations[] = {
             SOUND_NONE,
 			SOUND_NONE,
 			SOUND_NONE,
+			SOUND_NONE,
+			SOUND_NONE,
+			SOUND_NONE,
+			SOUND_NONE,
 			SOUND_NONE
         },
 

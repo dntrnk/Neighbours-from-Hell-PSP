@@ -117,8 +117,12 @@ static vDoor* v_doors[9][3];
 
 static unsigned short new_hint_id;
 
+static g2dImage* Sprite_DIRTYMICROWAVE;
+static g2dImage* Sprite_MICROWAVE_COOK;
+
 static g2dImage* Sprite_BINOCULARS_MS;
 static g2dImage* Sprite_BINOCULARS_GLUE_MS;
+
 static g2dImage* Sprite_SOFA_MS;
 
 static LookObject* look_objects[9][8];
@@ -142,6 +146,32 @@ static Neighbour* neighbour;
 static bool neighbour_active;
 
 static bool pause_button_pressed;
+
+static void microwave_on_making_trick(void) {
+    look_objects[ROOM_KIT][0]->spritelist = Sprite_MICROWAVE_COOK;
+    look_objects[ROOM_KIT][0]->sprite_x = 442;
+    look_objects[ROOM_KIT][0]->sprite_y = 100;
+    look_objects[ROOM_KIT][0]->sprite_w = 28;
+    look_objects[ROOM_KIT][0]->sprite_h = 19;
+    look_objects[ROOM_KIT][0]->sprite_show = true;
+}
+
+static void microwave_on_stop_making_trick(void) {
+    look_objects[ROOM_KIT][0]->sprite_show = false;
+}
+
+static void microwave_on_trick(void) {
+    look_objects[ROOM_KIT][0]->spritelist = Sprite_DIRTYMICROWAVE;
+    look_objects[ROOM_KIT][0]->sprite_x = 440;
+    look_objects[ROOM_KIT][0]->sprite_y = 100;
+    look_objects[ROOM_KIT][0]->sprite_w = 30;
+    look_objects[ROOM_KIT][0]->sprite_h = 19;
+    look_objects[ROOM_KIT][0]->sprite_show = true;
+}
+
+static void microwave_on_untrick(void) {
+    look_objects[ROOM_KIT][0]->sprite_show = false;
+}
 
 static void binoculars_on_trick(void) {
     look_objects[ROOM_KIT][1]->spritelist = Sprite_BINOCULARS_GLUE_MS;
@@ -338,6 +368,7 @@ static void init(void) {
             .sprite_w = 46,
             .sprite_h = 70,
             .sprite_show = true,
+            .above_door = false,
             .collision_x = 246,
             .collision_y = 86,
             .hint_text = "Посмотреть на запертую дверь",
@@ -356,6 +387,8 @@ static void init(void) {
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
             .tricked_bubble_size = 0,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
             .on_trick = NULL,
             .on_untrick = NULL
         };
@@ -373,6 +406,7 @@ static void init(void) {
             .sprite_w = 46,
             .sprite_h = 70,
             .sprite_show = true,
+            .above_door = false,
             .collision_x = 400,
             .collision_y = 228,
             .hint_text = "Посмотреть на запертую дверь",
@@ -391,11 +425,16 @@ static void init(void) {
             .tricked_phrase_text = "",
             .tricked_phrase_y = 0,
             .tricked_bubble_size = 0,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
             .on_trick = NULL,
             .on_untrick = NULL
         };
         look_objects[ROOM_ANC][0] = new_look_object2;
     }
+
+    Sprite_MICROWAVE_COOK = g2d_LoadImage("assets_thq/sprites/kit/microwave/microwave_cook.png", G2D_RGBA8888);
+    Sprite_DIRTYMICROWAVE = g2d_LoadImage("assets_thq/sprites/kit/microwave/dirtymicrowave.png", G2D_RGBA8888);
 
     LookObject* new_look_object3 = malloc(sizeof(LookObject));
     if (new_look_object3) {
@@ -407,7 +446,8 @@ static void init(void) {
             .sprite_src_y = 0,
             .sprite_w = 0,
             .sprite_h = 0,
-            .sprite_show = true,
+            .sprite_show = false,
+            .above_door = false,
             .collision_x = 404,
             .collision_y = 102,
             .hint_text = "Посмотреть на микроволновку",
@@ -426,8 +466,10 @@ static void init(void) {
             .tricked_phrase_text = "Кажется, яйцо уже\n\n\nспеклось",
             .tricked_phrase_y = 8,
             .tricked_bubble_size = 10,
-            .on_trick = NULL,
-            .on_untrick = NULL
+            .on_making_trick = microwave_on_making_trick,
+            .on_stop_making_trick = microwave_on_stop_making_trick,
+            .on_trick = microwave_on_trick,
+            .on_untrick = microwave_on_untrick
         };
         look_objects[ROOM_KIT][0] = new_look_object3;
     }
@@ -446,6 +488,7 @@ static void init(void) {
             .sprite_w = 11,
             .sprite_h = 19,
             .sprite_show = true,
+            .above_door = false,
             .collision_x = 599,
             .collision_y = 115,
             .hint_text = "Посмотреть на бинокль",
@@ -464,6 +507,8 @@ static void init(void) {
             .tricked_phrase_text = "Самоклеющийся бинокль\n\n\n- контактные линзы\n\n\nбудущего.",
             .tricked_phrase_y = 2,
             .tricked_bubble_size = 14,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
             .on_trick = binoculars_on_trick,
             .on_untrick = binoculars_on_untrick
         };
@@ -483,6 +528,7 @@ static void init(void) {
             .sprite_w = 61,
             .sprite_h = 56,
             .sprite_show = true,
+            .above_door = true,
             .collision_x = 161,
             .collision_y = 111,
             .hint_text = "Посмотреть на кресло",
@@ -501,6 +547,8 @@ static void init(void) {
             .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",
             .tricked_phrase_y = 8,
             .tricked_bubble_size = 10,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
             .on_trick = NULL,
             .on_untrick = NULL
         };
@@ -917,6 +965,33 @@ static void draw(void) {
         }
     }
 
+    // look_objects
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
+            LookObject* current_look_object = look_objects[room][i];
+
+            if (current_look_object == NULL)
+                break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
+            
+            if (current_look_object->above_door)
+                continue;
+
+            if (current_look_object->spritelist == NULL)
+                continue;
+
+            if (!current_look_object->sprite_show)
+                continue;
+
+            if (current_look_object->sprite_x + current_look_object->sprite_w <= camera_x || 
+                current_look_object->sprite_x >= camera_right ||
+                current_look_object->sprite_y + current_look_object->sprite_h <= camera_y ||
+                current_look_object->sprite_y >= camera_bottom)
+                continue;
+
+            g2d_DrawImageExt(current_look_object->spritelist, current_look_object->sprite_x - camera_x, current_look_object->sprite_y - camera_y, current_look_object->sprite_w, current_look_object->sprite_h, WHITE, current_look_object->sprite_src_x, current_look_object->sprite_src_y, current_look_object->sprite_w, current_look_object->sprite_h, 0, 255, G2D_UP_LEFT);
+        }
+    }
+
     if (woody->in_door) {
         woody_door_draw(woody);
     }
@@ -933,6 +1008,9 @@ static void draw(void) {
             if (current_look_object == NULL)
                 break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
             
+            if (!current_look_object->above_door)
+                continue;
+
             if (current_look_object->spritelist == NULL)
                 continue;
 
@@ -1028,8 +1106,12 @@ static void unload(void) {
         }
     }
 
+    g2d_FreeImage(Sprite_DIRTYMICROWAVE);
+    g2d_FreeImage(Sprite_MICROWAVE_COOK);
+
     g2d_FreeImage(Sprite_BINOCULARS_MS);
     g2d_FreeImage(Sprite_BINOCULARS_GLUE_MS);
+
     g2d_FreeImage(Sprite_SOFA_MS);
 
     // look_objects_unload

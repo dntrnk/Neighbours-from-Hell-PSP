@@ -12,6 +12,8 @@ typedef struct {
     unsigned short sprite_w, sprite_h;
     bool sprite_show;
 
+    bool above_door;
+
     int collision_x, collision_y;
     char hint_text[256];
     char use_hint_text[128];
@@ -34,6 +36,8 @@ typedef struct {
     int tricked_phrase_y;
     int tricked_bubble_size;
 
+    void (*on_making_trick)(void);
+    void (*on_stop_making_trick)(void);
     void (*on_trick)(void);
     void (*on_untrick)(void);
 } LookObject;

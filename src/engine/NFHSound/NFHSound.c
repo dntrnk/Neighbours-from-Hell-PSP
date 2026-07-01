@@ -65,7 +65,8 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_BACKBREAK1] = "assets_thq/sfx/na_backbreak1.wav",
     [SOUND_NA_AAA_WHINE1] = "assets_thq/sfx/na_aaa_whine1.wav",
     [SOUND_NA_WHEEZE3] = "assets_thq/sfx/na_wheeze3.wav",
-    [SOUND_NA_WHEEZE4] = "assets_thq/sfx/na_wheeze4.wav"
+    [SOUND_NA_WHEEZE4] = "assets_thq/sfx/na_wheeze4.wav",
+    [SOUND_OBJ_MICRO_BEEP1] = "assets_thq/sfx/obj_micro_beep1.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -119,7 +120,8 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_NA_BACKBREAK1] = 0,
     [SOUND_NA_AAA_WHINE1] = 0,
     [SOUND_NA_WHEEZE3] = 0,
-    [SOUND_NA_WHEEZE4] = 0
+    [SOUND_NA_WHEEZE4] = 0,
+    [SOUND_OBJ_MICRO_BEEP1] = 0
 };
 
 typedef struct {
