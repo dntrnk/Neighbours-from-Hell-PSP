@@ -737,7 +737,7 @@ static void init(void) {
     neighbour_gfxdata[6] = neighbour_generic2_frames;
     neighbour_gfxdata[7] = neighbour_generic3_frames;
     neighbour_gfxdata[8] = neighbour_look_frames;
-    neighbour_gfxdata[8] = neighbour_shout0_frames;
+    neighbour_gfxdata[9] = neighbour_shout0_frames;
 
     neighbour_animations[0] = neighbour_generic_animations;
     neighbour_animations[1] = neighbour_doorleft_animations;
@@ -748,7 +748,7 @@ static void init(void) {
     neighbour_animations[6] = neighbour_generic2_animations;
     neighbour_animations[7] = neighbour_generic3_animations;
     neighbour_animations[8] = neighbour_look_animations;
-    neighbour_animations[8] = neighbour_shout0_animations;
+    neighbour_animations[9] = neighbour_shout0_animations;
 
     neighbour = neighbour_create(
         neighbour_spritelists, // spritelists
