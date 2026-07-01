@@ -78,6 +78,19 @@ static void init(void) {
     new_scroll_y_target = 0.0f;
     scroll_y = 0;
     scroll_y_limit = -10;
+
+    selected_button = 0;
+    clicked_button = 1;
+
+    menu_buttons[0] = BUTTON_SELECTED;
+    menu_buttons[1] = BUTTON_DEFAULT;
+    menu_buttons[2] = BUTTON_DEFAULT;
+    menu_buttons[3] = BUTTON_DEFAULT;
+
+    menu_buttons_colors[0] = WHITE;
+    menu_buttons_colors[1] = CG_MENU_GRAY;
+    menu_buttons_colors[2] = CG_MENU_GRAY;
+    menu_buttons_colors[3] = CG_MENU_GRAY;
 }
 
 static void pause_buttons_update(void) {
