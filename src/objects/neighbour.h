@@ -17,6 +17,7 @@
 #include "../animations/neighbour/generic2.h"
 #include "../animations/neighbour/generic3.h"
 #include "../animations/neighbour/look.h"
+#include "../animations/neighbour/shout0.h"
 
 typedef struct Woody Woody;
 

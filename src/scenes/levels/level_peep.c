@@ -85,6 +85,9 @@ extern const Animation neighbour_generic3_animations[];
 extern const Frame neighbour_look_frames[];
 extern const Animation neighbour_look_animations[];
 
+extern const Frame neighbour_shout0_frames[];
+extern const Animation neighbour_shout0_animations[];
+
 extern int camera_x;
 extern int camera_y;
 extern int camera_right;
@@ -723,6 +726,7 @@ static void init(void) {
     neighbour_spritelists[6] = g2d_LoadImage("assets_thq/sprites/neighbour/generic2.png", G2D_CLUT8);
     neighbour_spritelists[7] = g2d_LoadImage("assets_thq/sprites/neighbour/generic3.png", G2D_CLUT8);
     neighbour_spritelists[8] = g2d_LoadImage("assets_thq/sprites/neighbour/look.png", G2D_CLUT8);
+    neighbour_spritelists[9] = g2d_LoadImage("assets_thq/sprites/neighbour/shout0.png", G2D_CLUT8);
 
     neighbour_gfxdata[0] = neighbour_generic_frames;
     neighbour_gfxdata[1] = neighbour_doorleft_frames;
@@ -733,6 +737,7 @@ static void init(void) {
     neighbour_gfxdata[6] = neighbour_generic2_frames;
     neighbour_gfxdata[7] = neighbour_generic3_frames;
     neighbour_gfxdata[8] = neighbour_look_frames;
+    neighbour_gfxdata[8] = neighbour_shout0_frames;
 
     neighbour_animations[0] = neighbour_generic_animations;
     neighbour_animations[1] = neighbour_doorleft_animations;
@@ -743,6 +748,7 @@ static void init(void) {
     neighbour_animations[6] = neighbour_generic2_animations;
     neighbour_animations[7] = neighbour_generic3_animations;
     neighbour_animations[8] = neighbour_look_animations;
+    neighbour_animations[8] = neighbour_shout0_animations;
 
     neighbour = neighbour_create(
         neighbour_spritelists, // spritelists

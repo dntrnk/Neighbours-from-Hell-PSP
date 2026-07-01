@@ -159,7 +159,7 @@ static const LookObjectCheckToTrickArgs action_args_23 = {ROOM_KIT, 0, 24, 34};
 static const AnimationPlayTillTheEndArgs action_args_24 = {ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_DOUBLETAKE1, 25};
 static const BubbleSetArgs action_args_25 = {BUBBLE_WUT, 26};
 static const LookObjectTrickCountArgs action_args_26 = {ROOM_KIT, 0, 34, 27};
-static const AnimationPlayTillTheEndArgs action_args_27 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 29};
+static const AnimationPlayTillTheEndArgs action_args_27 = {ANIMATION_PACK_NEIGHBOUR_SHOUT0, ANIMATION_NEIGHBOUR_SHOUT0, 29};
 static const AnimationPlayTillTheEndArgs action_args_28 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 29};
 
 // Подойти к микроволновке
