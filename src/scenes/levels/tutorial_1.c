@@ -501,8 +501,7 @@ static void draw(void) {
     for (int room = 0; room < room_count; room++) {
         hDoor* current_door = h_doors[room][0]; // Левая дверь всегда под индексом 0
 
-        if (current_door == NULL)
-            continue;
+        if (current_door != NULL) continue;
 
         if (current_door->using_by == USING_NONE) {
             if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -519,8 +518,7 @@ static void draw(void) {
     for (int room = 0; room < room_count; room++) {
         hDoor* current_door = h_doors[room][1]; // Левая дверь всегда под индексом 1
 
-        if (current_door == NULL)
-            continue;
+        if (!current_door) continue;
 
         if (current_door->using_by == USING_NONE) {
             if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -538,8 +536,7 @@ static void draw(void) {
         for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
             vDoor* current_door = v_doors[room][door];
 
-            if (current_door == NULL)
-                continue;
+            if (!current_door) continue;
 
             if (current_door->using_by == USING_NONE) {
                 if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -558,8 +555,7 @@ static void draw(void) {
         for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_objects[room][i];
 
-            if (current_look_object == NULL)
-                break; // Важно, чтобы look_objects по порядку ставили
+            if (!current_look_object) break; // Важно, чтобы look_objects по порядку ставили
 
             if (current_look_object->sprite_x + current_look_object->sprite_w <= camera_x || 
                 current_look_object->sprite_x >= camera_right ||
@@ -576,11 +572,9 @@ static void draw(void) {
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             Storage* current_storage = storages[room][i];
 
-            if (current_storage == NULL)
-                break; // Важно, чтобы storages по порядку ставили
+            if (!current_storage) break; // Важно, чтобы storages по порядку ставили
             
-            if (current_storage->spritelist == NULL)
-                continue;
+            if (!current_storage->spritelist) continue;
 
             if (current_storage->sprite_x + current_storage->sprite_w <= camera_x || 
                 current_storage->sprite_x >= camera_right ||
