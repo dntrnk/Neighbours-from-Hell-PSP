@@ -116,7 +116,7 @@ static int room_count;
 static RoomCollision room_collisions[9];
 
 static hDoor* h_doors[9][2];
-static vDoor* v_doors[9][3];
+static vDoor* v_doors[9][MAX_V_DOORS_IN_ROOM];
 
 static unsigned short new_hint_id;
 
@@ -128,9 +128,9 @@ static g2dImage* Sprite_BINOCULARS_GLUE_MS;
 
 static g2dImage* Sprite_SOFA_MS;
 
-static LookObject* look_objects[9][8];
+static LookObject* look_objects[9][MAX_LOOK_OBJECTS_IN_ROOM];
 static Hideout* hideouts[9];
-static Storage* storages[9][8];
+static Storage* storages[9][MAX_STORAGES_IN_ROOM];
 
 static LevelEnd* level_end;
 static bool level_end_active;
@@ -919,8 +919,7 @@ static void draw(void) {
     for (int room = 0; room < room_count; room++) {
         hDoor* current_door = h_doors[room][0]; // Левая дверь всегда под индексом 0
 
-        if (current_door == NULL)
-            continue;
+        if (!current_door) continue;
 
         if (current_door->using_by == USING_NONE) {
             if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -937,8 +936,7 @@ static void draw(void) {
     for (int room = 0; room < room_count; room++) {
         hDoor* current_door = h_doors[room][1]; // Правая дверь всегда под индексом 1
 
-        if (current_door == NULL)
-            continue;
+        if (!current_door) continue;
 
         if (current_door->using_by == USING_NONE) {
             if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -956,8 +954,7 @@ static void draw(void) {
         for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
             vDoor* current_door = v_doors[room][door];
 
-            if (current_door == NULL)
-                continue;
+            if (!current_door) continue;
 
             if (current_door->using_by == USING_NONE) {
                 if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
@@ -976,17 +973,13 @@ static void draw(void) {
         for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_objects[room][i];
 
-            if (current_look_object == NULL)
-                break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
+            if (!current_look_object) break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
             
-            if (current_look_object->above_door)
-                continue;
+            if (current_look_object->above_door) continue;
 
-            if (current_look_object->spritelist == NULL)
-                continue;
+            if (!current_look_object->spritelist) continue;
 
-            if (!current_look_object->sprite_show)
-                continue;
+            if (!current_look_object->sprite_show) continue;
 
             if (current_look_object->sprite_x + current_look_object->sprite_w <= camera_x || 
                 current_look_object->sprite_x >= camera_right ||
@@ -1011,17 +1004,13 @@ static void draw(void) {
         for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_objects[room][i];
 
-            if (current_look_object == NULL)
-                break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
+            if (!current_look_object) break; // Важно, чтобы look_objects по порядку ставили. А они будут по порядку заполнять массив при загрузке уровня
             
-            if (!current_look_object->above_door)
-                continue;
+            if (!current_look_object->above_door) continue;
 
-            if (current_look_object->spritelist == NULL)
-                continue;
+            if (!current_look_object->spritelist) continue;
 
-            if (!current_look_object->sprite_show)
-                continue;
+            if (!current_look_object->sprite_show) continue;
 
             if (current_look_object->sprite_x + current_look_object->sprite_w <= camera_x || 
                 current_look_object->sprite_x >= camera_right ||
@@ -1038,14 +1027,11 @@ static void draw(void) {
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             Storage* current_storage = storages[room][i];
 
-            if (current_storage == NULL)
-                break; // Важно, чтобы storages по порядку ставили
+            if (!current_storage) break; // Хранилища идут подряд без пропусков
             
-            if (current_storage->spritelist == NULL)
-                continue;
+            if (!current_storage->spritelist) continue;
 
-            if (!current_storage->sprite_show)
-                continue;
+            if (!current_storage->sprite_show) continue;
 
             if (current_storage->sprite_x + current_storage->sprite_w <= camera_x || 
                 current_storage->sprite_x >= camera_right ||
