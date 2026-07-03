@@ -501,7 +501,7 @@ static void draw(void) {
     for (int room = 0; room < room_count; room++) {
         hDoor* current_door = h_doors[room][0]; // Левая дверь всегда под индексом 0
 
-        if (current_door != NULL) continue;
+        if (!current_door) continue;
 
         if (current_door->using_by == USING_NONE) {
             if (current_door->sprite_x + current_door->sprite_w <= camera_x || 
