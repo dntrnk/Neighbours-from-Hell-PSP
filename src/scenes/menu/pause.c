@@ -126,7 +126,7 @@ static void update(void) {
         new_scroll_y = new_scroll_y_target;
         scroll_y = floor(new_scroll_y);
     } else {
-        new_scroll_y = lerp(new_scroll_y, new_scroll_y_target, 0.8);
+        new_scroll_y = lerp(new_scroll_y, new_scroll_y_target, 0.8f);
         scroll_y = floor(new_scroll_y);
     }
 
@@ -326,19 +326,19 @@ static void draw(void) {
 
     if (tutorial_selected) {
         intraFontPrint(Font_BLUEHIGH_8, 335, 101 + intraFontTextHeight(Font_BLUEHIGH_8), "Слушайте советы");
-        intraFontPrint(Font_BLUEHIGH_8, 339, 101+6 + intraFontTextHeight(Font_BLUEHIGH_8), "режиссера! Он");
-        intraFontPrint(Font_BLUEHIGH_8, 332, 101+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "подскажет вам, что");
-        intraFontPrint(Font_BLUEHIGH_8, 354, 101+6+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "делать.");
+        intraFontPrint(Font_BLUEHIGH_8, 339, 107 + intraFontTextHeight(Font_BLUEHIGH_8), "режиссера! Он");
+        intraFontPrint(Font_BLUEHIGH_8, 332, 113 + intraFontTextHeight(Font_BLUEHIGH_8), "подскажет вам, что");
+        intraFontPrint(Font_BLUEHIGH_8, 354, 119 + intraFontTextHeight(Font_BLUEHIGH_8), "делать.");
     } else {
         intraFontPrint(Font_BLUEHIGH_8, 330, 104 + intraFontTextHeight(Font_BLUEHIGH_8), "Некоторые пакости в");
-        intraFontPrint(Font_BLUEHIGH_8, 340, 104+6 + intraFontTextHeight(Font_BLUEHIGH_8), "сериях можно");
-        intraFontPrint(Font_BLUEHIGH_8, 345, 104+6+6 + intraFontTextHeight(Font_BLUEHIGH_8), "пропускать.");
+        intraFontPrint(Font_BLUEHIGH_8, 340, 110 + intraFontTextHeight(Font_BLUEHIGH_8), "сериях можно");
+        intraFontPrint(Font_BLUEHIGH_8, 345, 116 + intraFontTextHeight(Font_BLUEHIGH_8), "пропускать.");
     }
 
     g2d_DrawImageExt(SpriteList_BUTTONS, 386 + 9, 241 + 9, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
 
     // Название уровня
-    intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontSetStyle(Font_ACMESA, 0.8f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_ACMESA, 1);
 
     if (tutorial_selected) {
@@ -358,31 +358,30 @@ static void draw(void) {
     // Левая половина
     g2d_DrawImage(BG_INGAME_MENU, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
-    intraFontSetStyle(Font_ACMESA, 0.8, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontSetStyle(Font_ACMESA, 0.8f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
     intraFontPrint(Font_ACMESA, 75, 35 + intraFontTextHeight(Font_ACMESA), "Игровое меню");
 
-    #define OFFSET_X -99
     #define OFFSET_Y -53
 
     // Отрисовка кнопок, состояние кнопки совпадает со спрайтом (не выбран/выбран/нажат)
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 130 + OFFSET_Y, 150, 24, WHITE, menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 155 + OFFSET_Y, 150, 24, WHITE, menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 180 + OFFSET_Y, 150, 24, WHITE, menu_buttons[2] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
-    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 205 + OFFSET_Y, 150, 24, WHITE, menu_buttons[3] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 77, 150, 24, WHITE, menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 102, 150, 24, WHITE, menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 127, 150, 24, WHITE, menu_buttons[2] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 74, 152, 150, 24, WHITE, menu_buttons[3] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8f, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 149, 137 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Продолжить игру");
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8f, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 149, 162 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Начать съемку заново");
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8f, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 149, 187 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Снимать новую серию");
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[3], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontSetStyle(Font_ACMESA, 0.8f, menu_buttons_colors[3], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 149, 212 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Вернуться в меню");
 
     g2dFlip(G2D_VSYNC);
