@@ -5,7 +5,7 @@ g2dImage* g2d_LoadImage(const char* filename, g2dTexFormat pallete) {
 }
 
 void g2d_FreeImage(g2dImage* image) {
-    if (image != NULL)
+    if (image)
         g2dTexFree(&image);
 }
 

@@ -361,7 +361,7 @@ static void woody_auto_move_check(Woody* woody) {
         LookObject** look_object_in_room = woody->look_objects[woody->room];
         for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
             LookObject* current_look_object = look_object_in_room[i];
-            if (current_look_object != NULL) {
+            if (current_look_object) {
                 if (((abs(current_look_object->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) && woody->y == woody->floor_y) || (current_look_object->collision_x == woody->x)) {
                     woody->state = STATE_AUTO_H_MOVE;
                     woody->auto_move_goal_type = GOAL_LOOK_OBJECT;
@@ -389,7 +389,7 @@ static void woody_auto_move_check(Woody* woody) {
     // Авто-движение к Hideout
     if (controls_pressed(PSP_CTRL_CIRCLE)) {
         Hideout* current_hideout = woody->hideouts[woody->room];
-        if (current_hideout != NULL) {
+        if (current_hideout) {
             if (((abs(current_hideout->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) && woody->y == woody->floor_y) || (current_hideout->collision_x == woody->x)) {
                 woody->state = STATE_AUTO_H_MOVE;
                 woody->auto_move_goal_type = GOAL_HIDEOUT;
@@ -405,7 +405,7 @@ static void woody_auto_move_check(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             Storage* current_storage = storages_in_room[i];
-            if (current_storage != NULL) {
+            if (current_storage) {
                 if (((abs(current_storage->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) && woody->y == woody->floor_y) || (current_storage->collision_x == woody->x)) {
                     woody->state = STATE_AUTO_H_MOVE;
                     woody->auto_move_goal_type = GOAL_STORAGE;
@@ -436,13 +436,13 @@ static void woody_auto_move_complete(Woody* woody) {
                 // Ищем текущий LookObject
                 for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object != NULL) {
+                    if (current_look_object) {
                         if (current_look_object->collision_x == woody->x) {
                             if (current_look_object->item_to_trick == woody->inventory[woody->selected_item]) {
                                 woody->state = STATE_MAKING_TRICK;
                                 woody->trick_making_length = current_look_object->trick_making_length;
 
-                                if (current_look_object->on_making_trick != NULL) {
+                                if (current_look_object->on_making_trick) {
                                     current_look_object->on_making_trick();
                                 }
 
@@ -502,7 +502,7 @@ static void woody_auto_move_complete(Woody* woody) {
                 Storage** storages_in_room = woody->storages[woody->room];
                 for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     Storage* current_storage = storages_in_room[i];
-                    if (current_storage != NULL) {
+                    if (current_storage ) {
                         if (woody->x == current_storage->collision_x) {
                             switch (current_storage->sprite_type) {
                                 case SPRITE_TYPE_OPENS:
@@ -548,7 +548,7 @@ static void woody_hints_update(Woody* woody) {
     // Смотрим LookObjects
     for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
         LookObject* current_look_object = woody->look_objects[woody->room][i];
-        if (current_look_object != NULL) {
+        if (current_look_object ) {
             if (abs(current_look_object->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
                 woody->hints[2] = woody->hints[1];
                 woody->hints[1] = woody->hints[0];
@@ -582,7 +582,7 @@ static void woody_hints_update(Woody* woody) {
 
     // Смотрим Hideouts
     Hideout* current_hideout = woody->hideouts[woody->room];
-    if (current_hideout != NULL) {
+    if (current_hideout ) {
         if (abs(current_hideout->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
             woody->hints[2] = woody->hints[1];
             woody->hints[1] = woody->hints[0];
@@ -614,7 +614,7 @@ static void woody_hints_update(Woody* woody) {
     // Смотрим Storages
     for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
         Storage* current_storage = woody->storages[woody->room][i];
-        if (current_storage != NULL) {
+        if (current_storage ) {
             if (abs(current_storage->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
                 woody->hints[2] = woody->hints[1];
                 woody->hints[1] = woody->hints[0];
@@ -717,7 +717,7 @@ static void woody_update_h_move(Woody* woody) {
             // Проверка на дверь
             hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
 
-            if (current_door != NULL) {
+            if (current_door ) {
                 if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {
                     woody_start_using_h_door(woody, current_door);
                     woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORLEFT, ANIMATION_WOODY_DOORLEFT_ENTER);
@@ -734,7 +734,7 @@ static void woody_update_h_move(Woody* woody) {
         // Проверка на дверь
         hDoor* current_door = woody->h_doors[woody->room][1]; // Правая дверь всегда под индексом 1!
 
-            if (current_door != NULL) {
+            if (current_door ) {
                 if (woody->x + woody->velocity_x >= current_door->collision_x && current_door->using_by == USING_NONE) {
                     woody_start_using_h_door(woody, current_door);
                     woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORRIGHT, ANIMATION_WOODY_DOORRIGHT_ENTER);
@@ -750,7 +750,7 @@ static void woody_update_h_move(Woody* woody) {
     // Ассист движения к вертикальным дверям
     if (controls_held(PSP_CTRL_UP)) {
         for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
-            if (woody->v_doors[woody->room][door] != NULL) {
+            if (woody->v_doors[woody->room][door] ) {
                 int current_collision_x = woody->v_doors[woody->room][door]->collision_x;
                 int distance = abs(current_collision_x - woody->x);
 
@@ -824,7 +824,7 @@ static void woody_update_v_move(Woody* woody) {
     // Вход в вертикальную дверь
     for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
         vDoor* current_door = woody->v_doors[woody->room][door];
-        if (current_door != NULL) {
+        if (current_door ) {
             if (current_door->using_by == USING_NONE && woody->x == current_door->collision_x && woody->y <= current_door->collision_y) {
                 woody_start_using_v_door(woody, current_door);
                 break;
@@ -968,7 +968,7 @@ static void woody_update_storage_check(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage != NULL) {
+            if (current_storage ) {
                 if (woody->x == current_storage->collision_x) {
                     if (!current_storage->opened) {
                         current_storage->opened = true;
@@ -1019,7 +1019,7 @@ static void woody_update_storage_found(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage != NULL) {
+            if (current_storage ) {
                 if (woody->x == current_storage->collision_x) {
                     int first_item_index = woody->item_count;
                     woody->inventory_animation_first_index = first_item_index;
@@ -1086,7 +1086,7 @@ static void woody_update_storage_not_found(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage != NULL) {
+            if (current_storage ) {
                 if (woody->x == current_storage->collision_x) {
                     current_storage->sprite_show = false;
                 }
@@ -1251,11 +1251,11 @@ static void woody_update_making_trick(Woody* woody) {
                 // Ищем текущий LookObject
                 for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object != NULL) {
+                    if (current_look_object ) {
                         if (current_look_object->collision_x == woody->x) {
                             current_look_object->tricked = true;
 
-                            if (current_look_object->on_trick != NULL) {
+                            if (current_look_object->on_trick ) {
                                 current_look_object->on_trick();
                             }
 
@@ -1294,10 +1294,10 @@ static void woody_update_making_trick(Woody* woody) {
                     // Ищем текущий LookObject
                     for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                         LookObject* current_look_object = woody->look_objects[woody->room][i];
-                        if (current_look_object != NULL) {
+                        if (current_look_object ) {
                             if (current_look_object->collision_x == woody->x) {
 
-                                if (current_look_object->on_stop_making_trick != NULL) {
+                                if (current_look_object->on_stop_making_trick ) {
                                     current_look_object->on_stop_making_trick();
                                 }
 
@@ -1346,7 +1346,7 @@ static void woody_update_level_start(Woody* woody) {
         // Проверка на дверь
         hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
 
-        if (current_door != NULL) {
+        if (current_door ) {
             if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {
                 woody_start_using_h_door(woody, current_door);
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_DOORLEFT, ANIMATION_WOODY_DOORLEFT_ENTER);

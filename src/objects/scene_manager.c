@@ -69,7 +69,7 @@ static void scene_push_process(void) {
 
     current_scene = scene_stack[scene_stack_count - 1];
 
-    if (current_scene->init != NULL) {
+    if (current_scene->init) {
         current_scene->init();
     }
 
@@ -80,8 +80,8 @@ static void scene_pop_process(void) {
     if (scene_stack_count <= 0) return;
 
     Scene* top = scene_stack[scene_stack_count - 1];
-    if (top != NULL) {
-        if (top->unload != NULL) {
+    if (top) {
+        if (top->unload) {
             top->unload();
         }
     }
@@ -107,7 +107,7 @@ static void scene_restart_process(void) {
 
     current_scene = scene_stack[0];
 
-    if (current_scene->init != NULL) {
+    if (current_scene->init) {
         current_scene->init();
     }
 }

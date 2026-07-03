@@ -325,7 +325,7 @@ static void init(void) {
         int index = 0;
 
         for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
-            if (v_doors[room][i] == NULL) {
+            if (!v_doors[room][i]) {
                 index = i;
                 break;
             }
@@ -1087,7 +1087,7 @@ static void unload(void) {
     // h_doors_unload
     for (int room = 0; room < room_count; room++) {
         for (int i = 0; i < 2; i++) {
-            if (h_doors[room][i] != NULL) {
+            if (h_doors[room][i]) {
                 free(h_doors[room][i]);
                 h_doors[room][i] = NULL;
             }
@@ -1097,7 +1097,7 @@ static void unload(void) {
     // v_doors_unload
     for (int room = 0; room < room_count; room++) {
         for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
-            if (v_doors[room][i] != NULL) {
+            if (v_doors[room][i]) {
                 free(v_doors[room][i]);
                 v_doors[room][i] = NULL;
             }
@@ -1115,7 +1115,7 @@ static void unload(void) {
     // look_objects_unload
     for (int room = 0; room < room_count; room++) {
         for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
-            if (look_objects[room][i] != NULL) {
+            if (look_objects[room][i]) {
                 free(look_objects[room][i]);
                 look_objects[room][i] = NULL;
             }
@@ -1124,7 +1124,7 @@ static void unload(void) {
 
     // hideouts unload
     for (int i = 0; i < room_count; i++) {
-        if (hideouts[i] != NULL) {
+        if (hideouts[i]) {
             free(hideouts[i]);
         }
     }
@@ -1132,7 +1132,7 @@ static void unload(void) {
     // storages unload
     for (int room = 0; room < room_count; room++) {
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-            if (storages[room][i] != NULL) {
+            if (storages[room][i]) {
                 free(storages[room][i]);
                 storages[room][i] = NULL;
             }
@@ -1148,6 +1148,8 @@ static void unload(void) {
     g2d_FreeImage(neighbour_spritelists[6]);
     g2d_FreeImage(neighbour_spritelists[7]);
     g2d_FreeImage(neighbour_spritelists[8]);
+    g2d_FreeImage(neighbour_spritelists[9]);
+    g2d_FreeImage(neighbour_spritelists[10]);
     neighbour_unload(neighbour);
     intro_unload(intro);
     level_end_unload(level_end);
