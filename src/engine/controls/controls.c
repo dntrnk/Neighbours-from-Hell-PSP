@@ -10,7 +10,6 @@ typedef struct Controls {
     unsigned int pressed;
     unsigned int held;
     unsigned int released;
-    int hold_counter[32];
 } Controls;
 
 static Controls pad;
@@ -66,24 +65,21 @@ void controls_read(void) {
     controls_AddInput(PSP_CTRL_HOME);
 }
 
-int controls_pressed(const unsigned int button) {
+bool controls_pressed(const unsigned int button) {
     if ((pad.pressed & button) == button) {	
         pad.pressed &= ~button;
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
-int controls_held(const unsigned int button) {
+bool controls_held(const unsigned int button) {
     return ((pad.held & button) == button);
 }
 
-int controls_released(const unsigned int button) {
-    if ((pad.released & button) == button)
-        return 1;
-
-    return 0;
+bool controls_released(const unsigned int button) {
+    return ((pad.released & button) == button);
 }
 
 int controls_AnalogX(void) {
