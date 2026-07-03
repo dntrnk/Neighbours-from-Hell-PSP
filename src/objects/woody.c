@@ -508,7 +508,7 @@ static void woody_auto_move_complete(Woody* woody) {
                 Storage** storages_in_room = woody->storages[woody->room];
                 for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
                     Storage* current_storage = storages_in_room[i];
-                    if (current_storage ) {
+                    if (current_storage) {
                         if (woody->x == current_storage->collision_x) {
                             switch (current_storage->sprite_type) {
                                 case SPRITE_TYPE_OPENS:
@@ -554,7 +554,7 @@ static void woody_hints_update(Woody* woody) {
     // Смотрим LookObjects
     for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
         LookObject* current_look_object = woody->look_objects[woody->room][i];
-        if (current_look_object ) {
+        if (current_look_object) {
             if (abs(current_look_object->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
                 woody->hints[2] = woody->hints[1];
                 woody->hints[1] = woody->hints[0];
@@ -588,7 +588,7 @@ static void woody_hints_update(Woody* woody) {
 
     // Смотрим Hideouts
     Hideout* current_hideout = woody->hideouts[woody->room];
-    if (current_hideout ) {
+    if (current_hideout) {
         if (abs(current_hideout->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
             woody->hints[2] = woody->hints[1];
             woody->hints[1] = woody->hints[0];
@@ -620,7 +620,7 @@ static void woody_hints_update(Woody* woody) {
     // Смотрим Storages
     for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
         Storage* current_storage = woody->storages[woody->room][i];
-        if (current_storage ) {
+        if (current_storage) {
             if (abs(current_storage->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
                 woody->hints[2] = woody->hints[1];
                 woody->hints[1] = woody->hints[0];
@@ -724,7 +724,7 @@ static void woody_stop_making_trick(Woody* woody) {
                 // Ищем текущий LookObject
                 for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object ) {
+                    if (current_look_object) {
                         if (current_look_object->collision_x == woody->x) {
 
                             if (current_look_object->on_stop_making_trick) {
@@ -797,7 +797,7 @@ static void woody_update_h_move(Woody* woody) {
     // Ассист движения к вертикальным дверям
     if (controls_held(PSP_CTRL_UP)) {
         for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
-            if (woody->v_doors[woody->room][door] ) {
+            if (woody->v_doors[woody->room][door]) {
                 int current_collision_x = woody->v_doors[woody->room][door]->collision_x;
                 int distance = abs(current_collision_x - woody->x);
 
@@ -871,7 +871,7 @@ static void woody_update_v_move(Woody* woody) {
     // Вход в вертикальную дверь
     for (int door = 0; door < MAX_V_DOORS_IN_ROOM; door++) {
         vDoor* current_door = woody->v_doors[woody->room][door];
-        if (current_door ) {
+        if (current_door) {
             if (current_door->using_by == USING_NONE && woody->x == current_door->collision_x && woody->y <= current_door->collision_y) {
                 woody_start_using_v_door(woody, current_door);
                 break;
@@ -1302,11 +1302,11 @@ static void woody_update_making_trick(Woody* woody) {
                 // Ищем текущий LookObject
                 for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object ) {
+                    if (current_look_object) {
                         if (current_look_object->collision_x == woody->x) {
                             current_look_object->tricked = true;
 
-                            if (current_look_object->on_trick ) {
+                            if (current_look_object->on_trick) {
                                 current_look_object->on_trick();
                             }
 
