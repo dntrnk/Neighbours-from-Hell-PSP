@@ -88,6 +88,9 @@ extern const Animation neighbour_look_animations[];
 extern const Frame neighbour_shout0_frames[];
 extern const Animation neighbour_shout0_animations[];
 
+extern const Frame neighbour_sofa1_frames[];
+extern const Animation neighbour_sofa1_animations[];
+
 extern int camera_x;
 extern int camera_y;
 extern int camera_right;
@@ -545,7 +548,7 @@ static void init(void) {
             .tricked = false,
             .item_to_trick = ITEM_FARTBAG,
             .alt_action = false,
-            .trick_making_length = 108,
+            .trick_making_length = 54,
             .trick_tv_rating = 25,
             .tricked_phrase_text = "Вот он удивится, когда\n\n\nплюхнется в кресло!",
             .tricked_phrase_y = 8,
@@ -727,6 +730,7 @@ static void init(void) {
     neighbour_spritelists[7] = g2d_LoadImage("assets_thq/sprites/neighbour/generic3.png", G2D_CLUT8);
     neighbour_spritelists[8] = g2d_LoadImage("assets_thq/sprites/neighbour/look.png", G2D_CLUT8);
     neighbour_spritelists[9] = g2d_LoadImage("assets_thq/sprites/neighbour/shout0.png", G2D_CLUT8);
+    neighbour_spritelists[10] = g2d_LoadImage("assets_thq/sprites/lir/sofa/level_peep1.png", G2D_CLUT8);
 
     neighbour_gfxdata[0] = neighbour_generic_frames;
     neighbour_gfxdata[1] = neighbour_doorleft_frames;
@@ -738,6 +742,7 @@ static void init(void) {
     neighbour_gfxdata[7] = neighbour_generic3_frames;
     neighbour_gfxdata[8] = neighbour_look_frames;
     neighbour_gfxdata[9] = neighbour_shout0_frames;
+    neighbour_gfxdata[10] = neighbour_sofa1_frames;
 
     neighbour_animations[0] = neighbour_generic_animations;
     neighbour_animations[1] = neighbour_doorleft_animations;
@@ -749,6 +754,7 @@ static void init(void) {
     neighbour_animations[7] = neighbour_generic3_animations;
     neighbour_animations[8] = neighbour_look_animations;
     neighbour_animations[9] = neighbour_shout0_animations;
+    neighbour_animations[10] = neighbour_sofa1_animations;
 
     neighbour = neighbour_create(
         neighbour_spritelists, // spritelists
