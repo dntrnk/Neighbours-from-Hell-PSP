@@ -118,7 +118,7 @@ static bool pause_button_pressed;
 static void init(void) {
     FILE* file = fopen("data/levels/tutorial_1.json", "r");
 
-    if (file == NULL) {
+    if (!file) {
         scene_error("Не удалось открыть файл \"data/levels/tutorial_1.json\"");
     }
 

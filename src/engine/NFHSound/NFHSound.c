@@ -1,8 +1,13 @@
 #include "NFHSound.h"
 
 #include <stdlib.h>
+#include <stdbool.h>
+
 #include "../audio/pspaalib.h"
 #include "../../objects/scene_manager.h"
+
+#define MUSIC_CHANNEL 5
+#define HOUSE_MUSIC_CHANNEL 6
 
 static const char* const music_bindings[] = {
     [MUSIC_DNTRNK] = "assets_my/music/dntrnk.at3",
@@ -76,67 +81,7 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_HANDS1] = "assets_thq/sfx/na_hands1.wav"
 };
 
-static unsigned short sound_channels_bindings[] = {
-    [SOUND_BUT1] = 0,
-    [SOUND_BUT_HOVER1] = 0,
-    [SOUND_DOOR_CLOSE1] = 0,
-    [SOUND_DOOR_OPEN1] = 0,
-    [SOUND_ILLEGAL] = 0,
-    [SOUND_LEVELSTART] = 0,
-    [SOUND_WOD_JUHU1] = 0,
-    [SOUND_WOD_LAUGH1] = 0,
-    [SOUND_WOD_STEP1A] = 0,
-    [SOUND_WOD_STEP2A] = 0,
-    [SOUND_OBJ_OPEN1] = 0,
-    [SOUND_OBJ_CLOSE1] = 0,
-    [SOUND_WOD_HA1] = 0,
-    [SOUND_GIVE_TAKE1] = 0,
-    [SOUND_GIVE_TAKE2] = 0,
-    [SOUND_WOD_EH1] = 0,
-    [SOUND_NA_USE1A] = 0,
-    [SOUND_NA_STEP1] = 0,
-    [SOUND_NA_STEP2] = 0,
-    [SOUND_NA_SITSDOWN1] = 0,
-    [SOUND_NA_REMOTE1] = 0,
-    [SOUND_NA_GETSUP1] = 0,
-    [SOUND_NA_PEEP1] = 0,
-    [SOUND_NA_PEEP2] = 0,
-    [SOUND_NA_PEEP3] = 0,
-    [SOUND_NA_PEEP4] = 0,
-    [SOUND_OBJ_SQUIEEK1] = 0,
-    [SOUND_NA_WORKOUT1] = 0,
-    [SOUND_NA_WORKOUT2] = 0,
-    [SOUND_NA_AAA_LONG2] = 0,
-    [SOUND_OBJ_PLOP1] = 0,
-    [SOUND_WOD_NONO] = 0,
-    [SOUND_WOD_LAUGH2] = 0,
-    [SOUND_WOD_FEAR1] = 0,
-    [SOUND_INSTALL1] = 0,
-    [SOUND_INSTALL2] = 0,
-    [SOUND_USE1] = 0,
-    [SOUND_APPLAUSE] = 0,
-    [SOUND_NA_SHOUT1] = 0,
-    [SOUND_NA_HUH1] = 0,
-    [SOUND_NA_SUP_HUH1] = 0,
-    [SOUND_NA_RUN1] = 0,
-    [SOUND_NA_RUN2] = 0,
-    [SOUND_NA_USE1] = 0,
-    [SOUND_NA_PEEP5] = 0,
-    [SOUND_JINGLE_JOKE] = 0,
-    [SOUND_NA_AAA_LONG4] = 0,
-    [SOUND_NA_BACKBREAK1] = 0,
-    [SOUND_NA_AAA_WHINE1] = 0,
-    [SOUND_NA_WHEEZE3] = 0,
-    [SOUND_NA_WHEEZE4] = 0,
-    [SOUND_OBJ_MICRO_BEEP1] = 0,
-    [SOUND_BIG1] = 0,
-    [SOUND_BIG2] = 0,
-    [SOUND_BIG3] = 0,
-    [SOUND_NA_GRRR1] = 0,
-    [SOUND_NA_SUP_HUH2] = 0,
-    [SOUND_NA_FART2] = 0,
-    [SOUND_NA_HANDS1] = 0
-};
+static unsigned short sound_channels_bindings[sizeof(sfx_bindings) / sizeof(sfx_bindings[0])] = {0};
 
 typedef struct {
     int sound;
@@ -151,36 +96,36 @@ static short sound_channels_order[31] = {
 };
 
 static unsigned short next_free_sound_channel = 17;
-static short house_music_loaded = -1;
 static short music_loaded = -1;
+static short house_music_loaded = -1;
 
 void NFHMusicPlay(int new_music, int loop) {
     if (music_loaded != new_music) {
-        int error_code = AalibLoad(music_bindings[new_music], 5, 1);
-        if (error_code != 0) {
+        int error_code = AalibLoad(music_bindings[new_music], MUSIC_CHANNEL, true);
+        if (error_code != PSPAALIB_SUCCESS) {
             scene_error("Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
         }
 
         music_loaded = new_music;
     }
 
-    if (AalibGetStatus(5) == -1) {   
-        AalibSetAutoloop(5, loop);
-        AalibPlay(5);
+    if (AalibGetStatus(MUSIC_CHANNEL) == PSPAALIB_STATUS_STOPPED) {   
+        AalibSetAutoloop(MUSIC_CHANNEL, loop);
+        AalibPlay(MUSIC_CHANNEL);
     }
 }
 
 void NFHMusicStop(void) {
-    AalibStop(5);
-    AalibDisable(5, PSPAALIB_EFFECT_VOLUME_MANUAL);
+    AalibStop(MUSIC_CHANNEL);
+    AalibDisable(MUSIC_CHANNEL, PSPAALIB_EFFECT_VOLUME_MANUAL);
 }
 
 void NFHHouseMusicLoad(void) {
     int new_music = (rand() % 2) ? MUSIC_INGAME1_NORMAL : MUSIC_INGAME2_NORMAL;
 
     if (house_music_loaded != new_music) {
-        int error_code = AalibLoad(music_bindings[new_music], 6, 1);
-        if (error_code != 0) {
+        int error_code = AalibLoad(music_bindings[new_music], HOUSE_MUSIC_CHANNEL, true);
+        if (error_code != PSPAALIB_SUCCESS) {
             scene_error("Ошибка загрузки %s: %d", music_bindings[new_music], error_code);
         }
 
@@ -189,28 +134,29 @@ void NFHHouseMusicLoad(void) {
 }
 
 void NFHHouseMusicPlay(void) {
-    if (AalibGetStatus(6) != -1) {
-        AalibStop(6);
+    if (AalibGetStatus(HOUSE_MUSIC_CHANNEL) != PSPAALIB_STATUS_STOPPED) {
+        AalibStop(HOUSE_MUSIC_CHANNEL);
     }
     
-    AalibSetAutoloop(6, 1);
-    AalibPlay(6);
+    AalibSetAutoloop(HOUSE_MUSIC_CHANNEL, true);
+    AalibPlay(HOUSE_MUSIC_CHANNEL);
 }
 
 void NFHHouseMusicPause(void) {
-    if (AalibGetStatus(6) == -3) {
-        AalibPause(6);
+    if (AalibGetStatus(HOUSE_MUSIC_CHANNEL) == PSPAALIB_STATUS_PLAYING) {
+        AalibPause(HOUSE_MUSIC_CHANNEL);
     }
 }
 
 void NFHHouseMusicResume(void) {
-    if (AalibGetStatus(6) == -2)
-        AalibPause(6);
+    if (AalibGetStatus(HOUSE_MUSIC_CHANNEL) == PSPAALIB_STATUS_PAUSED) {
+        AalibPause(HOUSE_MUSIC_CHANNEL);
+    }
 }
 
 void NFHHouseMusicStop(void) {
-    AalibStop(6);
-    AalibDisable(6, PSPAALIB_EFFECT_VOLUME_MANUAL);
+    AalibStop(HOUSE_MUSIC_CHANNEL);
+    AalibDisable(HOUSE_MUSIC_CHANNEL, PSPAALIB_EFFECT_VOLUME_MANUAL);
 }
 
 void NFHSoundLoad(int sound, int channel) {
@@ -218,8 +164,9 @@ void NFHSoundLoad(int sound, int channel) {
     current_sound_channel->sound = sound;
     current_sound_channel->channel = channel;
     sound_channels_bindings[sound] = channel;
-    int error_code = AalibLoad(sfx_bindings[sound], channel, 1);
-    if (error_code != 0) {
+
+    int error_code = AalibLoad(sfx_bindings[sound], channel, true);
+    if (error_code != PSPAALIB_SUCCESS) {
         scene_error("Ошибка загрузки %s: %d", sfx_bindings[sound], error_code);
     }
 }
@@ -228,7 +175,7 @@ void NFHSoundPlay(int sound) {
     int current_sound_channel = sound_channels_bindings[sound];
 
     if (current_sound_channel != 0) {
-        if (AalibGetStatus(current_sound_channel) != -1) {
+        if (AalibGetStatus(current_sound_channel) != PSPAALIB_STATUS_STOPPED) {
             AalibStop(current_sound_channel);
         }
     } else {
@@ -256,7 +203,7 @@ void NFHSoundPlay(int sound) {
     }
 
     if (current_sound_channel != 0) {
-        AalibSetAutoloop(current_sound_channel, 0);
+        AalibSetAutoloop(current_sound_channel, false);
         AalibPlay(current_sound_channel);
 
         for (int i = 30; i > 0; i--) {
@@ -276,6 +223,7 @@ void NFHSoundPreload(int sound) {
         } else {
             short new_sound_channel = sound_channels_order[30];
 
+            // Сбросить биндинг вытесняемого звука
             for (int i = 0; i < sizeof(sound_channels_bindings) / sizeof(sound_channels_bindings[0]); i++) {
                 if (sound_channels_bindings[i] == new_sound_channel) {
                     sound_channels_bindings[i] = 0;
@@ -298,7 +246,7 @@ void NFHSoundPreload(int sound) {
 
 void NFHSoundUnloadAll(void) {
     for (int channel = 17; channel < 48; channel++) {
-        if (AalibGetStatus(channel) != -1) {
+        if (AalibGetStatus(channel) != PSPAALIB_STATUS_STOPPED) {
             AalibStop(channel);
             AalibUnload(channel);
         }

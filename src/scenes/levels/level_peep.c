@@ -201,7 +201,7 @@ static int get_unique_hint_id(void) {
 static void init(void) {
     FILE* file = fopen("data/levels/level_peep.json", "r");
 
-    if (file == NULL) {
+    if (!file) {
         scene_error("Не удалось открыть файл \"data/levels/level_peep.json\"");
     }
 
