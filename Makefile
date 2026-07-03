@@ -49,6 +49,8 @@ OBJS = \
 	src/animations/neighbour/look.o \
 	src/gfxdata/neighbour/shout0.o \
 	src/animations/neighbour/shout0.o \
+	src/gfxdata/neighbour/sofa1.o \
+	src/animations/neighbour/sofa1.o \
 	src/objects/sign.o \
 	src/gfxdata/ui/sign.o \
 	src/animations/ui/sign.o \

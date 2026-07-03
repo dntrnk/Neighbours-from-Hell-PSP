@@ -57,5 +57,9 @@
 #define SOUND_BIG1 52
 #define SOUND_BIG2 53
 #define SOUND_BIG3 54
+#define SOUND_NA_GRRR1 55
+#define SOUND_NA_SUP_HUH2 56
+#define SOUND_NA_FART2 57
+#define SOUND_NA_HANDS1 58
 
 #endif // SFX_TYPES_H

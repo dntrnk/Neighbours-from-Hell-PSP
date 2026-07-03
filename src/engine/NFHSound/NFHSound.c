@@ -69,7 +69,11 @@ static const char* const sfx_bindings[] = {
     [SOUND_OBJ_MICRO_BEEP1] = "assets_thq/sfx/obj_micro_beep1.wav",
     [SOUND_BIG1] = "assets_thq/sfx/big1.wav",
     [SOUND_BIG2] = "assets_thq/sfx/big2.wav",
-    [SOUND_BIG3] = "assets_thq/sfx/big3.wav"
+    [SOUND_BIG3] = "assets_thq/sfx/big3.wav",
+    [SOUND_NA_GRRR1] = "assets_thq/sfx/na_grrr1.wav",
+    [SOUND_NA_SUP_HUH2] = "assets_thq/sfx/na_sup_huh2.wav",
+    [SOUND_NA_FART2] = "assets_thq/sfx/na_fart2.wav",
+    [SOUND_NA_HANDS1] = "assets_thq/sfx/na_hands1.wav"
 };
 
 static unsigned short sound_channels_bindings[] = {
@@ -127,7 +131,11 @@ static unsigned short sound_channels_bindings[] = {
     [SOUND_OBJ_MICRO_BEEP1] = 0,
     [SOUND_BIG1] = 0,
     [SOUND_BIG2] = 0,
-    [SOUND_BIG3] = 0
+    [SOUND_BIG3] = 0,
+    [SOUND_NA_GRRR1] = 0,
+    [SOUND_NA_SUP_HUH2] = 0,
+    [SOUND_NA_FART2] = 0,
+    [SOUND_NA_HANDS1] = 0
 };
 
 typedef struct {
