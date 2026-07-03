@@ -1382,8 +1382,9 @@ static void woody_update_level_ending(Woody* woody) {
                 NFHSoundPlay(SOUND_APPLAUSE);
             }
             woody->animation_loop = false;
-            woody->state = STATE_STOP;
-
+            woody->state = STATE_STOP;            
+        } else if (woody->level_end->counter == 1) {
+            // Обновляем данные ЗА КАДР до того, как level_end появится
             strcpy(woody->level_end->tricks_text, woody->ui_tricks_counter_text);
             sprintf(woody->level_end->tv_rating_text, "%d", woody->tv_rating);
         }
