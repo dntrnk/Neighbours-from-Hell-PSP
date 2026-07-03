@@ -137,6 +137,7 @@ static void init(void) {
 
     intro = intro_create(
         current_episode_name, // episode_name
+        NULL, // woody
         false, // move_woody
         0, 0 // camera_extra_x, camera_extra_y
     );
@@ -334,9 +335,11 @@ static void init(void) {
         json_get_item_number(parsed_json, "min_quota"), // min_quota
         json_get_item_number(parsed_json, "total_tricks"), // total_tricks
 
+        NULL, // neighbour
         level_end, // level_end
         &level_end_active // level_end_active
     );
+    intro->woody = woody;
 
     neighbour_spritelists[0] = SpriteList_NEIGHBOUR_GENERIC;
     neighbour_spritelists[1] = SpriteList_DOORLEFT;
@@ -353,12 +356,15 @@ static void init(void) {
         neighbour_animations, // animations
 
         0, 0, // start_x, start_y
-        ROOM_LIR, // start_room
+        ROOM_NONE, // start_room
         BUBBLE_SOFA, // start_bubble
         NULL, NULL, // h_doors, v_doors
         NULL, // look_objects
-        woody
+        woody, // woody
+        NULL, // neighbour_active
+        NULL // level_end_active
     );
+    woody->neighbour = neighbour;
 
     // Туториал
     cJSON* tutorial_phrases = json_get_item_array(parsed_json, "tutorial_phrases");

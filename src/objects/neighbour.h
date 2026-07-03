@@ -19,10 +19,17 @@
 #include "../animations/neighbour/look.h"
 #include "../animations/neighbour/shout0.h"
 #include "../animations/neighbour/sofa1.h"
+#include "../animations/neighbour/gameover.h"
 
 typedef struct Woody Woody;
 
-typedef struct {
+typedef enum {
+    STATE_GO_TO_FLOOR,
+    STATE_GO_TO_WOODY,
+    STATE_LOSE_ANIMATION
+} GameOverState;
+
+typedef struct Neighbour {
     // Анимации
     g2dImage* spritelists[16];
     const Frame* gfxdata[16];
@@ -69,6 +76,9 @@ typedef struct {
     // Основа соседа
     int x, y;
 
+    // Used in gameover
+    int origin_x, origin_y;
+
     int action_state;
     bool action_done;
 
@@ -89,9 +99,14 @@ typedef struct {
     float angry;
     int angry_cooldown; // Время до того, пока angry будет уменьшаться
 
-
     bool jingle_joke_playing;
     int jingle_joke_timer;
+
+    bool woody_caught;
+    GameOverState game_over_state;
+    int game_over_goal_x;
+    bool* neighbour_active;
+    bool* level_end_active;
 
     // Интерфейс
     // local spriteatlasUI = SpriteAtlas_INGAMEUI
@@ -129,7 +144,9 @@ Neighbour* neighbour_create(
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
     LookObject* (*look_objects)[8],
-    Woody* woody
+    Woody* woody,
+    bool* neighbour_active,
+    bool* level_end_active
 );
 
 void neighbour_animation_update_frame(Neighbour* neighbour);

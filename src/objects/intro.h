@@ -3,11 +3,15 @@
 
 #include <stdbool.h>
 
+#include "woody.h"
+
 #define INTRO_WOODY_START_MOVE_TO_HOUSE 1
 #define INTRO_WOODY_START_ANIMATION 2
 #define INTRO_NEIGHBOUR_CAN_MOVE 3
 #define INTRO_WOODY_CAN_MOVE 4
 #define INTRO_DELETE 5
+
+typedef struct Woody Woody;
 
 typedef struct {
     char episode_name[128];
@@ -39,9 +43,11 @@ typedef struct {
 
     int camera_limit_x;
     int camera_limit_y;
+
+    Woody* woody;
 } Intro;
 
-Intro* intro_create(const char* episode_name, bool move_woody, int camera_extra_x, int camera_extra_y);
+Intro* intro_create(const char* episode_name, Woody* woody, bool move_woody, int camera_extra_x, int camera_extra_y);
 int intro_update(Intro* intro);
 void intro_draw_loading(int progress);
 void intro_draw(const Intro* intro);

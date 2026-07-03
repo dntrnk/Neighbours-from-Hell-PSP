@@ -78,7 +78,21 @@ static const char* const sfx_bindings[] = {
     [SOUND_NA_GRRR1] = "assets_thq/sfx/na_grrr1.wav",
     [SOUND_NA_SUP_HUH2] = "assets_thq/sfx/na_sup_huh2.wav",
     [SOUND_NA_FART2] = "assets_thq/sfx/na_fart2.wav",
-    [SOUND_NA_HANDS1] = "assets_thq/sfx/na_hands1.wav"
+    [SOUND_NA_HANDS1] = "assets_thq/sfx/na_hands1.wav",
+    [SOUND_JINGLE_CAUGHT] = "assets_thq/sfx/jingle_caught.wav",
+    [SOUND_KILL_WOOSH1] = "assets_thq/sfx/kill_woosh1.wav",
+    [SOUND_NA_KILL_BLAH1] = "assets_thq/sfx/na_kill_blah1.wav",
+    [SOUND_NA_KILL_BLAH2] = "assets_thq/sfx/na_kill_blah2.wav",
+    [SOUND_NA_KILLSHOUT2] = "assets_thq/sfx/na_killshout2.wav",
+    [SOUND_OBJ_HIT1] = "assets_thq/sfx/obj_hit1.wav",
+    [SOUND_WOD_AU1] = "assets_thq/sfx/wod_au1.wav",
+    [SOUND_WOD_AU2] = "assets_thq/sfx/wod_au2.wav",
+    [SOUND_OBJ_HIT2] = "assets_thq/sfx/obj_hit2.wav",
+    [SOUND_NA_KILL_HITS1] = "assets_thq/sfx/na_kill_hits1.wav",
+    [SOUND_NA_BEATS3] = "assets_thq/sfx/na_beats3.wav",
+    [SOUND_NA_KILL_JUMPS1] = "assets_thq/sfx/na_kill_jumps1.wav",
+    [SOUND_NA_KILL_BLAH3] = "assets_thq/sfx/na_kill_blah3.wav",
+    [SOUND_NA_BEATS1] = "assets_thq/sfx/na_beats1.wav"
 };
 
 static unsigned short sound_channels_bindings[sizeof(sfx_bindings) / sizeof(sfx_bindings[0])] = {0};

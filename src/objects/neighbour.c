@@ -56,6 +56,7 @@ typedef struct {
 
 typedef struct {
     int x, y;
+    bool use_in_origin;
     int next_state;
 } PositionSetArgs;
 
@@ -117,7 +118,7 @@ static const WalkToXArgs action_args_1 = {-66, 2};
 static const WalkToYArgs action_args_2 = {-60, 3};
 
 // Сесть в кресло
-static const PositionSetArgs action_args_3 = {2, -53, 4};
+static const PositionSetArgs action_args_3 = {2, -53, false, 4};
 static const LookObjectVisibilitySetArgs action_args_4 = {ROOM_LIR, 1, false, 5};
 static const AnimationPlayTillTheEndArgs action_args_5 = {ANIMATION_PACK_NEIGHBOUR_SOFA, ANIMATION_NEIGHBOUR_SOFA_ENTER, 6};
 
@@ -128,7 +129,7 @@ static const LookObjectCheckToTrickArgs action_args_6 = {ROOM_LIR, 1, 7, 17};
 static const AnimationPlayTillTheEndArgs action_args_7 = {ANIMATION_PACK_NEIGHBOUR_SOFA1, ANIMATION_NEIGHBOUR_SOFA1_NEIGHBOUR_SURPRISE, 8};
 static const AnimationPlayTillTheEndArgs action_args_8 = {ANIMATION_PACK_NEIGHBOUR_SOFA, ANIMATION_NEIGHBOUR_SOFA_LEAVE, 9};
 static const BubbleSetArgs action_args_9 = {BUBBLE_WUT, 10};
-static const PositionSetArgs action_args_10 = {-66, -60, 11};
+static const PositionSetArgs action_args_10 = {-66, -60, true, 11};
 static const LookObjectVisibilitySetArgs action_args_11 = {ROOM_LIR, 1, true, 12};
 static const LookObjectTrickCountArgs action_args_12 = {ROOM_LIR, 1, 14, 13};
 static const AnimationPlayTillTheEndArgs action_args_13 = {ANIMATION_PACK_NEIGHBOUR_SHOUT0, ANIMATION_NEIGHBOUR_SHOUT0, 15};
@@ -146,7 +147,7 @@ static const AnimationPlayTillTheEndArgs action_args_21 = {ANIMATION_PACK_NEIGHB
 // Встать с кресла
 static const BubbleSetArgs action_args_22 = {BUBBLE_BINOCULARS, 23};
 static const AnimationPlayTillTheEndArgs action_args_23 = {ANIMATION_PACK_NEIGHBOUR_SOFA, ANIMATION_NEIGHBOUR_SOFA_LEAVE, 24};
-static const PositionSetArgs action_args_24 = {-66, -60, 25};
+static const PositionSetArgs action_args_24 = {-66, -60, true, 25};
 static const LookObjectVisibilitySetArgs action_args_25 = {ROOM_LIR, 1, true, 26};
 
 // Уйти от кресла
@@ -157,12 +158,12 @@ static const WalkToXArgs action_args_27 = {154, 28};
 
 // Начать использовать дверь с гостиной на кухню
 static const StartUsingHDoorArgs action_args_28 = {ROOM_LIR, 1, 29};
-static const PositionSetArgs action_args_29 = {108, -53, 30};
+static const PositionSetArgs action_args_29 = {108, -53, false, 30};
 static const AnimationPlayTillTheEndArgs action_args_30 = {ANIMATION_PACK_NEIGHBOUR_DOORRIGHT, ANIMATION_NEIGHBOUR_DOORRIGHT_ENTER, 31};
 
 // Закончить использовать дверь с гостиной на кухню
-static const EndUsingHDoorArgs action_args_31 = {ROOM_LIR, 1, 32};
-static const PositionSetArgs action_args_32 = {208, -54, 33};
+static const PositionSetArgs action_args_31 = {208, -54, true, 32};
+static const EndUsingHDoorArgs action_args_32 = {ROOM_LIR, 1, 33};
 
 // Идти мимо микроволновки
 static const WalkToXArgs action_args_33 = {228, 34};
@@ -200,20 +201,20 @@ static const LookObjectCheckToAltActionArgs action_args_47 = {ROOM_KIT, 1, 53, 4
 // Проверить, есть ли бинокль
 
 // Бинокль на месте
-static const PositionSetArgs action_args_48 = {309, -50, 49};
+static const PositionSetArgs action_args_48 = {309, -50, false, 49};
 static const LookObjectVisibilitySetArgs action_args_49 = {ROOM_KIT, 1, false, 50};
 static const AnimationPlayTillTheEndArgs action_args_50 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP, 51};
 static const LookObjectVisibilitySetArgs action_args_51 = {ROOM_KIT, 1, true, 52};
-static const PositionSetArgs action_args_52 = {410, -54, 64};
+static const PositionSetArgs action_args_52 = {410, -54, true, 64};
 
 // Бинокля нет
 static const AnimationPlayTillTheEndArgs action_args_53 = {ANIMATION_PACK_NEIGHBOUR_LOOK, ANIMATION_NEIGHBOUR_LOOK1, 64};
 
 // Смотреть в бинокль (пакость)
-static const PositionSetArgs action_args_54 = {309, -50, 55};
+static const PositionSetArgs action_args_54 = {309, -50, false, 55};
 static const LookObjectVisibilitySetArgs action_args_55 = {ROOM_KIT, 1, false, 56};
 static const AnimationPlayTillTheEndArgs action_args_56 = {ANIMATION_PACK_NEIGHBOUR_BINOCULARS, ANIMATION_NEIGHBOUR_BINOCULARS_PEEP_GLUE, 57};
-static const PositionSetArgs action_args_57 = {410, -54, 58};
+static const PositionSetArgs action_args_57 = {410, -54, true, 58};
 static const BubbleSetArgs action_args_58 = {BUBBLE_WUT, 59};
 static const LookObjectTrickCountArgs action_args_59 = {ROOM_KIT, 1, 61, 60};
 static const AnimationPlayTillTheEndArgs action_args_60 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2, 62};
@@ -227,12 +228,12 @@ static const WalkToXArgs action_args_65 = {210, 66};
 
 // Начать использовать дверь с кухни на гостиную
 static const StartUsingHDoorArgs action_args_66 = {ROOM_KIT, 0, 67};
-static const PositionSetArgs action_args_67 = {248, -53, 68};
+static const PositionSetArgs action_args_67 = {248, -53, false, 68};
 static const AnimationPlayTillTheEndArgs action_args_68 = {ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_ENTER, 69};
 
 // Закончить использовать дверь с кухни на гостиную
-static const EndUsingHDoorArgs action_args_69 = {ROOM_KIT, 0, 70};
-static const PositionSetArgs action_args_70 = {148, -56, 1};
+static const PositionSetArgs action_args_69 = {148, -56, true, 70};
+static const EndUsingHDoorArgs action_args_70 = {ROOM_KIT, 0, 1};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -285,8 +286,8 @@ const Action actions[] = {
     {ANIMATION_PLAY_TILL_THE_END, &action_args_30, false},
 
     // Закончить использовать дверь с гостиной на кухню
-    {END_USING_H_DOOR, &action_args_31, true},
-    {POSITION_SET, &action_args_32, true},
+    {POSITION_SET, &action_args_31, true},
+    {END_USING_H_DOOR, &action_args_32, true},
 
     // Идти мимо микроволновки
     {WALK_TO_X, &action_args_33, false},
@@ -355,8 +356,8 @@ const Action actions[] = {
     {ANIMATION_PLAY_TILL_THE_END, &action_args_68, false},
 
     // Закончить использовать дверь с кухни на гостиную
-    {END_USING_H_DOOR, &action_args_69, true},
-    {POSITION_SET, &action_args_70, true}
+    {POSITION_SET, &action_args_69, true},
+    {END_USING_H_DOOR, &action_args_70, true}
 };
 
 Neighbour* neighbour_create(
@@ -370,7 +371,9 @@ Neighbour* neighbour_create(
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
     LookObject* (*look_objects)[8],
-    Woody* woody
+    Woody* woody,
+    bool* neighbour_active,
+    bool* level_end_active
 ) {
     Neighbour* neighbour = malloc(sizeof(Neighbour));
     memset(neighbour, 0, sizeof(Neighbour));
@@ -428,6 +431,10 @@ Neighbour* neighbour_create(
     neighbour->x = start_x;
     neighbour->y = start_y;
 
+    // Used in gameover
+    neighbour->origin_x = start_x;
+    neighbour->origin_y = start_y;
+
     neighbour->action_state = 0;
     neighbour->action_done = false;
 
@@ -450,6 +457,12 @@ Neighbour* neighbour_create(
 
     neighbour->jingle_joke_playing = false;
     neighbour->jingle_joke_timer = 0;
+
+    neighbour->woody_caught = false;
+    neighbour->game_over_state = STATE_GO_TO_FLOOR;
+    neighbour->game_over_goal_x = 0;
+    neighbour->neighbour_active = neighbour_active;
+    neighbour->level_end_active = level_end_active;
 
     // Интерфейс
     neighbour->head_icon_src_x = 47 * neighbour->emotion;
@@ -554,50 +567,295 @@ void neighbour_dest_door_animation_set(Neighbour* neighbour, int pack, int anima
 }
 
 void neighbour_update(Neighbour* neighbour) {
-    bool need_to_execute = true;
-    while (need_to_execute) {
-        Action current_action = actions[neighbour->action_state];
-        need_to_execute = current_action.instant;
-        switch (current_action.action) {
-            case WALK_TO_X: {
-                const WalkToXArgs* args = (const WalkToXArgs*) current_action.args;
+    if (!neighbour->woody_caught) {
+        bool need_to_execute = true;
+        while (need_to_execute) {
+            Action current_action = actions[neighbour->action_state];
+            need_to_execute = current_action.instant;
+            switch (current_action.action) {
+                case WALK_TO_X: {
+                    const WalkToXArgs* args = (const WalkToXArgs*) current_action.args;
 
-                int goal_x = args->x;
-                bool action_ended = false;
+                    int goal_x = args->x;
+                    bool action_ended = false;
 
-                if (goal_x > neighbour->x) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
+                    if (goal_x > neighbour->x) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
 
-                    neighbour->x += 4;
+                        neighbour->x += 4;
 
-                    if (goal_x <= neighbour->x) {
+                        neighbour->origin_x = neighbour->x;
+
+                        if (goal_x <= neighbour->x) {
+                            action_ended = true;
+                        }
+                    } else if (goal_x < neighbour->x) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
+
+                        neighbour->x -= 4;
+
+                        neighbour->origin_x = neighbour->x;
+
+                        if (goal_x >= neighbour->x) {
+                            action_ended = true;
+                        }
+                    } else {
                         action_ended = true;
                     }
-                } else if (goal_x < neighbour->x) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
 
-                    neighbour->x -= 4;
-
-                    if (goal_x >= neighbour->x) {
-                        action_ended = true;
+                    if (action_ended) {
+                        neighbour->x = goal_x;
+                        neighbour->origin_x = neighbour->x;
+                        neighbour->action_state = args->next_state;
                     }
-                } else {
-                    action_ended = true;
+
+                    break;
                 }
 
-                if (action_ended) {
-                    neighbour->x = goal_x;
+                case WALK_TO_Y: {
+                    const WalkToYArgs* args = (const WalkToYArgs*) current_action.args;
+
+                    int goal_y = args->y;
+                    bool action_ended = false;
+
+                    if (goal_y > neighbour->y) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
+
+                        neighbour->y += 1;
+
+                        neighbour->origin_y = neighbour->y;
+
+                        if (goal_y <= neighbour->y) {
+                            action_ended = true;
+                        }
+                    } else if (goal_y < neighbour->y) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG0);
+
+                        neighbour->y -= 1;
+
+                        neighbour->origin_y = neighbour->y;
+
+                        if (goal_y >= neighbour->y) {
+                            action_ended = true;
+                        }
+                    } else {
+                        action_ended = true;
+                    }
+
+                    if (action_ended) {
+                        neighbour->y = goal_y;
+                        neighbour->origin_y = neighbour->y;
+                        neighbour->action_state = args->next_state;
+                    }
+
+                    break;
+                }
+
+                case BUBBLE_SET: {
+                    const BubbleSetArgs* args = (const BubbleSetArgs*) current_action.args;
+                    
+                    int new_bubble_id = args->new_bubble_id;
+                    int src_x = new_bubble_id * 46;
+                    int src_y = 0;
+
+                    src_y = (src_x / 506) * 37;
+                    src_x = src_x % 506;
+
+                    neighbour->current_bubble = new_bubble_id;
+                    neighbour->bubble_sprite_src_x = src_x;
+                    neighbour->bubble_sprite_src_y = src_y;
+
                     neighbour->action_state = args->next_state;
+
+                    break;
                 }
 
-                break;
+                case POSITION_SET: {
+                    const PositionSetArgs* args = (const PositionSetArgs*) current_action.args;
+                    
+                    neighbour->x = args->x;
+                    neighbour->y = args->y;
+
+                    if (args->use_in_origin) {
+                        neighbour->origin_x = neighbour->x;
+                        neighbour->origin_y = neighbour->y;
+                    }
+
+                    neighbour->action_state = args->next_state;
+
+                    break;
+                }
+
+                case START_USING_H_DOOR: {
+                    const StartUsingHDoorArgs* args = (const StartUsingHDoorArgs*) current_action.args;
+
+                    hDoor* current_door = neighbour->h_doors[args->room][args->side];
+
+                    if (current_door->using_by == USING_NONE) {
+                        hDoor* new_dest_door = neighbour->h_doors[current_door->dest_door_room][current_door->dest_door_id];
+
+                        neighbour->room = current_door->dest_door_room;
+                        neighbour->in_door = true;
+
+                        current_door->using_by = USING_NEIGHBOUR;
+                        new_dest_door->using_by = USING_NEIGHBOUR;
+
+                        if (args->side == 0) {
+                            // Оффсеты...
+                            neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 293;
+                            neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
+
+                            neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORRIGHT, ANIMATION_NEIGHBOUR_DOORRIGHT_LEAVE);
+                        } else {
+                            // Оффсеты...
+                            neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 174;
+                            neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
+
+                            neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_LEAVE);
+                        }
+
+                        neighbour->dest_door_animation_play = true;
+
+                        neighbour->action_state = args->next_state;
+                    } else {
+                        if (args->side == 0) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS3);
+                        } else {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS1);
+                        }
+                        need_to_execute = false;
+                    }
+
+                    break;
+                }
+
+                case END_USING_H_DOOR: {
+                    const EndUsingHDoorArgs* args = (const EndUsingHDoorArgs*) current_action.args;
+
+                    hDoor* enter_door = neighbour->h_doors[args->room][args->side];
+                    hDoor* dest_door = neighbour->h_doors[enter_door->dest_door_room][enter_door->dest_door_id];
+
+                    neighbour->dest_door_animation_play = false;
+                    neighbour->in_door = false;
+
+                    enter_door->using_by = USING_NONE;
+                    dest_door->using_by = USING_NONE;
+
+                    woody_check_caught(neighbour->woody, neighbour);
+
+                    neighbour->action_state = args->next_state;
+
+                    break;
+                }
+
+                case ANIMATION_PLAY_TILL_THE_END: {
+                    const AnimationPlayTillTheEndArgs* args = (const AnimationPlayTillTheEndArgs*) current_action.args;
+                    
+                    if (neighbour->current_animation_pack != args->animation_pack || neighbour->current_animation_index != args->animation_index) {
+                        neighbour_animation_set(neighbour, args->animation_pack, args->animation_index);
+                    } else {
+                        if (neighbour->animation_frame == neighbour->animation_length - 2) { // Так надо, иначе последний кадр два раза рисуется лол
+                            neighbour->action_state = args->next_state;
+                        }
+                    }
+
+                    break;
+                }
+                
+                case LOOK_OBJECT_VISIBILITY_SET: {
+                    const LookObjectVisibilitySetArgs* args = (const LookObjectVisibilitySetArgs*) current_action.args;
+
+                    neighbour->look_objects[args->room][args->id]->sprite_show = args->visibility;
+
+                    neighbour->action_state = args->next_state;
+
+                    break;
+                }
+
+                case LOOK_OBJECT_CHECK_TO_TRICK: {
+                    const LookObjectCheckToTrickArgs* args = (const LookObjectCheckToTrickArgs*) current_action.args;
+
+                    const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                    if (current_look_object->tricked) {
+                        neighbour->head_icon_animation_frame = 0;
+                        neighbour->head_icon_animation_play = true;
+                    }
+
+                    neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
+
+                    break;
+                }
+
+                case LOOK_OBJECT_MAKE_UNTRICKED: {
+                    const LookObjectMakeUntrickedArgs* args = (const LookObjectMakeUntrickedArgs*) current_action.args;
+
+                    LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                    current_look_object->tricked = false;
+
+                    if (current_look_object->on_untrick) {
+                        neighbour->look_objects[args->room][args->id]->on_untrick();
+                    }
+
+                    neighbour->action_state = args->next_state;
+
+                    break;
+                }
+
+                case LOOK_OBJECT_TRICK_COUNT: {
+                    const LookObjectTrickCountArgs* args = (const LookObjectTrickCountArgs*) current_action.args;
+
+                    if (neighbour->angry == 0.0f) {
+                        woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                        neighbour->emotion = 2;
+                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                        neighbour->action_state = args->no_breakdown_state;
+                    } else {
+                        woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                        neighbour->emotion = 3;
+                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                        neighbour_breakdown_counter_update(neighbour);
+                        neighbour->action_state = args->breakdown_state;
+                    }
+                    
+                    neighbour->angry = 100.0f;
+                    neighbour->angry_cooldown = 53;
+
+                    NFHHouseMusicPause();
+                    NFHSoundPlay(SOUND_JINGLE_JOKE);
+
+                    if (rand() % 2 == 0) {
+                        NFHSoundPlay(SOUND_BIG2);
+                    } else {
+                        NFHSoundPlay(SOUND_BIG3);
+                    }
+
+                    neighbour->jingle_joke_playing = true;
+                    neighbour->jingle_joke_timer = 120;
+
+                    break;
+                }
+
+                case LOOK_OBJECT_CHECK_TO_ALT_ACTION: {
+                    const LookObjectCheckToAltActionArgs* args = (const LookObjectCheckToAltActionArgs*) current_action.args;
+
+                    const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                    neighbour->action_state = (current_look_object->alt_action) ? args->alt_state : args->no_alt_state;
+
+                    break;
+                }
             }
-
-            case WALK_TO_Y: {
-                const WalkToYArgs* args = (const WalkToYArgs*) current_action.args;
-
-                int goal_y = args->y;
-                bool action_ended = false;
+        }
+    } else {
+        switch (neighbour->game_over_state) {
+            case STATE_GO_TO_FLOOR: {
+                int goal_y = neighbour->woody->y - 166;
 
                 if (goal_y > neighbour->y) {
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
@@ -605,7 +863,8 @@ void neighbour_update(Neighbour* neighbour) {
                     neighbour->y += 1;
 
                     if (goal_y <= neighbour->y) {
-                        action_ended = true;
+                        neighbour->y = goal_y;
+                        neighbour->game_over_state = STATE_GO_TO_WOODY;
                     }
                 } else if (goal_y < neighbour->y) {
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG0);
@@ -613,209 +872,60 @@ void neighbour_update(Neighbour* neighbour) {
                     neighbour->y -= 1;
 
                     if (goal_y >= neighbour->y) {
-                        action_ended = true;
+                        neighbour->y = goal_y;
+                        neighbour->game_over_state = STATE_GO_TO_WOODY;
                     }
                 } else {
-                    action_ended = true;
-                }
-
-                if (action_ended) {
                     neighbour->y = goal_y;
-                    neighbour->action_state = args->next_state;
+                    neighbour->game_over_state = STATE_GO_TO_WOODY;
                 }
 
                 break;
             }
 
-            case BUBBLE_SET: {
-                const BubbleSetArgs* args = (const BubbleSetArgs*) current_action.args;
-                
-                int new_bubble_id = args->new_bubble_id;
-                int src_x = new_bubble_id * 46;
-                int src_y = 0;
+            case STATE_GO_TO_WOODY: {
+                if (neighbour->game_over_goal_x > neighbour->x) {
+                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
 
-                src_y = (src_x / 506) * 37;
-                src_x = src_x % 506;
+                    neighbour->x += 4;
 
-                neighbour->current_bubble = new_bubble_id;
-                neighbour->bubble_sprite_src_x = src_x;
-                neighbour->bubble_sprite_src_y = src_y;
-
-                neighbour->action_state = args->next_state;
-
-                break;
-            }
-
-            case POSITION_SET: {
-                const PositionSetArgs* args = (const PositionSetArgs*) current_action.args;
-                
-                neighbour->x = args->x;
-                neighbour->y = args->y;
-
-                neighbour->action_state = args->next_state;
-
-                break;
-            }
-
-            case START_USING_H_DOOR: {
-                const StartUsingHDoorArgs* args = (const StartUsingHDoorArgs*) current_action.args;
-
-                hDoor* current_door = neighbour->h_doors[args->room][args->side];
-
-                if (current_door->using_by == USING_NONE) {
-                    hDoor* new_dest_door = neighbour->h_doors[current_door->dest_door_room][current_door->dest_door_id];
-
-                    neighbour->room = current_door->dest_door_room;
-                    neighbour->in_door = true;
-
-                    current_door->using_by = USING_NEIGHBOUR;
-                    new_dest_door->using_by = USING_NEIGHBOUR;
-
-                    if (args->side == 0) {
-                        // Оффсеты...
-                        neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 293;
-                        neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
-
-                        neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORRIGHT, ANIMATION_NEIGHBOUR_DOORRIGHT_LEAVE);
-                    } else {
-                        // Оффсеты...
-                        neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 174;
-                        neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
-
-                        neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_LEAVE);
+                    if (neighbour->game_over_goal_x <= neighbour->x) {
+                        neighbour->x = neighbour->game_over_goal_x;
+                        neighbour->game_over_state = STATE_LOSE_ANIMATION;
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
                     }
+                } else if (neighbour->game_over_goal_x < neighbour->x) {
+                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
 
-                    neighbour->dest_door_animation_play = true;
+                    neighbour->x -= 4;
 
-                    neighbour->action_state = args->next_state;
-                } else {
-                    if (args->side == 0) {
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS3);
-                    } else {
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS1);
+                    if (neighbour->game_over_goal_x >= neighbour->x) {
+                        neighbour->x = neighbour->game_over_goal_x;
+                        neighbour->game_over_state = STATE_LOSE_ANIMATION;
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
                     }
-                    need_to_execute = false;
-                }
-
-                break;
-            }
-
-            case END_USING_H_DOOR: {
-                const EndUsingHDoorArgs* args = (const EndUsingHDoorArgs*) current_action.args;
-
-                hDoor* enter_door = neighbour->h_doors[args->room][args->side];
-                hDoor* dest_door = neighbour->h_doors[enter_door->dest_door_room][enter_door->dest_door_id];
-
-                neighbour->dest_door_animation_play = false;
-                neighbour->in_door = false;
-
-                enter_door->using_by = USING_NONE;
-                dest_door->using_by = USING_NONE;
-
-                neighbour->action_state = args->next_state;
-
-                break;
-            }
-
-            case ANIMATION_PLAY_TILL_THE_END: {
-                const AnimationPlayTillTheEndArgs* args = (const AnimationPlayTillTheEndArgs*) current_action.args;
-                
-                if (neighbour->current_animation_pack != args->animation_pack || neighbour->current_animation_index != args->animation_index) {
-                    neighbour_animation_set(neighbour, args->animation_pack, args->animation_index);
                 } else {
-                    if (neighbour->animation_frame == neighbour->animation_length - 2) { // Так надо, иначе последний кадр два раза рисуется лол
-                        neighbour->action_state = args->next_state;
-                    }
+                    neighbour->x = neighbour->game_over_goal_x;
+                    neighbour->game_over_state = STATE_LOSE_ANIMATION;
+                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
                 }
 
                 break;
             }
-            
-            case LOOK_OBJECT_VISIBILITY_SET: {
-                const LookObjectVisibilitySetArgs* args = (const LookObjectVisibilitySetArgs*) current_action.args;
 
-                neighbour->look_objects[args->room][args->id]->sprite_show = args->visibility;
+            case STATE_LOSE_ANIMATION: {
+                if (neighbour->animation_frame == neighbour->animation_length - 1) {
+                    strcpy(neighbour->woody->level_end->end_text, "Провал");
+                    strcpy(neighbour->woody->level_end->tricks_text, neighbour->woody->ui_tricks_counter_text);
+                    sprintf(neighbour->woody->level_end->tv_rating_text, "%d", neighbour->woody->tv_rating);
 
-                neighbour->action_state = args->next_state;
+                    neighbour->woody->level_end->counter = 0;
+                    *neighbour->level_end_active = true;
 
-                break;
-            }
+                    *neighbour->neighbour_active = false;
 
-            case LOOK_OBJECT_CHECK_TO_TRICK: {
-                const LookObjectCheckToTrickArgs* args = (const LookObjectCheckToTrickArgs*) current_action.args;
-
-                const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                if (current_look_object->tricked) {
-                    neighbour->head_icon_animation_frame = 0;
-                    neighbour->head_icon_animation_play = true;
+                    NFHSoundPlay(SOUND_APPLAUSE);
                 }
-
-                neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
-
-                break;
-            }
-
-            case LOOK_OBJECT_MAKE_UNTRICKED: {
-                const LookObjectMakeUntrickedArgs* args = (const LookObjectMakeUntrickedArgs*) current_action.args;
-
-                LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                current_look_object->tricked = false;
-
-                if (current_look_object->on_untrick) {
-                    neighbour->look_objects[args->room][args->id]->on_untrick();
-                }
-
-                neighbour->action_state = args->next_state;
-
-                break;
-            }
-
-            case LOOK_OBJECT_TRICK_COUNT: {
-                const LookObjectTrickCountArgs* args = (const LookObjectTrickCountArgs*) current_action.args;
-
-                if (neighbour->angry == 0.0f) {
-                    woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
-
-                    neighbour->emotion = 2;
-                    neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                    neighbour->action_state = args->no_breakdown_state;
-                } else {
-                    woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
-
-                    neighbour->emotion = 3;
-                    neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                    neighbour_breakdown_counter_update(neighbour);
-                    neighbour->action_state = args->breakdown_state;
-                }
-                
-                neighbour->angry = 100.0f;
-                neighbour->angry_cooldown = 53;
-
-                NFHHouseMusicPause();
-                NFHSoundPlay(SOUND_JINGLE_JOKE);
-
-                if (rand() % 2 == 0) {
-                    NFHSoundPlay(SOUND_BIG2);
-                } else {
-                    NFHSoundPlay(SOUND_BIG3);
-                }
-
-                neighbour->jingle_joke_playing = true;
-                neighbour->jingle_joke_timer = 120;
-
-                break;
-            }
-
-            case LOOK_OBJECT_CHECK_TO_ALT_ACTION: {
-                const LookObjectCheckToAltActionArgs* args = (const LookObjectCheckToAltActionArgs*) current_action.args;
-
-                const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                neighbour->action_state = (current_look_object->alt_action) ? args->alt_state : args->no_alt_state;
 
                 break;
             }

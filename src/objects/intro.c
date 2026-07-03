@@ -28,6 +28,7 @@ extern intraFont* Font_ACMESAI_13;
 
 Intro* intro_create(
     const char* episode_name,
+    Woody* woody,
     bool move_woody,
     int camera_extra_x,
     int camera_extra_y
@@ -66,6 +67,8 @@ Intro* intro_create(
 
     intro->camera_extra_x = camera_extra_x;
     intro->camera_extra_y = camera_extra_y;
+
+    intro->woody = woody;
 
     return intro;
 }
@@ -147,7 +150,9 @@ int intro_update(Intro* intro) {
     intro->song_timer++;
 
     if (intro->song_timer == TIMER_SONG_END) {
-        NFHHouseMusicPlay();
+        if (!intro->woody->caught) {
+            NFHHouseMusicPlay();
+        }
         exit_code = INTRO_DELETE;
     }
 

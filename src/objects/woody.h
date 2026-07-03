@@ -6,6 +6,7 @@
 #include "../engine/graphics/g2d.h"
 
 #include "sign.h"
+#include "neighbour.h"
 #include "level_end.h"
 
 #include "../types/gfx_types.h"
@@ -42,6 +43,9 @@ typedef enum {
     STATE_NONO_END,
     STATE_MAKING_TRICK,
     STATE_SMILE,
+    STATE_CAUGHT_GO_TO_FLOOR,
+    STATE_CAUGHT_START,
+    STATE_CAUGHT_LOOP,
     STATE_LEVEL_START,
     STATE_LEVEL_ENDING,
     STATE_STOP
@@ -127,12 +131,15 @@ typedef struct Woody {
     bool is_on_floor;
     int floor_y;
     bool hide;
+    bool caught;
 
     WoodyState state;
 
     WoodyAutoMoveGoal auto_move_goal_type;
     int auto_move_goal_x;
     int auto_move_goal_y;
+
+    Neighbour* neighbour;
 
     hDoor* (*h_doors)[2];
     vDoor* (*v_doors)[3];
@@ -230,6 +237,7 @@ Woody* woody_create(
     RoomCollision* room_collisions,
     int min_quota,
     int total_tricks,
+    Neighbour* neighbour,
     LevelEnd* level_end,
     bool* level_end_active
 );
@@ -245,6 +253,7 @@ void woody_draw(const Woody* woody);
 void woody_door_draw(const Woody* woody);
 void woody_draw_ui(const Woody* woody);
 void woody_tricks_counter_update(Woody* woody, int trick_tv_rating);
+void woody_check_caught(Woody* woody, Neighbour* neighbour);
 bool woody_check_sign_collision(const Woody* woody, const Sign* sign);
 void woody_unload(Woody* woody);
 

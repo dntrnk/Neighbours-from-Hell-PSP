@@ -91,6 +91,9 @@ extern const Animation neighbour_shout0_animations[];
 extern const Frame neighbour_sofa1_frames[];
 extern const Animation neighbour_sofa1_animations[];
 
+extern const Frame neighbour_gameover_frames[];
+extern const Animation neighbour_gameover_animations[];
+
 extern int camera_x;
 extern int camera_y;
 extern int camera_right;
@@ -220,6 +223,7 @@ static void init(void) {
 
     intro = intro_create(
         current_episode_name, // episode_name
+        NULL, // woody
         true, // move_woody
         -234, -147 // camera_extra_x, camera_extra_y
     );
@@ -716,9 +720,11 @@ static void init(void) {
         json_get_item_number(parsed_json, "min_quota"), // min_quota
         json_get_item_number(parsed_json, "total_tricks"), // total_tricks
 
+        NULL, // neighbour
         level_end, // level_end
         &level_end_active // level_end_active
     );
+    intro->woody = woody;
 
     neighbour_spritelists[0] = SpriteList_NEIGHBOUR_GENERIC;
     neighbour_spritelists[1] = SpriteList_DOORLEFT;
@@ -731,6 +737,7 @@ static void init(void) {
     neighbour_spritelists[8] = g2d_LoadImage("assets_thq/sprites/neighbour/look.png", G2D_CLUT8);
     neighbour_spritelists[9] = g2d_LoadImage("assets_thq/sprites/neighbour/shout0.png", G2D_CLUT8);
     neighbour_spritelists[10] = g2d_LoadImage("assets_thq/sprites/lir/sofa/level_peep1.png", G2D_CLUT8);
+    neighbour_spritelists[11] = g2d_LoadImage("assets_thq/sprites/neighbour/gameover.png", G2D_CLUT8);
 
     neighbour_gfxdata[0] = neighbour_generic_frames;
     neighbour_gfxdata[1] = neighbour_doorleft_frames;
@@ -743,6 +750,7 @@ static void init(void) {
     neighbour_gfxdata[8] = neighbour_look_frames;
     neighbour_gfxdata[9] = neighbour_shout0_frames;
     neighbour_gfxdata[10] = neighbour_sofa1_frames;
+    neighbour_gfxdata[11] = neighbour_gameover_frames;
 
     neighbour_animations[0] = neighbour_generic_animations;
     neighbour_animations[1] = neighbour_doorleft_animations;
@@ -755,6 +763,7 @@ static void init(void) {
     neighbour_animations[8] = neighbour_look_animations;
     neighbour_animations[9] = neighbour_shout0_animations;
     neighbour_animations[10] = neighbour_sofa1_animations;
+    neighbour_animations[11] = neighbour_gameover_animations;
 
     neighbour = neighbour_create(
         neighbour_spritelists, // spritelists
@@ -766,8 +775,11 @@ static void init(void) {
         BUBBLE_SOFA, // start_bubble
         h_doors, v_doors, // h_doors, v_doors
         look_objects, // look_objects
-        woody // woody
+        woody, // woody,
+        &neighbour_active, // neighbour_active
+        &level_end_active // level_end_active
     );
+    woody->neighbour = neighbour;
     neighbour_active = false;
 
     logic_frame = 0;
@@ -1049,7 +1061,7 @@ static void draw(void) {
         }
     }
 
-    if (!woody->in_door) {
+    if (!woody->in_door && neighbour->game_over_state != STATE_LOSE_ANIMATION) {
         woody_draw(woody);
     }
 
@@ -1150,6 +1162,7 @@ static void unload(void) {
     g2d_FreeImage(neighbour_spritelists[8]);
     g2d_FreeImage(neighbour_spritelists[9]);
     g2d_FreeImage(neighbour_spritelists[10]);
+    g2d_FreeImage(neighbour_spritelists[11]);
     neighbour_unload(neighbour);
     intro_unload(intro);
     level_end_unload(level_end);

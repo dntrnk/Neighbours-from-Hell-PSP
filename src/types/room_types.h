@@ -2,7 +2,8 @@
 #define ROOM_TYPES_H
 
 typedef enum {
-    ROOM_KIT,
+    ROOM_NONE = -1,
+    ROOM_KIT = 0,
     ROOM_LIR,
     ROOM_ANC,
     ROOM_FRO,
