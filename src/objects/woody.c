@@ -1015,7 +1015,7 @@ static void woody_update_storage_check(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage ) {
+            if (current_storage) {
                 if (woody->x == current_storage->collision_x) {
                     if (!current_storage->opened) {
                         current_storage->opened = true;
@@ -1066,7 +1066,7 @@ static void woody_update_storage_found(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage ) {
+            if (current_storage) {
                 if (woody->x == current_storage->collision_x) {
                     int first_item_index = woody->item_count;
                     woody->inventory_animation_first_index = first_item_index;
@@ -1133,7 +1133,7 @@ static void woody_update_storage_not_found(Woody* woody) {
         Storage** storages_in_room = woody->storages[woody->room];
         for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
             current_storage = storages_in_room[i];
-            if (current_storage ) {
+            if (current_storage) {
                 if (woody->x == current_storage->collision_x) {
                     current_storage->sprite_show = false;
                 }
@@ -1796,6 +1796,25 @@ void woody_check_caught(Woody* woody, Neighbour* neighbour) {
         }
 
         woody->caught = true;
+
+        woody->look_object_phrase_show = false;
+
+        if (woody->state == STATE_STORAGE_CHECK || woody->state == STATE_STORAGE_FOUND || woody->state == STATE_STORAGE_NOT_FOUND) {
+            Storage* current_storage = NULL;
+
+            Storage** storages_in_room = woody->storages[woody->room];
+            for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
+                current_storage = storages_in_room[i];
+                if (current_storage) {
+                    if (woody->x == current_storage->collision_x) {
+                        current_storage->sprite_show = false;
+                    }
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
 
         woody_stop_making_trick(woody);
 
