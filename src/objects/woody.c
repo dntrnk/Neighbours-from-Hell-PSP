@@ -189,6 +189,7 @@ Woody* woody_create(
     woody->inventory_using = false;
 
     // Пакости
+    woody->trick_making_progress = 0;
     woody->trick_making_length = 0;
 
     // Интерфейс
@@ -445,6 +446,7 @@ static void woody_auto_move_complete(Woody* woody) {
                             if (current_look_object->item_to_trick == woody->inventory[woody->selected_item]) {
                                 woody->state = STATE_MAKING_TRICK;
                                 woody->trick_making_length = current_look_object->trick_making_length;
+                                woody->trick_making_progress = 0;
 
                                 if (current_look_object->on_making_trick) {
                                     current_look_object->on_making_trick();
@@ -1270,9 +1272,9 @@ static void woody_update_nono_end(Woody* woody) {
 }
 
 static void woody_update_making_trick(Woody* woody) {
-    woody->trick_making_length--;
+    woody->trick_making_progress++;
 
-    if (woody->trick_making_length == 0) {
+    if (woody->trick_making_progress == woody->trick_making_length) {
         woody->state = STATE_SMILE;
 
         // Удаляем предмет из инвентаря
@@ -1628,10 +1630,10 @@ void woody_draw(const Woody* woody) {
         g2d_DrawImageExt(SpriteList_PROGRESSBAR, woody->x - camera_x + 33, woody->y - camera_y - 19, 49, 12, WHITE, 0, 0, 49, 12, 0, 235, G2D_UP_LEFT);
 
         // Прогресс
-        int progressbar_width = 49 - (49.0f * woody->trick_making_length / 108.0f);
+        int progressbar_width = (49.0f * (float) woody->trick_making_progress / (float) woody->trick_making_length);
         g2d_DrawImageExt(SpriteList_PROGRESSBAR, woody->x - camera_x + 33, woody->y - camera_y - 19, progressbar_width, 12, WHITE, 0, 12, progressbar_width, 12, 0, 235, G2D_UP_LEFT);
 
-        int percentage = 100 - (100.0f * woody->trick_making_length / 108.0f);
+        int percentage = (100.0f * (float) woody->trick_making_progress / (float) woody->trick_making_length);
 
         char percentage_text[8];
         sprintf(percentage_text, "%d%%", percentage);

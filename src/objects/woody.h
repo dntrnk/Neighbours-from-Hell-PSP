@@ -172,6 +172,7 @@ typedef struct Woody {
     bool inventory_using;
 
     // Пакости
+    int trick_making_progress;
     int trick_making_length;
 
     // Интерфейс
