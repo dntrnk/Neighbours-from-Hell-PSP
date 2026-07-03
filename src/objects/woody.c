@@ -1785,9 +1785,7 @@ void woody_tricks_counter_update(Woody* woody, int trick_tv_rating) {
 
 void woody_check_caught(Woody* woody, Neighbour* neighbour) {
     if (woody->room == neighbour->room && !woody->in_door && !neighbour->in_door && !woody->hide) {
-        neighbour->x = neighbour->origin_x;
-        neighbour->y = neighbour->origin_y;
-        neighbour->game_over_state = STATE_GO_TO_FLOOR;
+        neighbour->game_over_state = STATE_GAME_OVER_START;
         neighbour->woody_caught = true;
 
         woody->look_objects[ROOM_LIR][1]->sprite_show = true; // на всякий случай

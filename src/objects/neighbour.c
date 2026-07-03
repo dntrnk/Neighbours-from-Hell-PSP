@@ -854,8 +854,19 @@ void neighbour_update(Neighbour* neighbour) {
         }
     } else {
         switch (neighbour->game_over_state) {
+            case STATE_GAME_OVER_START: {
+                neighbour->x = neighbour->origin_x;
+                neighbour->y = neighbour->origin_y;
+
+                neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS2);
+
+                neighbour->game_over_state = STATE_GO_TO_FLOOR;
+
+                break;
+            }
+
             case STATE_GO_TO_FLOOR: {
-                int goal_y = neighbour->woody->y - 166;
+                int goal_y = neighbour->woody->floor_y - 166;
 
                 if (goal_y > neighbour->y) {
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);

@@ -24,6 +24,7 @@
 typedef struct Woody Woody;
 
 typedef enum {
+    STATE_GAME_OVER_START,
     STATE_GO_TO_FLOOR,
     STATE_GO_TO_WOODY,
     STATE_LOSE_ANIMATION
