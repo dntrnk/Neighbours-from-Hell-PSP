@@ -1296,7 +1296,6 @@ static void woody_update_making_trick(Woody* woody) {
                         LookObject* current_look_object = woody->look_objects[woody->room][i];
                         if (current_look_object != NULL) {
                             if (current_look_object->collision_x == woody->x) {
-                                current_look_object->tricked = true;
 
                                 if (current_look_object->on_stop_making_trick != NULL) {
                                     current_look_object->on_stop_making_trick();
