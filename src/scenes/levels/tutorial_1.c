@@ -336,6 +336,7 @@ static void init(void) {
         json_get_item_number(parsed_json, "total_tricks"), // total_tricks
 
         NULL, // neighbour
+        NULL, // neighbour_active
         level_end, // level_end
         &level_end_active // level_end_active
     );

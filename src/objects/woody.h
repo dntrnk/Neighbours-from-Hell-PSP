@@ -140,6 +140,7 @@ typedef struct Woody {
     int auto_move_goal_y;
 
     Neighbour* neighbour;
+    bool* neighbour_active;
 
     hDoor* (*h_doors)[2];
     vDoor* (*v_doors)[3];
@@ -239,6 +240,7 @@ Woody* woody_create(
     int min_quota,
     int total_tricks,
     Neighbour* neighbour,
+    bool* neighbour_active,
     LevelEnd* level_end,
     bool* level_end_active
 );

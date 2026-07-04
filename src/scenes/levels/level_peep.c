@@ -721,9 +721,11 @@ static void init(void) {
         json_get_item_number(parsed_json, "total_tricks"), // total_tricks
 
         NULL, // neighbour
+        &neighbour_active, // neighbour_active
         level_end, // level_end
         &level_end_active // level_end_active
     );
+    woody->neighbour_active = &neighbour_active;
     intro->woody = woody;
 
     neighbour_spritelists[0] = SpriteList_NEIGHBOUR_GENERIC;

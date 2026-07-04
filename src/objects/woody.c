@@ -68,6 +68,7 @@ Woody* woody_create(
     int min_quota,
     int total_tricks,
     Neighbour* neighbour,
+    bool* neighbour_active,
     LevelEnd* level_end,
     bool* level_end_active
 ) {
@@ -154,6 +155,7 @@ Woody* woody_create(
     woody->v_doors = v_doors;
 
     woody->neighbour = neighbour;
+    woody->neighbour_active = neighbour_active;
 
     woody->look_objects = look_objects;
     
@@ -1192,6 +1194,10 @@ static void woody_update_in_h_door(Woody* woody) {
                 // Уровень пройден
                 woody->can_move = false;
                 woody->state = STATE_LEVEL_ENDING;
+
+                if (woody->neighbour_active) {
+                    *woody->neighbour_active = false;
+                }
 
                 NFHHouseMusicStop();
 
