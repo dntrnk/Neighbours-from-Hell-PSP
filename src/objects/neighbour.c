@@ -28,6 +28,10 @@ static inline int clamp(int x, int min, int max) {
     return (x < min) ? min : ((x > max) ? max : x);
 }
 
+static inline int randi_range(int min, int max) {
+    return rand() % (max + 1 - min) + min;
+}
+
 typedef enum {
     WALK_TO_X,
     WALK_TO_Y,
@@ -926,7 +930,13 @@ void neighbour_update(Neighbour* neighbour) {
 
                     neighbour->x = clamp(neighbour->game_over_goal_x, current_room->x1 - 181, current_room->x2 - 181);
                     neighbour->game_over_state = STATE_LOSE_ANIMATION;
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
+
+                    const int new_animation = randi_range(0, 2);
+                    switch (new_animation) {
+                        case 0: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1); break;
+                        case 1: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL2); break;
+                        case 2: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL3); break;
+                    }
                 }
 
                 break;
