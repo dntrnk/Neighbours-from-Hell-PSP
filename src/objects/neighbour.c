@@ -24,6 +24,10 @@ extern const Frame ui_bubble_frames[];
 extern int camera_x;
 extern int camera_y;
 
+static inline int clamp(int x, int min, int max) {
+    return (x < min) ? min : ((x > max) ? max : x);
+}
+
 typedef enum {
     WALK_TO_X,
     WALK_TO_Y,
@@ -895,15 +899,15 @@ void neighbour_update(Neighbour* neighbour) {
             }
 
             case STATE_GO_TO_WOODY: {
+                bool action_ended = false;
+
                 if (neighbour->game_over_goal_x > neighbour->x) {
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
 
                     neighbour->x += 4;
 
                     if (neighbour->game_over_goal_x <= neighbour->x) {
-                        neighbour->x = neighbour->game_over_goal_x;
-                        neighbour->game_over_state = STATE_LOSE_ANIMATION;
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
+                        action_ended = true;
                     }
                 } else if (neighbour->game_over_goal_x < neighbour->x) {
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
@@ -911,12 +915,16 @@ void neighbour_update(Neighbour* neighbour) {
                     neighbour->x -= 4;
 
                     if (neighbour->game_over_goal_x >= neighbour->x) {
-                        neighbour->x = neighbour->game_over_goal_x;
-                        neighbour->game_over_state = STATE_LOSE_ANIMATION;
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
+                        action_ended = true;
                     }
                 } else {
-                    neighbour->x = neighbour->game_over_goal_x;
+                    action_ended = true;
+                }
+
+                if (action_ended) {
+                    RoomCollision* current_room = &neighbour->woody->room_collisions[neighbour->woody->room];
+
+                    neighbour->x = clamp(neighbour->game_over_goal_x, current_room->x1 - 181, current_room->x2 - 181);
                     neighbour->game_over_state = STATE_LOSE_ANIMATION;
                     neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1);
                 }

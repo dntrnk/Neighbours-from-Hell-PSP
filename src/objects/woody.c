@@ -1819,7 +1819,9 @@ void woody_check_caught(Woody* woody, Neighbour* neighbour) {
         woody->auto_move_goal_type = GOAL_NONE;
         woody->inventory_using = false;
 
-        if (woody->x > (woody->room_collisions[woody->room].x2 - woody->room_collisions[woody->room].x1) * 0.5 + woody->room_collisions[woody->room].x1) {
+        RoomCollision* current_room = &woody->room_collisions[woody->room];
+
+        if (woody->x > clamp(neighbour->origin_x + 181, current_room->x1 + 30, current_room->x2 - 30)) {
             neighbour->game_over_goal_x = woody->x - 206;
         } else {
             neighbour->game_over_goal_x = woody->x - 156;
@@ -1828,7 +1830,7 @@ void woody_check_caught(Woody* woody, Neighbour* neighbour) {
         if (woody->y == woody->floor_y) {
             woody->state = STATE_CAUGHT_START;
 
-            if (woody->x > (woody->room_collisions[woody->room].x2 - woody->room_collisions[woody->room].x1) * 0.5 + woody->room_collisions[woody->room].x1) {
+            if (woody->x > clamp(neighbour->origin_x + 181, current_room->x1 + 30, current_room->x2 - 30)) {
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_FEAR3);
             } else {
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_FEAR1);
