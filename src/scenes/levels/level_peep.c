@@ -155,8 +155,6 @@ static const Frame* woody_gfxdata[16];
 static const Animation* woody_animations[16];
 static Woody* woody;
 
-static int logic_frame;
-
 static g2dImage* neighbour_spritelists[16];
 static const Frame* neighbour_gfxdata[16];
 static const Animation* neighbour_animations[16];
@@ -894,8 +892,6 @@ static void init(void) {
     woody->neighbour = neighbour;
     neighbour_active = false;
 
-    logic_frame = 0;
-
     // Интерфейс
     pause_button_pressed = false;
 
@@ -935,61 +931,9 @@ static void update(void) {
 
     woody_update(woody);
 
-    logic_frame++;
-
-    if (logic_frame == 5) {
-        if (neighbour_active) {
-            neighbour_update(neighbour);
-        }
-        logic_frame = 0;
+    if (neighbour_active) {
+        neighbour_update(neighbour);
     }
-
-    // Вот это всё надо будет в соседа засунуть. Сейчас он обновляется один раз в шесть кадров. А пусть он сам свои logic_frame
-    // считает, а не уровень. Тогда будет куда деть весь код соседа ниже
-    if (neighbour->ui_breakdowns_counter_animation_play) {
-        neighbour->ui_breakdowns_counter_animation_frame_time++;
-        if (neighbour->ui_breakdowns_counter_animation_frame_time == 10) {
-            neighbour->ui_breakdowns_counter_animation_frame_time = 0;
-            neighbour->ui_breakdowns_counter_animation_frame++;
-            
-            if (neighbour->ui_breakdowns_counter_animation_frame == 13) {
-                neighbour->breakdowns++;
-                neighbour->woody->tv_rating += 3;
-
-                woody->ui_tv_rating_delta = 3.0f;
-                strcpy(woody->ui_tv_rating_delta_text, "+3");
-                woody->ui_tv_rating_delta_text_color = CG_ORANGE_BREAKDOWNS;
-
-                sprintf(neighbour->ui_breakdowns_counter_text, "%d", neighbour->breakdowns);
-
-                intraFontSetStyle(Font_BLUEHIGC_24, 0.583f, CG_ORANGE_BREAKDOWNS, 0, 0, INTRAFONT_ALIGN_LEFT);
-                intraFontActivate(Font_BLUEHIGC_24, 1);
-                neighbour->ui_breakdowns_counter_text_x = 459 - floor(intraFontMeasureText(Font_BLUEHIGC_24, neighbour->ui_breakdowns_counter_text) * 0.5);
-                neighbour->ui_breakdowns_counter_text_show = false;
-            }
-
-            if (neighbour->ui_breakdowns_counter_animation_frame >= 14) {
-                if (neighbour->ui_breakdowns_counter_animation_frame == 17) {
-                    woody->ui_tv_rating_delta_text_show = true;
-                    neighbour->ui_breakdowns_counter_text_show = true;
-                    woody->ui_tv_rating_animation_play = true;
-                    woody->ui_tv_rating_animation_frame = 0;
-                    neighbour->ui_breakdowns_counter_animation_play = false;
-                } else {
-                    neighbour->ui_breakdowns_counter_text_show = !neighbour->ui_breakdowns_counter_text_show;
-                    woody->ui_tv_rating_delta_text_show = !woody->ui_tv_rating_delta_text_show;
-                }
-            }
-        }
-    }
-
-    if (neighbour->jingle_joke_playing) {
-        neighbour->jingle_joke_timer--;
-        if (neighbour->jingle_joke_timer == 0) {
-            NFHHouseMusicResume();
-        }
-    }
-    // ---
 
     // Пауза
     if (controls_released(PSP_CTRL_START)) {

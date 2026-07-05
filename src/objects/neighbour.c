@@ -532,6 +532,8 @@ Neighbour* neighbour_create(
 
     neighbour->woody = woody;
 
+    neighbour->logic_frame = 0;
+
     // Прохождение уровня
     neighbour->emotion = 0;
     neighbour->breakdowns = 0;
@@ -650,114 +652,488 @@ void neighbour_dest_door_animation_set(Neighbour* neighbour, int pack, int anima
 }
 
 void neighbour_update(Neighbour* neighbour) {
-    if (!neighbour->woody_caught) {
-        bool need_to_execute = true;
-        while (need_to_execute) {
-            Action current_action = actions[neighbour->action_state];
-            need_to_execute = current_action.instant;
-            switch (current_action.action) {
-                case WALK_TO_X: {
-                    const WalkToXArgs* args = (const WalkToXArgs*) current_action.args;
+    neighbour->logic_frame++;
 
-                    int goal_x = args->x;
-                    bool action_ended = false;
+    if (neighbour->logic_frame == 5) {
+        if (!neighbour->woody_caught) {
+            bool need_to_execute = true;
+            while (need_to_execute) {
+                Action current_action = actions[neighbour->action_state];
+                need_to_execute = current_action.instant;
+                switch (current_action.action) {
+                    case WALK_TO_X: {
+                        const WalkToXArgs* args = (const WalkToXArgs*) current_action.args;
 
-                    if (goal_x > neighbour->x) {
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
+                        int goal_x = args->x;
+                        bool action_ended = false;
 
-                        neighbour->x += 4;
+                        if (goal_x > neighbour->x) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
 
-                        neighbour->origin_x = neighbour->x;
+                            neighbour->x += 4;
 
-                        if (goal_x <= neighbour->x) {
+                            neighbour->origin_x = neighbour->x;
+
+                            if (goal_x <= neighbour->x) {
+                                action_ended = true;
+                            }
+                        } else if (goal_x < neighbour->x) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
+
+                            neighbour->x -= 4;
+
+                            neighbour->origin_x = neighbour->x;
+
+                            if (goal_x >= neighbour->x) {
+                                action_ended = true;
+                            }
+                        } else {
                             action_ended = true;
                         }
-                    } else if (goal_x < neighbour->x) {
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
 
-                        neighbour->x -= 4;
-
-                        neighbour->origin_x = neighbour->x;
-
-                        if (goal_x >= neighbour->x) {
-                            action_ended = true;
+                        if (action_ended) {
+                            neighbour->x = goal_x;
+                            neighbour->origin_x = neighbour->x;
+                            neighbour->action_state = args->next_state;
                         }
-                    } else {
-                        action_ended = true;
+
+                        break;
                     }
 
-                    if (action_ended) {
-                        neighbour->x = goal_x;
-                        neighbour->origin_x = neighbour->x;
+                    case WALK_TO_Y: {
+                        const WalkToYArgs* args = (const WalkToYArgs*) current_action.args;
+
+                        int goal_y = args->y;
+                        bool action_ended = false;
+
+                        if (goal_y > neighbour->y) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
+
+                            neighbour->y += 1;
+
+                            neighbour->origin_y = neighbour->y;
+
+                            if (goal_y <= neighbour->y) {
+                                action_ended = true;
+                            }
+                        } else if (goal_y < neighbour->y) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG0);
+
+                            neighbour->y -= 1;
+
+                            neighbour->origin_y = neighbour->y;
+
+                            if (goal_y >= neighbour->y) {
+                                action_ended = true;
+                            }
+                        } else {
+                            action_ended = true;
+                        }
+
+                        if (action_ended) {
+                            neighbour->y = goal_y;
+                            neighbour->origin_y = neighbour->y;
+                            neighbour->action_state = args->next_state;
+                        }
+
+                        break;
+                    }
+
+                    case RUN_TO_X: {
+                        const RunToXArgs* args = (const RunToXArgs*) current_action.args;
+
+                        int goal_x = args->x;
+                        bool action_ended = false;
+
+                        if (goal_x > neighbour->x) { // unused
+                            // neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC???, ANIMATION_NEIGHBOUR_MR1);
+
+                            // neighbour->x += 8;
+
+                            // neighbour->origin_x = neighbour->x;
+
+                            // if (goal_x <= neighbour->x) {
+                            //     action_ended = true;
+                            // }
+                        } else if (goal_x < neighbour->x) {
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_MR3);
+
+                            neighbour->x -= 8;
+
+                            neighbour->origin_x = neighbour->x;
+
+                            if (goal_x >= neighbour->x) {
+                                action_ended = true;
+                            }
+                        } else {
+                            action_ended = true;
+                        }
+
+                        if (action_ended) {
+                            neighbour->x = goal_x;
+                            neighbour->origin_x = neighbour->x;
+                            neighbour->action_state = args->next_state;
+                        }
+
+                        break;
+                    }
+
+                    case BUBBLE_SET: {
+                        const BubbleSetArgs* args = (const BubbleSetArgs*) current_action.args;
+                        
+                        int new_bubble_id = args->new_bubble_id;
+                        int src_x = new_bubble_id * 46;
+                        int src_y = 0;
+
+                        src_y = (src_x / 506) * 37;
+                        src_x = src_x % 506;
+
+                        neighbour->current_bubble = new_bubble_id;
+                        neighbour->bubble_sprite_src_x = src_x;
+                        neighbour->bubble_sprite_src_y = src_y;
+
                         neighbour->action_state = args->next_state;
+
+                        break;
                     }
+
+                    case POSITION_SET: {
+                        const PositionSetArgs* args = (const PositionSetArgs*) current_action.args;
+                        
+                        neighbour->x = args->x;
+                        neighbour->y = args->y;
+
+                        if (args->use_in_origin) {
+                            neighbour->origin_x = neighbour->x;
+                            neighbour->origin_y = neighbour->y;
+                        }
+
+                        neighbour->action_state = args->next_state;
+
+                        break;
+                    }
+
+                    case START_USING_H_DOOR: {
+                        const StartUsingHDoorArgs* args = (const StartUsingHDoorArgs*) current_action.args;
+
+                        hDoor* current_door = neighbour->h_doors[args->room][args->side];
+
+                        if (current_door->using_by == USING_NONE) {
+                            hDoor* new_dest_door = neighbour->h_doors[current_door->dest_door_room][current_door->dest_door_id];
+
+                            neighbour->room = current_door->dest_door_room;
+                            neighbour->in_door = true;
+
+                            current_door->using_by = USING_NEIGHBOUR;
+                            new_dest_door->using_by = USING_NEIGHBOUR;
+
+                            if (args->side == 0) {
+                                // Оффсеты...
+                                neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 293;
+                                neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
+
+                                neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORRIGHT, ANIMATION_NEIGHBOUR_DOORRIGHT_LEAVE);
+                            } else {
+                                // Оффсеты...
+                                neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 174;
+                                neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
+
+                                neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_LEAVE);
+                            }
+
+                            neighbour->dest_door_animation_play = true;
+
+                            neighbour->action_state = args->next_state;
+                        } else {
+                            if (args->side == 0) {
+                                neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS3);
+                            } else {
+                                neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS1);
+                            }
+                            need_to_execute = false;
+                        }
+
+                        break;
+                    }
+
+                    case END_USING_H_DOOR: {
+                        const EndUsingHDoorArgs* args = (const EndUsingHDoorArgs*) current_action.args;
+
+                        hDoor* enter_door = neighbour->h_doors[args->room][args->side];
+                        hDoor* dest_door = neighbour->h_doors[enter_door->dest_door_room][enter_door->dest_door_id];
+
+                        neighbour->dest_door_animation_play = false;
+                        neighbour->in_door = false;
+
+                        enter_door->using_by = USING_NONE;
+                        dest_door->using_by = USING_NONE;
+
+                        woody_check_caught(neighbour->woody, neighbour);
+
+                        neighbour->action_state = args->next_state;
+
+                        break;
+                    }
+
+                    case ANIMATION_PLAY_TILL_THE_END: {
+                        const AnimationPlayTillTheEndArgs* args = (const AnimationPlayTillTheEndArgs*) current_action.args;
+                        
+                        if (neighbour->current_animation_pack != args->animation_pack || neighbour->current_animation_index != args->animation_index) {
+                            neighbour_animation_set(neighbour, args->animation_pack, args->animation_index);
+                        } else {
+                            if (neighbour->animation_frame == neighbour->animation_length - 2) { // Так надо, иначе последний кадр два раза рисуется лол
+                                neighbour->action_state = args->next_state;
+                            }
+                        }
+
+                        break;
+                    }
+                    
+                    case LOOK_OBJECT_VISIBILITY_SET: {
+                        const LookObjectVisibilitySetArgs* args = (const LookObjectVisibilitySetArgs*) current_action.args;
+
+                        neighbour->look_objects[args->room][args->id]->sprite_show = args->visibility;
+
+                        neighbour->action_state = args->next_state;
+
+                        break;
+                    }
+
+                    case LOOK_OBJECT_CHECK_TO_TRICK: {
+                        const LookObjectCheckToTrickArgs* args = (const LookObjectCheckToTrickArgs*) current_action.args;
+
+                        const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                        if (current_look_object->tricked) {
+                            neighbour->head_icon_animation_frame = 0;
+                            neighbour->head_icon_animation_play = true;
+                        }
+
+                        neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
+
+                        break;
+                    }
+
+                    case LOOK_OBJECT_MAKE_UNTRICKED: {
+                        const LookObjectMakeUntrickedArgs* args = (const LookObjectMakeUntrickedArgs*) current_action.args;
+
+                        LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                        current_look_object->tricked = false;
+
+                        if (current_look_object->on_untrick) {
+                            neighbour->look_objects[args->room][args->id]->on_untrick();
+                        }
+
+                        if (neighbour->woody->tricks == neighbour->woody->total_tricks) {
+                            if (neighbour->woody->state == STATE_HIDEOUT) {
+                                woody_animation_set(neighbour->woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_LEAVE);
+                            }
+
+                            neighbour->woody->look_object_phrase_show = false;
+                            neighbour->woody->state = STATE_LEVEL_ENDING;
+
+                            *neighbour->woody->neighbour_active = false;
+
+                            NFHHouseMusicStop();
+
+                            NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+
+                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
+                        }
+
+                        neighbour->action_state = args->next_state;
+
+                        break;
+                    }
+
+                    case LOOK_OBJECT_TRICK_COUNT: {
+                        const LookObjectTrickCountArgs* args = (const LookObjectTrickCountArgs*) current_action.args;
+
+                        if (neighbour->angry == 0.0f) {
+                            woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                            neighbour->emotion = 2;
+                            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                            neighbour->action_state = args->no_breakdown_state;
+                        } else {
+                            woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
+
+                            neighbour->emotion = 3;
+                            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                            neighbour_breakdown_counter_update(neighbour);
+                            neighbour->action_state = args->breakdown_state;
+                        }
+                        
+                        neighbour->angry = 100.0f;
+                        neighbour->angry_cooldown = 53;
+
+                        NFHHouseMusicPause();
+                        NFHSoundPlay(SOUND_JINGLE_JOKE);
+
+                        if (rand() % 2 == 0) {
+                            NFHSoundPlay(SOUND_BIG2);
+                        } else {
+                            NFHSoundPlay(SOUND_BIG3);
+                        }
+
+                        neighbour->jingle_joke_playing = true;
+                        neighbour->jingle_joke_timer = 120;
+
+                        break;
+                    }
+
+                    case LOOK_OBJECT_CHECK_TO_ALT_ACTION: {
+                        const LookObjectCheckToAltActionArgs* args = (const LookObjectCheckToAltActionArgs*) current_action.args;
+
+                        const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
+
+                        neighbour->action_state = (current_look_object->alt_action) ? args->alt_state : args->no_alt_state;
+
+                        break;
+                    }
+
+                    case USE_OBJECT_CHECK_TO_TRICK: {
+                        const UseObjectCheckToTrickArgs* args = (const UseObjectCheckToTrickArgs*) current_action.args;
+
+                        const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                        neighbour->action_state = (current_use_object->tricked) ? args->trick_state : args->no_trick_state;
+
+                        break;
+                    }
+
+                    case USE_OBJECT_CHECK_TO_FIRST_TIME: {
+                        const UseObjectCheckToFirstTimeArgs* args = (const UseObjectCheckToFirstTimeArgs*) current_action.args;
+
+                        const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                        if (current_use_object->tricked) {
+                            neighbour->head_icon_animation_frame = 0;
+                            neighbour->head_icon_animation_play = true;
+                        }
+
+                        neighbour->action_state = (current_use_object->first_time) ? args->first_time_state : args->no_first_time_state;
+
+                        break;
+                    }
+
+                    case USE_OBJECT_MAKE_UNTRICKED: {
+                        const UseObjectMakeUntrickedArgs* args = (const UseObjectMakeUntrickedArgs*) current_action.args;
+
+                        UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                        current_use_object->tricked = false;
+
+                        if (current_use_object->on_untrick) {
+                            neighbour->use_objects[args->room][args->id]->on_untrick();
+                        }
+
+                        neighbour->action_state = args->next_state;
+
+                        break;
+                    }
+
+                    case USE_OBJECT_TRICK_COUNT: {
+                        const UseObjectTrickCountArgs* args = (const UseObjectTrickCountArgs*) current_action.args;
+
+                        if (neighbour->angry == 0.0f) {
+                            woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
+
+                            neighbour->emotion = 2;
+                            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                            neighbour->action_state = args->no_breakdown_state;
+                        } else {
+                            woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
+
+                            neighbour->emotion = 3;
+                            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                            neighbour_breakdown_counter_update(neighbour);
+                            neighbour->action_state = args->breakdown_state;
+                        }
+                        
+                        neighbour->angry = 100.0f;
+                        neighbour->angry_cooldown = 53;
+
+                        NFHHouseMusicPause();
+                        NFHSoundPlay(SOUND_JINGLE_JOKE);
+
+                        if (rand() % 2 == 0) {
+                            NFHSoundPlay(SOUND_BIG2);
+                        } else {
+                            NFHSoundPlay(SOUND_BIG3);
+                        }
+
+                        neighbour->jingle_joke_playing = true;
+                        neighbour->jingle_joke_timer = 120;
+
+                        break;
+                    }
+                }
+            }
+        } else {
+            switch (neighbour->game_over_state) {
+                case STATE_GAME_OVER_START: {
+                    neighbour->x = neighbour->origin_x;
+                    neighbour->y = neighbour->origin_y;
+
+                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS2);
+
+                    neighbour->game_over_state = STATE_GO_TO_FLOOR;
 
                     break;
                 }
 
-                case WALK_TO_Y: {
-                    const WalkToYArgs* args = (const WalkToYArgs*) current_action.args;
-
-                    int goal_y = args->y;
-                    bool action_ended = false;
+                case STATE_GO_TO_FLOOR: {
+                    int goal_y = neighbour->woody->floor_y - 166;
 
                     if (goal_y > neighbour->y) {
                         neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
 
                         neighbour->y += 1;
 
-                        neighbour->origin_y = neighbour->y;
-
                         if (goal_y <= neighbour->y) {
-                            action_ended = true;
+                            neighbour->y = goal_y;
+                            neighbour->game_over_state = STATE_GO_TO_WOODY;
                         }
                     } else if (goal_y < neighbour->y) {
                         neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG0);
 
                         neighbour->y -= 1;
 
-                        neighbour->origin_y = neighbour->y;
-
                         if (goal_y >= neighbour->y) {
-                            action_ended = true;
+                            neighbour->y = goal_y;
+                            neighbour->game_over_state = STATE_GO_TO_WOODY;
                         }
                     } else {
-                        action_ended = true;
-                    }
-
-                    if (action_ended) {
                         neighbour->y = goal_y;
-                        neighbour->origin_y = neighbour->y;
-                        neighbour->action_state = args->next_state;
+                        neighbour->game_over_state = STATE_GO_TO_WOODY;
                     }
 
                     break;
                 }
 
-                case RUN_TO_X: {
-                    const RunToXArgs* args = (const RunToXArgs*) current_action.args;
-
-                    int goal_x = args->x;
+                case STATE_GO_TO_WOODY: {
                     bool action_ended = false;
 
-                    if (goal_x > neighbour->x) { // unused
-                        // neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC???, ANIMATION_NEIGHBOUR_MR1);
+                    if (neighbour->game_over_goal_x > neighbour->x) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
 
-                        // neighbour->x += 8;
+                        neighbour->x += 4;
 
-                        // neighbour->origin_x = neighbour->x;
+                        if (neighbour->game_over_goal_x <= neighbour->x) {
+                            action_ended = true;
+                        }
+                    } else if (neighbour->game_over_goal_x < neighbour->x) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
 
-                        // if (goal_x <= neighbour->x) {
-                        //     action_ended = true;
-                        // }
-                    } else if (goal_x < neighbour->x) {
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_MR3);
+                        neighbour->x -= 4;
 
-                        neighbour->x -= 8;
-
-                        neighbour->origin_x = neighbour->x;
-
-                        if (goal_x >= neighbour->x) {
+                        if (neighbour->game_over_goal_x >= neighbour->x) {
                             action_ended = true;
                         }
                     } else {
@@ -765,456 +1141,132 @@ void neighbour_update(Neighbour* neighbour) {
                     }
 
                     if (action_ended) {
-                        neighbour->x = goal_x;
-                        neighbour->origin_x = neighbour->x;
-                        neighbour->action_state = args->next_state;
-                    }
+                        RoomCollision* current_room = &neighbour->woody->room_collisions[neighbour->woody->room];
 
-                    break;
-                }
+                        neighbour->x = clamp(neighbour->game_over_goal_x, current_room->x1 - 181, current_room->x2 - 181);
+                        neighbour->game_over_state = STATE_LOSE_ANIMATION;
 
-                case BUBBLE_SET: {
-                    const BubbleSetArgs* args = (const BubbleSetArgs*) current_action.args;
-                    
-                    int new_bubble_id = args->new_bubble_id;
-                    int src_x = new_bubble_id * 46;
-                    int src_y = 0;
-
-                    src_y = (src_x / 506) * 37;
-                    src_x = src_x % 506;
-
-                    neighbour->current_bubble = new_bubble_id;
-                    neighbour->bubble_sprite_src_x = src_x;
-                    neighbour->bubble_sprite_src_y = src_y;
-
-                    neighbour->action_state = args->next_state;
-
-                    break;
-                }
-
-                case POSITION_SET: {
-                    const PositionSetArgs* args = (const PositionSetArgs*) current_action.args;
-                    
-                    neighbour->x = args->x;
-                    neighbour->y = args->y;
-
-                    if (args->use_in_origin) {
-                        neighbour->origin_x = neighbour->x;
-                        neighbour->origin_y = neighbour->y;
-                    }
-
-                    neighbour->action_state = args->next_state;
-
-                    break;
-                }
-
-                case START_USING_H_DOOR: {
-                    const StartUsingHDoorArgs* args = (const StartUsingHDoorArgs*) current_action.args;
-
-                    hDoor* current_door = neighbour->h_doors[args->room][args->side];
-
-                    if (current_door->using_by == USING_NONE) {
-                        hDoor* new_dest_door = neighbour->h_doors[current_door->dest_door_room][current_door->dest_door_id];
-
-                        neighbour->room = current_door->dest_door_room;
-                        neighbour->in_door = true;
-
-                        current_door->using_by = USING_NEIGHBOUR;
-                        new_dest_door->using_by = USING_NEIGHBOUR;
-
-                        if (args->side == 0) {
-                            // Оффсеты...
-                            neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 293;
-                            neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
-
-                            neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORRIGHT, ANIMATION_NEIGHBOUR_DOORRIGHT_LEAVE);
-                        } else {
-                            // Оффсеты...
-                            neighbour->dest_door_sprite_x = new_dest_door->sprite_x - 174;
-                            neighbour->dest_door_sprite_y = new_dest_door->sprite_y - 129;
-
-                            neighbour_dest_door_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_DOORLEFT, ANIMATION_NEIGHBOUR_DOORLEFT_LEAVE);
-                        }
-
-                        neighbour->dest_door_animation_play = true;
-
-                        neighbour->action_state = args->next_state;
-                    } else {
-                        if (args->side == 0) {
-                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS3);
-                        } else {
-                            neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS1);
-                        }
-                        need_to_execute = false;
-                    }
-
-                    break;
-                }
-
-                case END_USING_H_DOOR: {
-                    const EndUsingHDoorArgs* args = (const EndUsingHDoorArgs*) current_action.args;
-
-                    hDoor* enter_door = neighbour->h_doors[args->room][args->side];
-                    hDoor* dest_door = neighbour->h_doors[enter_door->dest_door_room][enter_door->dest_door_id];
-
-                    neighbour->dest_door_animation_play = false;
-                    neighbour->in_door = false;
-
-                    enter_door->using_by = USING_NONE;
-                    dest_door->using_by = USING_NONE;
-
-                    woody_check_caught(neighbour->woody, neighbour);
-
-                    neighbour->action_state = args->next_state;
-
-                    break;
-                }
-
-                case ANIMATION_PLAY_TILL_THE_END: {
-                    const AnimationPlayTillTheEndArgs* args = (const AnimationPlayTillTheEndArgs*) current_action.args;
-                    
-                    if (neighbour->current_animation_pack != args->animation_pack || neighbour->current_animation_index != args->animation_index) {
-                        neighbour_animation_set(neighbour, args->animation_pack, args->animation_index);
-                    } else {
-                        if (neighbour->animation_frame == neighbour->animation_length - 2) { // Так надо, иначе последний кадр два раза рисуется лол
-                            neighbour->action_state = args->next_state;
+                        const int new_animation = randi_range(0, 2);
+                        switch (new_animation) {
+                            case 0: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1); break;
+                            case 1: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL2); break;
+                            case 2: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL3); break;
                         }
                     }
 
                     break;
                 }
-                
-                case LOOK_OBJECT_VISIBILITY_SET: {
-                    const LookObjectVisibilitySetArgs* args = (const LookObjectVisibilitySetArgs*) current_action.args;
 
-                    neighbour->look_objects[args->room][args->id]->sprite_show = args->visibility;
+                case STATE_LOSE_ANIMATION: {
+                    if (neighbour->animation_frame == neighbour->animation_length - 1) {
+                        strcpy(neighbour->woody->level_end->end_text, "Провал");
+                        strcpy(neighbour->woody->level_end->tricks_text, neighbour->woody->ui_tricks_counter_text);
+                        sprintf(neighbour->woody->level_end->tv_rating_text, "%d", neighbour->woody->tv_rating);
 
-                    neighbour->action_state = args->next_state;
+                        neighbour->woody->level_end->counter = 0;
+                        *neighbour->level_end_active = true;
 
-                    break;
-                }
+                        *neighbour->neighbour_active = false;
 
-                case LOOK_OBJECT_CHECK_TO_TRICK: {
-                    const LookObjectCheckToTrickArgs* args = (const LookObjectCheckToTrickArgs*) current_action.args;
-
-                    const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                    if (current_look_object->tricked) {
-                        neighbour->head_icon_animation_frame = 0;
-                        neighbour->head_icon_animation_play = true;
+                        NFHSoundPlay(SOUND_APPLAUSE);
                     }
-
-                    neighbour->action_state = (current_look_object->tricked) ? args->trick_state : args->no_trick_state;
-
-                    break;
-                }
-
-                case LOOK_OBJECT_MAKE_UNTRICKED: {
-                    const LookObjectMakeUntrickedArgs* args = (const LookObjectMakeUntrickedArgs*) current_action.args;
-
-                    LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                    current_look_object->tricked = false;
-
-                    if (current_look_object->on_untrick) {
-                        neighbour->look_objects[args->room][args->id]->on_untrick();
-                    }
-
-                    if (neighbour->woody->tricks == neighbour->woody->total_tricks) {
-                        if (neighbour->woody->state == STATE_HIDEOUT) {
-                            woody_animation_set(neighbour->woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_LEAVE);
-                        }
-
-                        neighbour->woody->look_object_phrase_show = false;
-                        neighbour->woody->state = STATE_LEVEL_ENDING;
-
-                        *neighbour->woody->neighbour_active = false;
-
-                        NFHHouseMusicStop();
-
-                        NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
-
-                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
-                    }
-
-                    neighbour->action_state = args->next_state;
-
-                    break;
-                }
-
-                case LOOK_OBJECT_TRICK_COUNT: {
-                    const LookObjectTrickCountArgs* args = (const LookObjectTrickCountArgs*) current_action.args;
-
-                    if (neighbour->angry == 0.0f) {
-                        woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
-
-                        neighbour->emotion = 2;
-                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                        neighbour->action_state = args->no_breakdown_state;
-                    } else {
-                        woody_tricks_counter_update(neighbour->woody, neighbour->look_objects[args->room][args->id]->trick_tv_rating);
-
-                        neighbour->emotion = 3;
-                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                        neighbour_breakdown_counter_update(neighbour);
-                        neighbour->action_state = args->breakdown_state;
-                    }
-                    
-                    neighbour->angry = 100.0f;
-                    neighbour->angry_cooldown = 53;
-
-                    NFHHouseMusicPause();
-                    NFHSoundPlay(SOUND_JINGLE_JOKE);
-
-                    if (rand() % 2 == 0) {
-                        NFHSoundPlay(SOUND_BIG2);
-                    } else {
-                        NFHSoundPlay(SOUND_BIG3);
-                    }
-
-                    neighbour->jingle_joke_playing = true;
-                    neighbour->jingle_joke_timer = 120;
-
-                    break;
-                }
-
-                case LOOK_OBJECT_CHECK_TO_ALT_ACTION: {
-                    const LookObjectCheckToAltActionArgs* args = (const LookObjectCheckToAltActionArgs*) current_action.args;
-
-                    const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
-
-                    neighbour->action_state = (current_look_object->alt_action) ? args->alt_state : args->no_alt_state;
-
-                    break;
-                }
-
-                case USE_OBJECT_CHECK_TO_TRICK: {
-                    const UseObjectCheckToTrickArgs* args = (const UseObjectCheckToTrickArgs*) current_action.args;
-
-                    const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
-
-                    neighbour->action_state = (current_use_object->tricked) ? args->trick_state : args->no_trick_state;
-
-                    break;
-                }
-
-                case USE_OBJECT_CHECK_TO_FIRST_TIME: {
-                    const UseObjectCheckToFirstTimeArgs* args = (const UseObjectCheckToFirstTimeArgs*) current_action.args;
-
-                    const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
-
-                    if (current_use_object->tricked) {
-                        neighbour->head_icon_animation_frame = 0;
-                        neighbour->head_icon_animation_play = true;
-                    }
-
-                    neighbour->action_state = (current_use_object->first_time) ? args->first_time_state : args->no_first_time_state;
-
-                    break;
-                }
-
-                case USE_OBJECT_MAKE_UNTRICKED: {
-                    const UseObjectMakeUntrickedArgs* args = (const UseObjectMakeUntrickedArgs*) current_action.args;
-
-                    UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
-
-                    current_use_object->tricked = false;
-
-                    if (current_use_object->on_untrick) {
-                        neighbour->use_objects[args->room][args->id]->on_untrick();
-                    }
-
-                    neighbour->action_state = args->next_state;
-
-                    break;
-                }
-
-                case USE_OBJECT_TRICK_COUNT: {
-                    const UseObjectTrickCountArgs* args = (const UseObjectTrickCountArgs*) current_action.args;
-
-                    if (neighbour->angry == 0.0f) {
-                        woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
-
-                        neighbour->emotion = 2;
-                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                        neighbour->action_state = args->no_breakdown_state;
-                    } else {
-                        woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
-
-                        neighbour->emotion = 3;
-                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
-
-                        neighbour_breakdown_counter_update(neighbour);
-                        neighbour->action_state = args->breakdown_state;
-                    }
-                    
-                    neighbour->angry = 100.0f;
-                    neighbour->angry_cooldown = 53;
-
-                    NFHHouseMusicPause();
-                    NFHSoundPlay(SOUND_JINGLE_JOKE);
-
-                    if (rand() % 2 == 0) {
-                        NFHSoundPlay(SOUND_BIG2);
-                    } else {
-                        NFHSoundPlay(SOUND_BIG3);
-                    }
-
-                    neighbour->jingle_joke_playing = true;
-                    neighbour->jingle_joke_timer = 120;
 
                     break;
                 }
             }
         }
-    } else {
-        switch (neighbour->game_over_state) {
-            case STATE_GAME_OVER_START: {
-                neighbour->x = neighbour->origin_x;
-                neighbour->y = neighbour->origin_y;
 
-                neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MS2);
-
-                neighbour->game_over_state = STATE_GO_TO_FLOOR;
-
-                break;
-            }
-
-            case STATE_GO_TO_FLOOR: {
-                int goal_y = neighbour->woody->floor_y - 166;
-
-                if (goal_y > neighbour->y) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
-
-                    neighbour->y += 1;
-
-                    if (goal_y <= neighbour->y) {
-                        neighbour->y = goal_y;
-                        neighbour->game_over_state = STATE_GO_TO_WOODY;
-                    }
-                } else if (goal_y < neighbour->y) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG0);
-
-                    neighbour->y -= 1;
-
-                    if (goal_y >= neighbour->y) {
-                        neighbour->y = goal_y;
-                        neighbour->game_over_state = STATE_GO_TO_WOODY;
-                    }
-                } else {
-                    neighbour->y = goal_y;
-                    neighbour->game_over_state = STATE_GO_TO_WOODY;
-                }
-
-                break;
-            }
-
-            case STATE_GO_TO_WOODY: {
-                bool action_ended = false;
-
-                if (neighbour->game_over_goal_x > neighbour->x) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG1);
-
-                    neighbour->x += 4;
-
-                    if (neighbour->game_over_goal_x <= neighbour->x) {
-                        action_ended = true;
-                    }
-                } else if (neighbour->game_over_goal_x < neighbour->x) {
-                    neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG3);
-
-                    neighbour->x -= 4;
-
-                    if (neighbour->game_over_goal_x >= neighbour->x) {
-                        action_ended = true;
-                    }
-                } else {
-                    action_ended = true;
-                }
-
-                if (action_ended) {
-                    RoomCollision* current_room = &neighbour->woody->room_collisions[neighbour->woody->room];
-
-                    neighbour->x = clamp(neighbour->game_over_goal_x, current_room->x1 - 181, current_room->x2 - 181);
-                    neighbour->game_over_state = STATE_LOSE_ANIMATION;
-
-                    const int new_animation = randi_range(0, 2);
-                    switch (new_animation) {
-                        case 0: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL1); break;
-                        case 1: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL2); break;
-                        case 2: neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GAMEOVER, ANIMATION_NEIGHBOUR_KILL3); break;
-                    }
-                }
-
-                break;
-            }
-
-            case STATE_LOSE_ANIMATION: {
-                if (neighbour->animation_frame == neighbour->animation_length - 1) {
-                    strcpy(neighbour->woody->level_end->end_text, "Провал");
-                    strcpy(neighbour->woody->level_end->tricks_text, neighbour->woody->ui_tricks_counter_text);
-                    sprintf(neighbour->woody->level_end->tv_rating_text, "%d", neighbour->woody->tv_rating);
-
-                    neighbour->woody->level_end->counter = 0;
-                    *neighbour->level_end_active = true;
-
-                    *neighbour->neighbour_active = false;
-
-                    NFHSoundPlay(SOUND_APPLAUSE);
-                }
-
-                break;
+        neighbour->animation_frame++;
+        if (neighbour->animation_frame == neighbour->animation_length) {
+            if (neighbour->animation_loop) {
+                neighbour->animation_frame = 0;
+            } else {
+                neighbour->animation_frame = neighbour->animation_length - 1;
             }
         }
-    }
+        neighbour_animation_update_frame(neighbour);
 
-    neighbour->animation_frame++;
-    if (neighbour->animation_frame == neighbour->animation_length) {
-        if (neighbour->animation_loop) {
-            neighbour->animation_frame = 0;
+        if (neighbour->dest_door_animation_play) {
+            neighbour->dest_door_animation_frame++;
+            if (neighbour->dest_door_animation_frame == neighbour->dest_door_animation_length) {
+                neighbour->dest_door_animation_frame = neighbour->dest_door_animation_length - 1;
+            }
+            neighbour_dest_door_animation_update_frame(neighbour);
+        }
+
+        if (neighbour->head_icon_animation_play) {
+            neighbour->head_icon_animation_frame++;
+            if (neighbour->head_icon_animation_frame % 2 == 0) {
+                neighbour->head_icon_show = !neighbour->head_icon_show;
+            }
+
+            if (neighbour->head_icon_animation_frame == 12) {
+                neighbour->head_icon_animation_play = false;
+            }
+        }
+
+        if (neighbour->angry_cooldown == 0) {
+            if (neighbour->angry != 0.0f) {
+                neighbour->angry -= 0.36f;
+                if (neighbour->angry <= 0.0f) {
+                    neighbour->angry = 0.0f;
+
+                    neighbour->emotion = 0;
+                    neighbour->head_icon_src_x = 47 * neighbour->emotion;
+                }
+            }
         } else {
-            neighbour->animation_frame = neighbour->animation_length - 1;
-        }
-    }
-    neighbour_animation_update_frame(neighbour);
-
-    if (neighbour->dest_door_animation_play) {
-        neighbour->dest_door_animation_frame++;
-        if (neighbour->dest_door_animation_frame == neighbour->dest_door_animation_length) {
-            neighbour->dest_door_animation_frame = neighbour->dest_door_animation_length - 1;
-        }
-        neighbour_dest_door_animation_update_frame(neighbour);
-    }
-
-    if (neighbour->head_icon_animation_play) {
-        neighbour->head_icon_animation_frame++;
-        if (neighbour->head_icon_animation_frame % 2 == 0) {
-            neighbour->head_icon_show = !neighbour->head_icon_show;
-        }
-
-        if (neighbour->head_icon_animation_frame == 12) {
-            neighbour->head_icon_animation_play = false;
-        }
-    }
-
-    if (neighbour->angry_cooldown == 0) {
-        if (neighbour->angry != 0.0f) {
-            neighbour->angry -= 0.36f;
-            if (neighbour->angry <= 0.0f) {
-                neighbour->angry = 0.0f;
-
-                neighbour->emotion = 0;
+            neighbour->angry_cooldown--;
+            if (neighbour->angry_cooldown == 0) {
+                neighbour->emotion = 1;
                 neighbour->head_icon_src_x = 47 * neighbour->emotion;
             }
         }
-    } else {
-        neighbour->angry_cooldown--;
-        if (neighbour->angry_cooldown == 0) {
-            neighbour->emotion = 1;
-            neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+        neighbour->logic_frame = 0;
+    }
+
+    if (neighbour->ui_breakdowns_counter_animation_play) {
+        neighbour->ui_breakdowns_counter_animation_frame_time++;
+        if (neighbour->ui_breakdowns_counter_animation_frame_time == 10) {
+            neighbour->ui_breakdowns_counter_animation_frame_time = 0;
+            neighbour->ui_breakdowns_counter_animation_frame++;
+            
+            if (neighbour->ui_breakdowns_counter_animation_frame == 13) {
+                neighbour->breakdowns++;
+                neighbour->woody->tv_rating += 3;
+
+                neighbour->woody->ui_tv_rating_delta = 3.0f;
+                strcpy(neighbour->woody->ui_tv_rating_delta_text, "+3");
+                neighbour->woody->ui_tv_rating_delta_text_color = CG_ORANGE_BREAKDOWNS;
+
+                sprintf(neighbour->ui_breakdowns_counter_text, "%d", neighbour->breakdowns);
+
+                intraFontSetStyle(Font_BLUEHIGC_24, 0.583f, CG_ORANGE_BREAKDOWNS, 0, 0, INTRAFONT_ALIGN_LEFT);
+                intraFontActivate(Font_BLUEHIGC_24, 1);
+                neighbour->ui_breakdowns_counter_text_x = 459 - floor(intraFontMeasureText(Font_BLUEHIGC_24, neighbour->ui_breakdowns_counter_text) * 0.5);
+                neighbour->ui_breakdowns_counter_text_show = false;
+            }
+
+            if (neighbour->ui_breakdowns_counter_animation_frame >= 14) {
+                if (neighbour->ui_breakdowns_counter_animation_frame == 17) {
+                    neighbour->woody->ui_tv_rating_delta_text_show = true;
+                    neighbour->ui_breakdowns_counter_text_show = true;
+                    neighbour->woody->ui_tv_rating_animation_play = true;
+                    neighbour->woody->ui_tv_rating_animation_frame = 0;
+                    neighbour->ui_breakdowns_counter_animation_play = false;
+                } else {
+                    neighbour->ui_breakdowns_counter_text_show = !neighbour->ui_breakdowns_counter_text_show;
+                    neighbour->woody->ui_tv_rating_delta_text_show = !neighbour->woody->ui_tv_rating_delta_text_show;
+                }
+            }
+        }
+    }
+
+    if (neighbour->jingle_joke_playing) {
+        neighbour->jingle_joke_timer--;
+        if (neighbour->jingle_joke_timer == 0) {
+            NFHHouseMusicResume();
         }
     }
 }

@@ -97,6 +97,8 @@ typedef struct Neighbour {
 
     Woody* woody;
 
+    int logic_frame;
+
     // Прохождение уровня
     int emotion;
     int breakdowns;

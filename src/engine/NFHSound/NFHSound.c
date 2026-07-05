@@ -249,7 +249,7 @@ void NFHSoundPreload(int sound) {
             AalibUnload(new_sound_channel);
             NFHSoundLoad(sound, new_sound_channel);
 
-             for (int i = 30; i > 0; i--) {
+            for (int i = 30; i > 0; i--) {
                 sound_channels_order[i] = sound_channels_order[i-1]; 
             }
 
