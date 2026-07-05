@@ -141,6 +141,7 @@ static Storage* storages[9][MAX_STORAGES_IN_ROOM];
 static UseObject* use_objects[9][MAX_USE_OBJECTS_IN_ROOM];
 
 g2dImage* SpriteList_TV;
+g2dImage* Sprite_TWISTEDANTENNA;
 
 static int tv_animation_frame;
 static int tv_animation_length;
@@ -204,6 +205,8 @@ static void tv_on_trick(void) {
     use_objects[ROOM_LIR][0]->sprite_src_x = 0;
     use_objects[ROOM_LIR][0]->sprite_src_y = 22;
     use_objects[ROOM_LIR][0]->collision_x = -128;
+    look_objects[ROOM_LIR][2]->collision_x = 49;
+    look_objects[ROOM_LIR][2]->sprite_show = true;
     tv_animation_frame = 0;
     tv_animation_length = 2;
 }
@@ -213,6 +216,8 @@ static void tv_on_untrick(void) {
     use_objects[ROOM_LIR][0]->sprite_src_y = 0;
     use_objects[ROOM_LIR][0]->collision_x = 69;
     use_objects[ROOM_LIR][0]->first_time = false;
+    look_objects[ROOM_LIR][2]->collision_x = -128;
+    look_objects[ROOM_LIR][2]->sprite_show = false;
     tv_animation_frame = 0;
     tv_animation_length = 8;
 }
@@ -588,6 +593,46 @@ static void init(void) {
             .on_untrick = NULL
         };
         look_objects[ROOM_LIR][1] = new_look_object5;
+    }
+
+    Sprite_TWISTEDANTENNA = g2d_LoadImage("assets_thq/sprites/lir/tv/twistedantenna.png", G2D_RGBA8888);
+
+    LookObject* new_look_object6 = malloc(sizeof(LookObject));
+    if (new_look_object6) {
+        *new_look_object6 = (LookObject) {
+            .spritelist = Sprite_TWISTEDANTENNA,
+            .sprite_x = 81,
+            .sprite_y = 103,
+            .sprite_src_x = 0,
+            .sprite_src_y = 0,
+            .sprite_w = 33,
+            .sprite_h = 21,
+            .sprite_show = false,
+            .above_door = true,
+            .collision_x = -128,
+            .collision_y = 111,
+            .hint_text = "Посмотреть на скрученную антенну",
+            .use_hint_text = "антенну",
+            .tricked_hint_text = "",
+            .tricked_use_hint_text = "",
+            .hint_id = get_unique_hint_id(),
+            .phrase_text = "Теперь ловит даже\n\n\nкабельное!",
+            .phrase_y = 8,
+            .bubble_size = 10,
+            .tricked = false,
+            .item_to_trick = ITEM_NONE,
+            .alt_action = false,
+            .trick_making_length = 0,
+            .trick_tv_rating = 0,
+            .tricked_phrase_text = "",
+            .tricked_phrase_y = 8,
+            .tricked_bubble_size = 10,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
+            .on_trick = NULL,
+            .on_untrick = NULL
+        };
+        look_objects[ROOM_LIR][2] = new_look_object6;
     }
 
     // Загрузка укрытий из JSON
@@ -1263,6 +1308,7 @@ static void unload(void) {
     }
 
     g2d_FreeImage(SpriteList_TV);
+    g2d_FreeImage(Sprite_TWISTEDANTENNA);
 
     g2d_FreeImage(woody->spritelists[4]);
     g2d_FreeImage(woody->spritelists[5]);
