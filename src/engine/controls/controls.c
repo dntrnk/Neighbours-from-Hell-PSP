@@ -66,12 +66,7 @@ void controls_read(void) {
 }
 
 bool controls_pressed(const unsigned int button) {
-    if ((pad.pressed & button) == button) {	
-        pad.pressed &= ~button;
-        return true;
-    }
-
-    return false;
+    return ((pad.pressed & button) == button);
 }
 
 bool controls_held(const unsigned int button) {
