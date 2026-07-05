@@ -1244,9 +1244,6 @@ static void draw(void) {
 
     // Отрисовка UI
 
-    // UI BG
-    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 0, 192, 480, 80, WHITE, 0, 0, 480, 80, 0, 255, G2D_UP_LEFT);
-
     woody_draw_ui(woody);
 
     neighbour_draw_ui(neighbour);

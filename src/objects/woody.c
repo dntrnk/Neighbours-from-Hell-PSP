@@ -1767,6 +1767,8 @@ void woody_door_draw(const Woody* woody) {
 }
 
 void woody_draw_ui(const Woody* woody) {
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 0, 192, 344, 80, WHITE, 0, 0, 344, 80, 0, 255, G2D_UP_LEFT);
+
     // Подсказки
     if (!woody->in_door) {
         int hint_text_x = 93;
@@ -1795,6 +1797,8 @@ void woody_draw_ui(const Woody* woody) {
             hint_text_x += floor(intraFontMeasureText(Font_BLUEHIGC_11, current_hint->text)) + 28;
         }
     }
+
+    g2d_DrawImageExt(SpriteAtlas_INGAMEUI, 344, 192, 136, 80, WHITE, 344, 0, 136, 80, 0, 255, G2D_UP_LEFT);
 
     // Пакости
     if (woody->ui_tricks_counter_text_show) {
@@ -1840,6 +1844,8 @@ void woody_draw_ui(const Woody* woody) {
             g2d_DrawImageExt(current_spritelist, 99 + i * 45, 235, 45, 34, WHITE, src_x, src_y, 45, 34, 0, 255, G2D_UP_LEFT);
         }
     }
+
+    g2d_DrawImageExt(SpriteList_BUTTONS, 319, 257, 16, 16, WHITE, 23, 23, 23, 23, 0, 255, G2D_UP_LEFT); // triangle
 
     // Таймер
     intraFontSetStyle(Font_BLUEHIGC_24, 1, CG_BLUE_TIMER, 0, 0, INTRAFONT_ALIGN_RIGHT);
