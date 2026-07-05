@@ -310,6 +310,42 @@ void woody_dest_door_animation_set(Woody* woody, int pack, int animation) {
     woody_dest_door_animation_update_frame(woody);
 }
 
+static LookObject* woody_find_look_object_at_x(const Woody* woody) {
+    LookObject** look_objects_in_room = woody->look_objects[woody->room];
+
+    for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
+        LookObject* current_look_object = look_objects_in_room[i];
+        if (!current_look_object) break;
+        if (woody->x == current_look_object->collision_x) return current_look_object;
+    }
+
+    return NULL;
+}
+
+static Storage* woody_find_storage_at_x(const Woody* woody) {
+    Storage** storages_in_room = woody->storages[woody->room];
+
+    for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
+        Storage* current_storage = storages_in_room[i];
+        if (!current_storage) break;
+        if (woody->x == current_storage->collision_x) return current_storage;
+    }
+
+    return NULL;
+}
+
+static UseObject* woody_find_use_object_at_x(const Woody* woody) {
+    UseObject** use_objects_in_room = woody->use_objects[woody->room];
+
+    for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+        UseObject* current_use_object = use_objects_in_room[i];
+        if (!current_use_object) break;
+        if (woody->x == current_use_object->collision_x) return current_use_object;
+    }
+
+    return NULL;
+}
+
 static void woody_inventory_delete_item(Woody* woody, const int item_to_delete) {
     woody->inventory[item_to_delete] = ITEM_NONE;
     if (item_to_delete != WOODY_MAX_ITEMS_IN_INVENTORY - 1) {
@@ -541,30 +577,24 @@ static void woody_auto_move_complete(Woody* woody) {
         case GOAL_STORAGE:
             // Пока что нет пакостей, связанных с храналищами
             if (!woody->inventory_using) {
-                woody->state = STATE_STORAGE_CHECK;
+                Storage* current_storage = woody_find_storage_at_x(woody);
 
-                Storage** storages_in_room = woody->storages[woody->room];
-                for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-                    Storage* current_storage = storages_in_room[i];
-                    if (current_storage) {
-                        if (woody->x == current_storage->collision_x) {
-                            switch (current_storage->sprite_type) {
-                                case SPRITE_TYPE_OPENS:
-                                    current_storage->sprite_show = true;
+                if (current_storage) {
+                    woody->state = STATE_STORAGE_CHECK;
+                    switch (current_storage->sprite_type) {
+                        case SPRITE_TYPE_OPENS:
+                            current_storage->sprite_show = true;
 
-                                    break;
-                                case SPRITE_TYPE_DISAPPEARS:
+                            break;
+                        case SPRITE_TYPE_DISAPPEARS:
 
-                                    break;
-                            }
-                        }
-                    } else {
-                        break;
+                            break;
                     }
-                }
-                woody->auto_move_goal_type = GOAL_NONE;
 
-                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
+                    woody->auto_move_goal_type = GOAL_NONE;
+
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_OPEN);
+                }
             } else {
                 woody->state = STATE_NONO;
                 woody->inventory_using = false;
@@ -577,35 +607,30 @@ static void woody_auto_move_complete(Woody* woody) {
             break;
         case GOAL_USE_OBJECT:
             // Прикол UseObject том, что чтобы сделать на нём пакость, предмет никакой не нужен
-            if (!woody->inventory_using) {
-                // Ищем текущий UseObjects
-                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
-                    UseObject* current_use_object = woody->use_objects[woody->room][i];
-                    if (current_use_object) {
-                        if (current_use_object->collision_x == woody->x) {
-                                woody->state = STATE_MAKING_TRICK;
-                                woody->trick_making_length = current_use_object->trick_making_length;
-                                woody->trick_making_progress = 0;
+            UseObject* current_use_object = woody_find_use_object_at_x(woody);
 
-                                if (current_use_object->on_making_trick) {
-                                    current_use_object->on_making_trick();
-                                }
+            if (current_use_object) {
+                if (!woody->inventory_using) {
+                    woody->state = STATE_MAKING_TRICK;
+                    woody->trick_making_length = current_use_object->trick_making_length;
+                    woody->trick_making_progress = 0;
 
-                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID);
-
-                            break;
-                        }
+                    if (current_use_object->on_making_trick) {
+                        current_use_object->on_making_trick();
                     }
-                }
-            } else {
-                woody->state = STATE_NONO;
 
-                woody->inventory_using = false;
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID);
+                } else {
+                    woody->state = STATE_NONO;
 
-                woody->auto_move_goal_type = GOAL_NONE;
+                    woody->inventory_using = false;
 
-                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+                    woody->auto_move_goal_type = GOAL_NONE;
+
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+                }   
             }
+
 
             break;
         case GOAL_FLOOR:
@@ -826,18 +851,11 @@ static void woody_stop_making_trick(Woody* woody) {
     if (woody->state == STATE_MAKING_TRICK) {
         switch (woody->auto_move_goal_type) {
             case GOAL_LOOK_OBJECT:
-                // Ищем текущий LookObject
-                for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
-                    LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object) {
-                        if (current_look_object->collision_x == woody->x) {
+                LookObject* current_look_object = woody_find_look_object_at_x(woody);
 
-                            if (current_look_object->on_stop_making_trick) {
-                                current_look_object->on_stop_making_trick();
-                            }
-
-                            break;
-                        }
+                if (current_look_object) {
+                    if (current_look_object->on_stop_making_trick) {
+                        current_look_object->on_stop_making_trick();
                     }
                 }
 
@@ -851,18 +869,11 @@ static void woody_stop_making_trick(Woody* woody) {
 
                 break;
             case GOAL_USE_OBJECT:
-                // Ищем текущий UseObject
-                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
-                    UseObject* current_use_object = woody->use_objects[woody->room][i];
-                    if (current_use_object) {
-                        if (current_use_object->collision_x == woody->x) {
+                UseObject* current_use_object = woody_find_use_object_at_x(woody);
 
-                            if (current_use_object->on_stop_making_trick) {
-                                current_use_object->on_stop_making_trick();
-                            }
-
-                            break;
-                        }
+                if (current_use_object) {
+                    if (current_use_object->on_stop_making_trick) {
+                        current_use_object->on_stop_making_trick();
                     }
                 }
 
@@ -1132,50 +1143,35 @@ static void woody_update_hideout_exit(Woody* woody) {
 
 static void woody_update_storage_check(Woody* woody) {
     if (IS_LAST_ANIMATION_FRAME) {
-        Storage* current_storage = NULL;
+        Storage* current_storage = woody_find_storage_at_x(woody);
 
-        Storage** storages_in_room = woody->storages[woody->room];
-        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-            current_storage = storages_in_room[i];
-            if (current_storage) {
-                if (woody->x == current_storage->collision_x) {
-                    if (!current_storage->opened) {
-                        current_storage->opened = true;
-                        woody->state = STATE_STORAGE_FOUND;
+        if (current_storage) {
+            if (!current_storage->opened) {
+                current_storage->opened = true;
+                woody->state = STATE_STORAGE_FOUND;
 
-                        switch (current_storage->side) {
-                            case SIDE_LEFT_HIGH:
-                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE_HIGH3);
+                switch (current_storage->side) {
+                    case SIDE_LEFT_HIGH:
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE_HIGH3);
 
-                                break;
-                            case SIDE_LEFT_MID:
-                                break;
-                            case SIDE_LEFT_LOW:
-                                break;
-                            case SIDE_UP_HIGH:
-                                break;
-                            case SIDE_UP_MID:
-                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE0);
+                        break;
+                    case SIDE_LEFT_MID:
+                    case SIDE_LEFT_LOW:
+                    case SIDE_UP_HIGH:
+                        break;
+                    case SIDE_UP_MID:
+                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_TAKE0);
 
-                                break;
-                            case SIDE_UP_LOW:
-                                break;
-                            case SIDE_RIGHT_HIGH:
-                                break;
-                            case SIDE_RIGHT_MID:
-                                break;
-                            case SIDE_RIGHT_LOW:
-                                break;
-                        }
-                    } else {
-                        woody->state = STATE_STORAGE_NOT_FOUND;
-                        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_LOSE);
-                    }
-
-                    break;
+                        break;
+                    case SIDE_UP_LOW:
+                    case SIDE_RIGHT_HIGH:
+                    case SIDE_RIGHT_MID:
+                    case SIDE_RIGHT_LOW:
+                        break;
                 }
             } else {
-                break;
+                woody->state = STATE_STORAGE_NOT_FOUND;
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_LOSE);
             }
         }
     }
@@ -1183,87 +1179,66 @@ static void woody_update_storage_check(Woody* woody) {
 
 static void woody_update_storage_found(Woody* woody) {
     if (IS_LAST_ANIMATION_FRAME) {
-        Storage* current_storage = NULL;
+        Storage* current_storage = woody_find_storage_at_x(woody);
 
-        Storage** storages_in_room = woody->storages[woody->room];
-        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-            current_storage = storages_in_room[i];
-            if (current_storage) {
-                if (woody->x == current_storage->collision_x) {
-                    int first_item_index = woody->item_count;
-                    woody->inventory_animation_first_index = first_item_index;
-                    woody->inventory_animation_last_index = first_item_index;
-                    for (int i = 0; i < MAX_ITEMS_IN_STORAGE; i++) {
-                        Item current_item = current_storage->items[i];
-                        if (current_item != ITEM_NONE) {
-                            woody->inventory[first_item_index + i] = current_item;
-                            woody->item_count++;
-                            woody->inventory_animation_last_index++;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    woody->inventory_animation_items_show = true;
-                    woody->inventory_animation_play = true;
-                    woody->inventory_animation_frame = 0;
-                    woody->inventory_animation_frame_time = 0;
-
-                    woody->state = STATE_STORAGE_END;
-
-                    switch (current_storage->side) {
-                        case SIDE_LEFT_HIGH:
-                        case SIDE_LEFT_MID:
-                        case SIDE_LEFT_LOW:
-                            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
-
-                            break;
-                        case SIDE_UP_HIGH:
-                        case SIDE_UP_MID:
-                        case SIDE_UP_LOW:
-                            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS0);
-
-                            break;
-                        case SIDE_RIGHT_HIGH:
-                        case SIDE_RIGHT_MID:
-                        case SIDE_RIGHT_LOW:
-                            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
-
-                            break;
-                    }
-
-                    current_storage->sprite_show = false;
-
+        if (current_storage) {
+            int first_item_index = woody->item_count;
+            woody->inventory_animation_first_index = first_item_index;
+            woody->inventory_animation_last_index = first_item_index;
+            for (int i = 0; i < MAX_ITEMS_IN_STORAGE; i++) {
+                Item current_item = current_storage->items[i];
+                if (current_item != ITEM_NONE) {
+                    woody->inventory[first_item_index + i] = current_item;
+                    woody->item_count++;
+                    woody->inventory_animation_last_index++;
+                } else {
+                    break;
                 }
-
-                break;
-            } else {
-                break;
             }
+
+            woody->inventory_animation_items_show = true;
+            woody->inventory_animation_play = true;
+            woody->inventory_animation_frame = 0;
+            woody->inventory_animation_frame_time = 0;
+
+            woody->state = STATE_STORAGE_END;
+
+            switch (current_storage->side) {
+                case SIDE_LEFT_HIGH:
+                case SIDE_LEFT_MID:
+                case SIDE_LEFT_LOW:
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS3);
+
+                    break;
+                case SIDE_UP_HIGH:
+                case SIDE_UP_MID:
+                case SIDE_UP_LOW:
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS0);
+
+                    break;
+                case SIDE_RIGHT_HIGH:
+                case SIDE_RIGHT_MID:
+                case SIDE_RIGHT_LOW:
+                    woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS1);
+
+                    break;
+            }
+
+            current_storage->sprite_show = false;
         }
     }
 }
 
 static void woody_update_storage_not_found(Woody* woody) {
     if (IS_LAST_ANIMATION_FRAME) {
-        woody->state = STATE_STORAGE_END;
+        Storage* current_storage = woody_find_storage_at_x(woody);
 
-        woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+        if (current_storage) {
+            current_storage->sprite_show = false;
 
-        Storage* current_storage = NULL;
+            woody->state = STATE_STORAGE_END;
 
-        Storage** storages_in_room = woody->storages[woody->room];
-        for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-            current_storage = storages_in_room[i];
-            if (current_storage) {
-                if (woody->x == current_storage->collision_x) {
-                    current_storage->sprite_show = false;
-                }
-
-                break;
-            } else {
-                break;
-            }
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
         }
     }
 }
@@ -1336,7 +1311,7 @@ static void woody_update_in_h_door(Woody* woody) {
 
 static void woody_update_in_v_door(Woody* woody) {
     // Camera Door Offset
-    vDoor* dest_door = (vDoor*)woody->dest_door;
+    vDoor* dest_door = (vDoor*) woody->dest_door;
 
     if (woody->dest_door_animation_frame >= 10) {
         woody->camera_door_offset_x = lerp(woody->camera_door_offset_x, dest_door->collision_x - woody->x, 0.92f);
@@ -1405,24 +1380,18 @@ static void woody_update_making_trick(Woody* woody) {
 
         switch (woody->auto_move_goal_type) {
             case GOAL_LOOK_OBJECT:
-                woody_inventory_delete_item(woody, woody->selected_item);
+                LookObject* current_look_object = woody_find_look_object_at_x(woody);
 
-                // Ищем текущий LookObject
-                for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
-                    LookObject* current_look_object = woody->look_objects[woody->room][i];
-                    if (current_look_object) {
-                        if (current_look_object->collision_x == woody->x) {
-                            current_look_object->tricked = true;
+                if (current_look_object) {
+                    woody_inventory_delete_item(woody, woody->selected_item);
 
-                            if (current_look_object->on_trick) {
-                                current_look_object->on_trick();
-                            }
+                    current_look_object->tricked = true;
 
-                            break;
-                        }
+                    if (current_look_object->on_trick) {
+                        current_look_object->on_trick();
                     }
                 }
-
+                
                 break;
             case GOAL_HIDEOUT:
                 // Пока что нет пакостей, связанных с укрытиями
@@ -1433,19 +1402,13 @@ static void woody_update_making_trick(Woody* woody) {
 
                 break;
             case GOAL_USE_OBJECT:
-                // Ищем текущий UseObject
-                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
-                    UseObject* current_use_object = woody->use_objects[woody->room][i];
-                    if (current_use_object) {
-                        if (current_use_object->collision_x == woody->x) {
-                            current_use_object->tricked = true;
+                UseObject* current_use_object = woody_find_use_object_at_x(woody);
+                
+                if (current_use_object) {
+                    current_use_object->tricked = true;
 
-                            if (current_use_object->on_trick) {
-                                current_use_object->on_trick();
-                            }
-
-                            break;
-                        }
+                    if (current_use_object->on_trick) {
+                        current_use_object->on_trick();
                     }
                 }
 
@@ -1914,29 +1877,20 @@ void woody_check_caught(Woody* woody, Neighbour* neighbour) {
         neighbour->game_over_state = STATE_GAME_OVER_START;
         neighbour->woody_caught = true;
 
+        woody->caught = true;
+
         woody->look_objects[ROOM_LIR][1]->sprite_show = true; // на всякий случай
         if (!woody->look_objects[ROOM_KIT][1]->alt_action) {
             woody->look_objects[ROOM_KIT][1]->sprite_show = true; // тоже на всякий случай
         }
 
-        woody->caught = true;
-
         woody->look_object_phrase_show = false;
 
         if (woody->state == STATE_STORAGE_CHECK || woody->state == STATE_STORAGE_FOUND || woody->state == STATE_STORAGE_NOT_FOUND) {
-            Storage* current_storage = NULL;
+            Storage* current_storage = woody_find_storage_at_x(woody);
 
-            Storage** storages_in_room = woody->storages[woody->room];
-            for (int i = 0; i < MAX_STORAGES_IN_ROOM; i++) {
-                current_storage = storages_in_room[i];
-                if (current_storage) {
-                    if (woody->x == current_storage->collision_x) {
-                        current_storage->sprite_show = false;
-                    }
-                    break;
-                } else {
-                    break;
-                }
+            if (current_storage) {
+                current_storage->sprite_show = false;
             }
         }
 
