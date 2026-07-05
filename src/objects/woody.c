@@ -1512,6 +1512,31 @@ static void woody_update_level_start(Woody* woody) {
 }
 
 static void woody_update_level_ending(Woody* woody) {
+    if (woody->in_door) {
+        woody->in_door = false;
+        woody->camera_door_offset_x = 0;
+        woody->camera_door_offset_y = 0;
+
+        // Делаем сразу все двери USING_BY = USING_NONE, потом сделаю как-нибудь лучше
+        for (int room = 0; room < 9; room++) {
+            for (int i = 0; i < 2; i++) {
+                hDoor* current_door = woody->h_doors[room][i];
+                if (current_door) {
+                    current_door->using_by = USING_NONE;
+                }
+            }
+        }
+
+        for (int room = 0; room < 9; room++) {
+            for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
+                vDoor* current_door = woody->v_doors[room][i];
+                if (current_door) {
+                    current_door->using_by = USING_NONE;
+                }
+            }
+        }
+    }
+
     if (woody->is_on_floor) {
         if (!*woody->level_end_active) {
             if (woody->tv_rating >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
@@ -1543,8 +1568,10 @@ static void woody_update_level_ending(Woody* woody) {
                 woody->is_on_floor = true;
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
             }
-        } else if (IS_LAST_ANIMATION_FRAME) {
-            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+        } else {
+            if (IS_LAST_ANIMATION_FRAME) {
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+            }
         }
     }
 }
