@@ -25,6 +25,8 @@
 #include "../animations/woody/generic2.h"
 #include "../animations/woody/generic3.h"
 
+#define WOODY_MAX_ITEMS_IN_INVENTORY 16
+
 typedef enum {
     STATE_H_MOVE,
     STATE_AUTO_H_MOVE,
@@ -169,7 +171,7 @@ typedef struct Woody {
     int total_tricks;
 
     // Инвентарь
-    Item inventory[16];
+    Item inventory[WOODY_MAX_ITEMS_IN_INVENTORY];
     int selected_item;
     int item_count;
     bool inventory_using;

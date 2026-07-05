@@ -17,7 +17,6 @@
 #define COLOR_GRAY_BUBBLE G2D_RGB(158, 158, 158)
 
 #define MAX_HINTS 3
-#define MAX_ITEMS_IN_INVENTORY 16
 
 #define WOODY_INTERACT_DISTANCE 36
 #define CAMERA_STICK_DEADZONE 65
@@ -183,7 +182,7 @@ Woody* woody_create(
     woody->total_tricks = total_tricks;
 
     // Инвентарь
-    for (int i = 0; i < MAX_ITEMS_IN_INVENTORY; i++) {
+    for (int i = 0; i < WOODY_MAX_ITEMS_IN_INVENTORY; i++) {
         woody->inventory[i] = ITEM_NONE;
     }
 
@@ -309,6 +308,27 @@ void woody_dest_door_animation_set(Woody* woody, int pack, int animation) {
     woody->dest_door_animation_frame_time = 0;
 
     woody_dest_door_animation_update_frame(woody);
+}
+
+static void woody_inventory_delete_item(Woody* woody, const int item_to_delete) {
+    woody->inventory[item_to_delete] = ITEM_NONE;
+    if (item_to_delete != WOODY_MAX_ITEMS_IN_INVENTORY - 1) {
+        woody->inventory[item_to_delete] = woody->inventory[item_to_delete + 1];
+    }
+    for (int item = item_to_delete + 1; item < (WOODY_MAX_ITEMS_IN_INVENTORY - 1); item++) {
+        if (woody->inventory[item] == ITEM_NONE) break;
+        woody->inventory[item] = woody->inventory[item+1];
+    }
+    woody->inventory[WOODY_MAX_ITEMS_IN_INVENTORY - 1] = ITEM_NONE;
+    woody->item_count--;
+                    
+    if (woody->selected_item > woody->item_count - 1) {
+        woody->selected_item = woody->item_count - 1;
+    }
+
+    if (woody->selected_item < 0) {
+        woody->selected_item = 0;
+    }
 }
 
 void woody_start_using_h_door(Woody* woody, hDoor* new_enter_door) {
@@ -1383,28 +1403,10 @@ static void woody_update_making_trick(Woody* woody) {
     if (woody->trick_making_progress == woody->trick_making_length) {
         woody->state = STATE_SMILE;
 
-        // Удаляем предмет из инвентаря
-        woody->inventory[woody->selected_item] = ITEM_NONE;
-        if (woody->selected_item != 15) {
-            woody->inventory[woody->selected_item] = woody->inventory[woody->selected_item+1];
-        }
-        for (int item = woody->selected_item+1; item < (MAX_ITEMS_IN_INVENTORY - 1); item++) {
-            if (woody->inventory[item] == ITEM_NONE) break;
-            woody->inventory[item] = woody->inventory[item+1];
-        }
-        woody->inventory[15] = ITEM_NONE;
-        woody->item_count--;
-                        
-        if (woody->selected_item > woody->item_count - 1) {
-            woody->selected_item = woody->item_count - 1;
-        }
-
-        if (woody->selected_item < 0) {
-            woody->selected_item = 0;
-        }
-
         switch (woody->auto_move_goal_type) {
             case GOAL_LOOK_OBJECT:
+                woody_inventory_delete_item(woody, woody->selected_item);
+
                 // Ищем текущий LookObject
                 for (int i = 0; i < MAX_LOOK_OBJECTS_IN_ROOM; i++) {
                     LookObject* current_look_object = woody->look_objects[woody->room][i];
