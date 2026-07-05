@@ -147,9 +147,9 @@ typedef struct Woody {
     bool* neighbour_active;
 
     hDoor* (*h_doors)[2];
-    vDoor* (*v_doors)[3];
+    vDoor* (*v_doors)[MAX_V_DOORS_IN_ROOM];
 
-    LookObject* (*look_objects)[8];
+    LookObject* (*look_objects)[MAX_LOOK_OBJECTS_IN_ROOM];
 
     char* look_object_phrase_text;
     int look_object_phrase_y;
@@ -157,8 +157,8 @@ typedef struct Woody {
     bool look_object_phrase_show;
 
     Hideout* (*hideouts);
-    Storage* (*storages)[8];
-    UseObject* (*use_objects)[2];
+    Storage* (*storages)[MAX_STORAGES_IN_ROOM];
+    UseObject* (*use_objects)[MAX_USE_OBJECTS_IN_ROOM];
 
     RoomID room;
     RoomCollision* room_collisions;
@@ -233,11 +233,11 @@ Woody* woody_create(
     int start_x,
     int start_y,
     hDoor* (*h_doors)[2],
-    vDoor* (*v_doors)[3],
-    LookObject* (*look_objects)[8],
+    vDoor* (*v_doors)[MAX_V_DOORS_IN_ROOM],
+    LookObject* (*look_objects)[MAX_LOOK_OBJECTS_IN_ROOM],
     Hideout* (*hideouts),
-    Storage* (*storages)[8],
-    UseObject* (*use_objects)[2],
+    Storage* (*storages)[MAX_STORAGES_IN_ROOM],
+    UseObject* (*use_objects)[MAX_USE_OBJECTS_IN_ROOM],
     int camera_limit_x,
     int camera_limit_y,
     RoomID room,

@@ -68,7 +68,7 @@ static void draw(void) {
 
     intraFontSetStyle(Font_BLUEHIGB_10, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_10, 0);
-    intraFontPrint(Font_BLUEHIGB_10, 4, 262 + intraFontTextHeight(Font_BLUEHIGB_10), "Version 0.2.0 INDEV");
+    intraFontPrint(Font_BLUEHIGB_10, 4, 262 + intraFontTextHeight(Font_BLUEHIGB_10), "Version 0.2.0");
 
     if (is_jwd) {
         g2d_DrawImage(jwd, 168, 80, WHITE, 0, 255, G2D_UP_LEFT);

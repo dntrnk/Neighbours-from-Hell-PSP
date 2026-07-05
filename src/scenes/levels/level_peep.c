@@ -318,8 +318,7 @@ static void init(void) {
 
         hDoor* new_door = malloc(sizeof(hDoor));
 
-        if (!new_door)
-            continue;
+        if (!new_door) continue;
 
         *new_door = (hDoor) {
             .spritelist = current_spritelist,
@@ -367,8 +366,7 @@ static void init(void) {
 
         vDoor* new_door = malloc(sizeof(vDoor));
 
-        if (!new_door)
-            continue;
+        if (!new_door) continue;
 
         *new_door = (vDoor) {
             .spritelist = SpriteList_DOORBACK,
@@ -647,8 +645,7 @@ static void init(void) {
 
         Hideout* new_hideout = malloc(sizeof(Hideout));
 
-        if (!new_hideout)
-            continue;
+        if (!new_hideout) continue;
 
         *new_hideout = (Hideout) {
             .type = HIDEOUT_WARDROBE, // TODO: ДОБАВИТЬ ПАРС ЭТОГО ЗНАЧЕНИЯ

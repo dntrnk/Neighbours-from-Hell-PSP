@@ -122,22 +122,10 @@ void scene_draw(void) {
 inline void scene_handle_requests(void) {
     if (scene_is_requesting) {
         switch (scene_request) {
-            case SCENE_PUSH:
-                scene_push_process();
-
-                break;
-            case SCENE_POP:
-                scene_pop_process();
-
-                break;
-            case SCENE_CHANGE:
-                scene_change_process();
-
-                break;
-            case SCENE_RESTART:
-                scene_restart_process();
-
-                break;
+            case SCENE_PUSH: scene_push_process(); break;
+            case SCENE_POP: scene_pop_process(); break;
+            case SCENE_CHANGE: scene_change_process(); break;
+            case SCENE_RESTART: scene_restart_process(); break;
         }
         scene_is_requesting = false;
     }

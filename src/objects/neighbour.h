@@ -88,10 +88,10 @@ typedef struct Neighbour {
     bool in_door;
 
     hDoor* (*h_doors)[2];
-    vDoor* (*v_doors)[3];
+    vDoor* (*v_doors)[MAX_V_DOORS_IN_ROOM];
 
-    LookObject* (*look_objects)[8];
-    UseObject* (*use_objects)[2];
+    LookObject* (*look_objects)[MAX_LOOK_OBJECTS_IN_ROOM];
+    UseObject* (*use_objects)[MAX_USE_OBJECTS_IN_ROOM];
 
     RoomID room;
 
@@ -146,9 +146,9 @@ Neighbour* neighbour_create(
     RoomID start_room,
     int start_bubble,
     hDoor* (*h_doors)[2],
-    vDoor* (*v_doors)[3],
-    LookObject* (*look_objects)[8],
-    UseObject* (*use_objects)[2],
+    vDoor* (*v_doors)[MAX_V_DOORS_IN_ROOM],
+    LookObject* (*look_objects)[MAX_LOOK_OBJECTS_IN_ROOM],
+    UseObject* (*use_objects)[MAX_USE_OBJECTS_IN_ROOM],
     Woody* woody,
     bool* neighbour_active,
     bool* level_end_active
