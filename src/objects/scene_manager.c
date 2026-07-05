@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stdarg.h>
 
 #define MAX_SCENE_STACK 8
@@ -35,7 +34,7 @@ extern intraFont* Font_BLUEHIGB_18;
 int get_freeRam(void);
 
 // костыль который надо будет убрать (мне прост как-то надо в меню паузы узнать, какой уровень запущен)
-int is_this_scene(const Scene* this_scene) {
+bool is_this_scene(const Scene* this_scene) {
     return (scene_stack[0] == this_scene);
 }
 

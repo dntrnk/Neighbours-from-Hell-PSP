@@ -1,6 +1,8 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
+#include <stdbool.h>
+
 typedef struct {
     void (*init)(void);
     void (*update)(void);
@@ -9,7 +11,7 @@ typedef struct {
 } Scene;
 
 // костыль который надо будет убрать (мне прост как-то надо в меню паузы узнать, какой уровень запущен)
-int is_this_scene(const Scene* this_scene);
+bool is_this_scene(const Scene* this_scene);
 
 void scene_push(Scene* new_scene);
 void scene_pop(void);
