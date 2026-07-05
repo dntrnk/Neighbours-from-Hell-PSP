@@ -81,13 +81,13 @@ static int room_count;
 static RoomCollision room_collisions[9];
 
 static hDoor* h_doors[9][2];
-static vDoor* v_doors[9][3];
+static vDoor* v_doors[9][MAX_V_DOORS_IN_ROOM];
 
 static unsigned short new_hint_id;
 
-static LookObject* look_objects[9][8];
+static LookObject* look_objects[9][MAX_LOOK_OBJECTS_IN_ROOM];
 static Hideout* hideouts[9];
-static Storage* storages[9][8];
+static Storage* storages[9][MAX_STORAGES_IN_ROOM];
 
 static LevelEnd* level_end;
 static bool level_end_active;
@@ -203,8 +203,7 @@ static void init(void) {
 
         hDoor* new_door = malloc(sizeof(hDoor));
 
-        if (!new_door)
-            continue;
+        if (!new_door) continue;
 
         *new_door = (hDoor) {
             .spritelist = current_spritelist,
@@ -252,8 +251,7 @@ static void init(void) {
 
         vDoor* new_door = malloc(sizeof(vDoor));
 
-        if (!new_door)
-            continue;
+        if (!new_door) continue;
 
         *new_door = (vDoor) {
             .spritelist = SpriteList_DOORBACK,
