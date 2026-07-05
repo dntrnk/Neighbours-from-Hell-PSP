@@ -269,7 +269,7 @@ const Animation neighbour_gameover_animations[] = {
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
-            SOUND_NA_BEATS3
+            SOUND_NA_BEATS3,
             SOUND_NONE,
             SOUND_NONE,
             SOUND_NONE,
