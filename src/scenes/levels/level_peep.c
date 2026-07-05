@@ -18,6 +18,7 @@
 #include "../../types/look_object_types.h"
 #include "../../types/hideout_types.h"
 #include "../../types/storage_types.h"
+#include "../../types/use_object_types.h"
 
 #include "../../objects/woody.h"
 #include "../../objects/neighbour.h"
@@ -137,6 +138,13 @@ static g2dImage* Sprite_SOFA_MS;
 static LookObject* look_objects[9][MAX_LOOK_OBJECTS_IN_ROOM];
 static Hideout* hideouts[9];
 static Storage* storages[9][MAX_STORAGES_IN_ROOM];
+static UseObject* use_objects[9][MAX_USE_OBJECTS_IN_ROOM];
+
+g2dImage* SpriteList_TV;
+
+static int tv_animation_frame;
+static int tv_animation_length;
+static int tv_animation_frame_time;
 
 static LevelEnd* level_end;
 static bool level_end_active;
@@ -190,6 +198,23 @@ static void binoculars_on_untrick(void) {
     look_objects[ROOM_KIT][1]->sprite_show = false;
     look_objects[ROOM_KIT][1]->collision_x = 2048;
     look_objects[ROOM_KIT][1]->alt_action = true;
+}
+
+static void tv_on_trick(void) {
+    use_objects[ROOM_LIR][0]->sprite_src_x = 0;
+    use_objects[ROOM_LIR][0]->sprite_src_y = 22;
+    use_objects[ROOM_LIR][0]->collision_x = -128;
+    tv_animation_frame = 0;
+    tv_animation_length = 2;
+}
+
+static void tv_on_untrick(void) {
+    use_objects[ROOM_LIR][0]->sprite_src_x = 0;
+    use_objects[ROOM_LIR][0]->sprite_src_y = 0;
+    use_objects[ROOM_LIR][0]->collision_x = 69;
+    use_objects[ROOM_LIR][0]->first_time = false;
+    tv_animation_frame = 0;
+    tv_animation_length = 8;
 }
 
 static inline int clamp(int x, int min, int max) {
@@ -673,6 +698,47 @@ static void init(void) {
         storages[ROOM_KIT][0] = new_storage3;
     }
 
+    // UseObjects
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            use_objects[room][i] = NULL;
+        }
+    }
+
+    SpriteList_TV = g2d_LoadImage("assets_thq/sprites/lir/tv/tv.png", G2D_RGBA8888);
+
+    tv_animation_frame = 0;
+    tv_animation_length = 8;
+    tv_animation_frame_time = 0;
+
+    UseObject* new_use_object1 = malloc(sizeof(UseObject));
+    if (new_use_object1) {
+        *new_use_object1 = (UseObject) {
+            .spritelist = SpriteList_TV,
+            .sprite_x = 99,
+            .sprite_y = 119,
+            .sprite_src_x = 0,
+            .sprite_src_y = 0,
+            .sprite_w = 14,
+            .sprite_h = 22,
+            .sprite_show = true,
+            .collision_x = 49,
+            .collision_y = 111,
+            .hint_text = "Использовать телевизионную антенну",
+            .use_hint_text = "телевизионную антенну",
+            .hint_id = get_unique_hint_id(),
+            .tricked = false,
+            .first_time = true,
+            .trick_making_length = 54,
+            .trick_tv_rating = 20,
+            .on_making_trick = NULL,
+            .on_stop_making_trick = NULL,
+            .on_trick = tv_on_trick,
+            .on_untrick = tv_on_untrick
+        };
+        use_objects[ROOM_LIR][0] = new_use_object1;
+    }
+
     // LevelEnd
     level_end = level_end_create();
 
@@ -711,6 +777,7 @@ static void init(void) {
         look_objects, // look_objects
         hideouts, // hideouts
         storages, // storages
+        use_objects, // use_objects
 
         json_get_item_number(parsed_json, "camera_limit_x"), json_get_item_number(parsed_json, "camera_limit_y"), // camera_limit_x, camera_limit_y
 
@@ -914,6 +981,17 @@ static void update(void) {
         camera_y = clamp(camera_y + intro->camera_extra_y, 0, woody->camera_limit_y);
     }
 
+    // TV
+    tv_animation_frame_time++;
+    if (tv_animation_frame_time == 5) {
+        tv_animation_frame++;
+        if (tv_animation_frame == tv_animation_length) {
+            tv_animation_frame = 0;
+        }
+        use_objects[ROOM_LIR][0]->sprite_src_x = tv_animation_frame * 14;
+        tv_animation_frame_time = 0;
+    }
+
     if (level_end_active) {
         level_end_update(level_end);
     }
@@ -1063,6 +1141,27 @@ static void draw(void) {
         }
     }
 
+    // use_objects
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            UseObject* current_use_object = use_objects[room][i];
+
+            if (!current_use_object) break; // Хранилища идут подряд без пропусков
+            
+            if (!current_use_object->spritelist) continue;
+
+            if (!current_use_object->sprite_show) continue;
+
+            if (current_use_object->sprite_x + current_use_object->sprite_w <= camera_x || 
+                current_use_object->sprite_x >= camera_right ||
+                current_use_object->sprite_y + current_use_object->sprite_h <= camera_y ||
+                current_use_object->sprite_y >= camera_bottom)
+                continue;
+
+            g2d_DrawImageExt(current_use_object->spritelist, current_use_object->sprite_x - camera_x, current_use_object->sprite_y - camera_y, current_use_object->sprite_w, current_use_object->sprite_h, WHITE, current_use_object->sprite_src_x, current_use_object->sprite_src_y, current_use_object->sprite_w, current_use_object->sprite_h, 0, 255, G2D_UP_LEFT);
+        }
+    }
+
     if (!woody->in_door && neighbour->game_over_state != STATE_LOSE_ANIMATION) {
         woody_draw(woody);
     }
@@ -1152,6 +1251,18 @@ static void unload(void) {
             }
         }
     }
+
+    // use_objects unload
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            if (use_objects[room][i]) {
+                free(use_objects[room][i]);
+                use_objects[room][i] = NULL;
+            }
+        }
+    }
+
+    g2d_FreeImage(SpriteList_TV);
 
     g2d_FreeImage(woody->spritelists[4]);
     g2d_FreeImage(woody->spritelists[5]);

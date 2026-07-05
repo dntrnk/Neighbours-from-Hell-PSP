@@ -61,6 +61,7 @@ Woody* woody_create(
     LookObject* (*look_objects)[8],
     Hideout* (*hideouts),
     Storage* (*storages)[8],
+    UseObject* (*use_objects)[2],
     int camera_limit_x,
     int camera_limit_y,
     RoomID room,
@@ -165,8 +166,8 @@ Woody* woody_create(
     woody->look_object_phrase_show = false;
 
     woody->hideouts = hideouts;
-
     woody->storages = storages;
+    woody->use_objects = use_objects;
 
     woody->room = room;
     woody->room_collisions = room_collisions;
@@ -427,6 +428,27 @@ static void woody_auto_move_check(Woody* woody) {
             }
         }
     }
+
+    // Авто-движение к UseObjects
+    if (controls_pressed(PSP_CTRL_CROSS)) {
+        UseObject** use_objects_in_room = woody->use_objects[woody->room];
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            UseObject* current_use_object = use_objects_in_room[i];
+            if (current_use_object) {
+                if ((((abs(current_use_object->collision_x - woody->x) < WOODY_INTERACT_DISTANCE && woody->y == woody->floor_y) || (current_use_object->collision_x == woody->x))) && (woody->state != STATE_MAKING_TRICK)) {
+                    woody->state = STATE_AUTO_H_MOVE;
+                    woody->auto_move_goal_type = GOAL_USE_OBJECT;
+                    woody->auto_move_goal_x = current_use_object->collision_x;
+                    woody->auto_move_goal_y = current_use_object->collision_y;
+                    woody->look_object_phrase_show = false;
+
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
 }
 
 static void woody_auto_move_complete(Woody* woody) {
@@ -496,12 +518,6 @@ static void woody_auto_move_complete(Woody* woody) {
             woody->auto_move_goal_type = GOAL_NONE;
 
             break;
-        case GOAL_FLOOR:
-            woody->state = STATE_H_MOVE;
-
-            woody->auto_move_goal_type = GOAL_NONE;
-
-            break;
         case GOAL_STORAGE:
             // Пока что нет пакостей, связанных с храналищами
             if (!woody->inventory_using) {
@@ -537,6 +553,45 @@ static void woody_auto_move_complete(Woody* woody) {
 
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
             }
+
+            break;
+        case GOAL_USE_OBJECT:
+            // Прикол UseObject том, что чтобы сделать на нём пакость, предмет никакой не нужен
+            if (!woody->inventory_using) {
+                // Ищем текущий UseObjects
+                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+                    UseObject* current_use_object = woody->use_objects[woody->room][i];
+                    if (current_use_object) {
+                        if (current_use_object->collision_x == woody->x) {
+                                woody->state = STATE_MAKING_TRICK;
+                                woody->trick_making_length = current_use_object->trick_making_length;
+                                woody->trick_making_progress = 0;
+
+                                if (current_use_object->on_making_trick) {
+                                    current_use_object->on_making_trick();
+                                }
+
+                                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_USE_MID);
+
+                            break;
+                        }
+                    }
+                }
+            } else {
+                woody->state = STATE_NONO;
+
+                woody->inventory_using = false;
+
+                woody->auto_move_goal_type = GOAL_NONE;
+
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC3, ANIMATION_WOODY_DECLINE);
+            }
+
+            break;
+        case GOAL_FLOOR:
+            woody->state = STATE_H_MOVE;
+
+            woody->auto_move_goal_type = GOAL_NONE;
 
             break;
         case GOAL_NONE:
@@ -646,6 +701,34 @@ static void woody_hints_update(Woody* woody) {
         }
     }
 
+    // Смотрим UseObjects
+    for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+        UseObject* current_use_object = woody->use_objects[woody->room][i];
+        if (current_use_object) {
+            if (abs(current_use_object->collision_x - woody->x) < WOODY_INTERACT_DISTANCE) {
+                woody->hints[2] = woody->hints[1];
+                woody->hints[1] = woody->hints[0];
+
+                Hint* current_hint = &woody->hints[0];
+                if (woody->inventory_using) {
+                    sprintf(current_hint->text, "Использовать %s на %s", item_use_names[woody->inventory[woody->selected_item]], current_use_object->use_hint_text);
+                } else {
+                    strcpy(current_hint->text, current_use_object->hint_text);
+                }
+
+                current_hint->button_type = CROSS;
+                current_hint->show = true;
+                current_hint->is_active_goal = false;
+
+                if (woody->auto_move_goal_type == GOAL_USE_OBJECT && woody->auto_move_goal_x == current_use_object->collision_x) {
+                    current_hint->is_active_goal = true;
+                }
+            }
+        } else {
+            break;
+        }
+    }
+
     // Сдвиг active_goal в начало подсказок
     for (int i = 0; i < MAX_HINTS; i++) {
         Hint* current_hint = &woody->hints[i];
@@ -743,11 +826,28 @@ static void woody_stop_making_trick(Woody* woody) {
                 // Пока что нет пакостей, связанных с укрытиями
 
                 break;
-            case GOAL_FLOOR:
-
-                break;
             case GOAL_STORAGE:
                 // Пока что нет пакостей, связанных с храналищами
+
+                break;
+            case GOAL_USE_OBJECT:
+                // Ищем текущий UseObject
+                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+                    UseObject* current_use_object = woody->use_objects[woody->room][i];
+                    if (current_use_object) {
+                        if (current_use_object->collision_x == woody->x) {
+
+                            if (current_use_object->on_stop_making_trick) {
+                                current_use_object->on_stop_making_trick();
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            case GOAL_FLOOR:
 
                 break;
             case GOAL_NONE:
@@ -1326,11 +1426,29 @@ static void woody_update_making_trick(Woody* woody) {
                 // Пока что нет пакостей, связанных с укрытиями
 
                 break;
-            case GOAL_FLOOR:
-
-                break;
             case GOAL_STORAGE:
                 // Пока что нет пакостей, связанных с храналищами
+
+                break;
+            case GOAL_USE_OBJECT:
+                // Ищем текущий UseObject
+                for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+                    UseObject* current_use_object = woody->use_objects[woody->room][i];
+                    if (current_use_object) {
+                        if (current_use_object->collision_x == woody->x) {
+                            current_use_object->tricked = true;
+
+                            if (current_use_object->on_trick) {
+                                current_use_object->on_trick();
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            case GOAL_FLOOR:
 
                 break;
             case GOAL_NONE:

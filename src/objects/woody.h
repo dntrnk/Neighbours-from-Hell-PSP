@@ -16,6 +16,7 @@
 #include "../types/look_object_types.h"
 #include "../types/hideout_types.h"
 #include "../types/storage_types.h"
+#include "../types/use_object_types.h"
 
 #include "../animations/woody/generic.h"
 #include "../animations/woody/doorleft.h"
@@ -55,6 +56,7 @@ typedef enum {
     GOAL_LOOK_OBJECT,
     GOAL_HIDEOUT,
     GOAL_STORAGE,
+    GOAL_USE_OBJECT,
     GOAL_FLOOR,
     GOAL_NONE
 } WoodyAutoMoveGoal;
@@ -153,8 +155,8 @@ typedef struct Woody {
     bool look_object_phrase_show;
 
     Hideout* (*hideouts);
-
     Storage* (*storages)[8];
+    UseObject* (*use_objects)[2];
 
     RoomID room;
     RoomCollision* room_collisions;
@@ -233,6 +235,7 @@ Woody* woody_create(
     LookObject* (*look_objects)[8],
     Hideout* (*hideouts),
     Storage* (*storages)[8],
+    UseObject* (*use_objects)[2],
     int camera_limit_x,
     int camera_limit_y,
     RoomID room,

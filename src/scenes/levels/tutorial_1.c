@@ -17,6 +17,7 @@
 #include "../../types/look_object_types.h"
 #include "../../types/hideout_types.h"
 #include "../../types/storage_types.h"
+#include "../../types/use_object_types.h"
 
 #include "../../objects/woody.h"
 #include "../../objects/neighbour.h"
@@ -88,6 +89,7 @@ static unsigned short new_hint_id;
 static LookObject* look_objects[9][MAX_LOOK_OBJECTS_IN_ROOM];
 static Hideout* hideouts[9];
 static Storage* storages[9][MAX_STORAGES_IN_ROOM];
+static UseObject* use_objects[9][MAX_USE_OBJECTS_IN_ROOM];
 
 static LevelEnd* level_end;
 static bool level_end_active;
@@ -292,6 +294,13 @@ static void init(void) {
         }
     }
 
+    // use_objects
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            use_objects[room][i] = NULL;
+        }
+    }
+
     // LevelEnd
     level_end = level_end_create();
 
@@ -324,6 +333,7 @@ static void init(void) {
         look_objects, // look_objects
         hideouts, // hideouts
         storages, // storages
+        use_objects, // use_objects
 
         json_get_item_number(parsed_json, "camera_limit_x"), json_get_item_number(parsed_json, "camera_limit_y"), // camera_limit_x, camera_limit_y
 
@@ -591,6 +601,25 @@ static void draw(void) {
         }
     }
 
+    // use_objects
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            UseObject* current_use_object = use_objects[room][i];
+
+            if (!current_use_object) break; // Важно, чтобы use_objects по порядку ставили
+            
+            if (!current_use_object->spritelist) continue;
+
+            if (current_use_object->sprite_x + current_use_object->sprite_w <= camera_x || 
+                current_use_object->sprite_x >= camera_right ||
+                current_use_object->sprite_y + current_use_object->sprite_h <= camera_y ||
+                current_use_object->sprite_y >= camera_bottom)
+                continue;
+
+            g2d_DrawImageExt(current_use_object->spritelist, current_use_object->sprite_x - camera_x, current_use_object->sprite_y - camera_y, current_use_object->sprite_w, current_use_object->sprite_h, WHITE, current_use_object->sprite_src_x, current_use_object->sprite_src_y, current_use_object->sprite_w, current_use_object->sprite_h, 0, 255, G2D_UP_LEFT);
+        }
+    }
+
     if (woody->in_door) {
         woody_door_draw(woody);
     }
@@ -674,6 +703,16 @@ static void unload(void) {
             if (storages[room][i]) {
                 free(storages[room][i]);
                 storages[room][i] = NULL;
+            }
+        }
+    }
+
+    // use_objects unload
+    for (int room = 0; room < room_count; room++) {
+        for (int i = 0; i < MAX_USE_OBJECTS_IN_ROOM; i++) {
+            if (use_objects[room][i]) {
+                free(use_objects[room][i]);
+                use_objects[room][i] = NULL;
             }
         }
     }
