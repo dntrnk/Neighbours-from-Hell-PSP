@@ -930,6 +930,10 @@ void neighbour_update(Neighbour* neighbour) {
 
                         *neighbour->woody->neighbour_active = false;
 
+                        NFHHouseMusicStop();
+
+                        NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+
                         neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
                     }
 
