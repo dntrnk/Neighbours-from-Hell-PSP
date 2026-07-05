@@ -6,6 +6,8 @@
 #include "../types/gfx_types.h"
 #include "../types/door_types.h"
 #include "../types/look_object_types.h"
+#include "../types/use_object_types.h"
+
 #include "../types/bubble_types.h"
 
 #include "../animations/neighbour/generic.h"
@@ -89,6 +91,7 @@ typedef struct Neighbour {
     vDoor* (*v_doors)[3];
 
     LookObject* (*look_objects)[8];
+    UseObject* (*use_objects)[2];
 
     RoomID room;
 
@@ -145,6 +148,7 @@ Neighbour* neighbour_create(
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
     LookObject* (*look_objects)[8],
+    UseObject* (*use_objects)[2],
     Woody* woody,
     bool* neighbour_active,
     bool* level_end_active

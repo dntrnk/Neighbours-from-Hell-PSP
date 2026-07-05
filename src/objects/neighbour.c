@@ -35,6 +35,7 @@ static inline int randi_range(int min, int max) {
 typedef enum {
     WALK_TO_X,
     WALK_TO_Y,
+    RUN_TO_X,
     BUBBLE_SET,
     POSITION_SET,
     START_USING_H_DOOR,
@@ -44,7 +45,11 @@ typedef enum {
     LOOK_OBJECT_CHECK_TO_TRICK,
     LOOK_OBJECT_MAKE_UNTRICKED,
     LOOK_OBJECT_TRICK_COUNT,
-    LOOK_OBJECT_CHECK_TO_ALT_ACTION
+    LOOK_OBJECT_CHECK_TO_ALT_ACTION,
+    USE_OBJECT_CHECK_TO_TRICK,
+    USE_OBJECT_CHECK_TO_FIRST_TIME,
+    USE_OBJECT_MAKE_UNTRICKED,
+    USE_OBJECT_TRICK_COUNT,
 } ActionType;
 
 typedef struct {
@@ -56,6 +61,11 @@ typedef struct {
     int y;
     int next_state;
 } WalkToYArgs;
+
+typedef struct {
+    int x;
+    int next_state;
+} RunToXArgs;
 
 typedef struct {
     int new_bubble_id;
@@ -113,6 +123,29 @@ typedef struct {
     int alt_state;
     int no_alt_state;
 } LookObjectCheckToAltActionArgs;
+
+typedef struct {
+    int room, id;
+    int trick_state;
+    int no_trick_state;
+} UseObjectCheckToTrickArgs;
+
+typedef struct {
+    int room, id;
+    int first_time_state;
+    int no_first_time_state;
+} UseObjectCheckToFirstTimeArgs;
+
+typedef struct {
+    int room, id;
+    int next_state;
+} UseObjectMakeUntrickedArgs;
+
+typedef struct {
+    int room, id;
+    int breakdown_state;
+    int no_breakdown_state;
+} UseObjectTrickCountArgs;
 
 typedef struct {
     ActionType action;
@@ -241,7 +274,27 @@ static const AnimationPlayTillTheEndArgs action_args_68 = {ANIMATION_PACK_NEIGHB
 
 // Закончить использовать дверь с кухни на гостиную
 static const PositionSetArgs action_args_69 = {148, -56, true, 70};
-static const EndUsingHDoorArgs action_args_70 = {ROOM_KIT, 0, 1};
+static const EndUsingHDoorArgs action_args_70 = {ROOM_KIT, 0, 71};
+
+// Проверить, есть ли пакость на телевизоре
+static const UseObjectCheckToTrickArgs action_args_71 = {ROOM_LIR, 0, 72, 1};
+
+// Пакость есть
+static const AnimationPlayTillTheEndArgs action_args_72 = {ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_DISCOVER3, 73};
+static const BubbleSetArgs action_args_73 = {BUBBLE_WUT, 74};
+static const RunToXArgs action_args_74 = {-128, 75};
+
+// Проверить, первый ли это раз
+static const UseObjectCheckToFirstTimeArgs action_args_75 = {ROOM_LIR, 0, 76, 79};
+
+// Первый раз
+static const UseObjectTrickCountArgs action_args_76 = {ROOM_LIR, 0, 78, 77};
+static const AnimationPlayTillTheEndArgs action_args_77 = {ANIMATION_PACK_NEIGHBOUR_SHOUT0, ANIMATION_NEIGHBOUR_SHOUT0, 79};
+static const AnimationPlayTillTheEndArgs action_args_78 = {ANIMATION_PACK_NEIGHBOUR_GENERIC2, ANIMATION_NEIGHBOUR_SHOUT2_EXTRA, 79};
+
+// Чинить телевизор
+static const AnimationPlayTillTheEndArgs action_args_79 = {ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_USE_MID, 80};
+static const UseObjectMakeUntrickedArgs action_args_80 = {ROOM_LIR, 0, 0};
 
 const Action actions[] = {
     // Подойти к креслу
@@ -365,7 +418,27 @@ const Action actions[] = {
 
     // Закончить использовать дверь с кухни на гостиную
     {POSITION_SET, &action_args_69, true},
-    {END_USING_H_DOOR, &action_args_70, true}
+    {END_USING_H_DOOR, &action_args_70, true},
+
+    // Проверить, есть ли пакость на телевизоре
+    {USE_OBJECT_CHECK_TO_TRICK, &action_args_71, true},
+
+    // Пакость есть
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_72, false},
+    {BUBBLE_SET, &action_args_73, true},
+    {RUN_TO_X, &action_args_74, false},
+
+    // Проверить, первый ли это раз
+    {USE_OBJECT_CHECK_TO_FIRST_TIME, &action_args_75, true},
+
+    // Первый раз
+    {USE_OBJECT_TRICK_COUNT, &action_args_76, true},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_77, false},
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_78, false},
+
+    // Чинить телевизор
+    {ANIMATION_PLAY_TILL_THE_END, &action_args_79, false},
+    {USE_OBJECT_MAKE_UNTRICKED, &action_args_80, true}
 };
 
 Neighbour* neighbour_create(
@@ -379,6 +452,7 @@ Neighbour* neighbour_create(
     hDoor* (*h_doors)[2],
     vDoor* (*v_doors)[3],
     LookObject* (*look_objects)[8],
+    UseObject* (*use_objects)[2],
     Woody* woody,
     bool* neighbour_active,
     bool* level_end_active
@@ -452,6 +526,7 @@ Neighbour* neighbour_create(
     neighbour->v_doors = v_doors;
 
     neighbour->look_objects = look_objects;
+    neighbour->use_objects = use_objects;
 
     neighbour->room = start_room;
 
@@ -659,6 +734,45 @@ void neighbour_update(Neighbour* neighbour) {
                     break;
                 }
 
+                case RUN_TO_X: {
+                    const RunToXArgs* args = (const RunToXArgs*) current_action.args;
+
+                    int goal_x = args->x;
+                    bool action_ended = false;
+
+                    if (goal_x > neighbour->x) { // unused
+                        // neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC???, ANIMATION_NEIGHBOUR_MR1);
+
+                        // neighbour->x += 8;
+
+                        // neighbour->origin_x = neighbour->x;
+
+                        // if (goal_x <= neighbour->x) {
+                        //     action_ended = true;
+                        // }
+                    } else if (goal_x < neighbour->x) {
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC3, ANIMATION_NEIGHBOUR_MR3);
+
+                        neighbour->x -= 8;
+
+                        neighbour->origin_x = neighbour->x;
+
+                        if (goal_x >= neighbour->x) {
+                            action_ended = true;
+                        }
+                    } else {
+                        action_ended = true;
+                    }
+
+                    if (action_ended) {
+                        neighbour->x = goal_x;
+                        neighbour->origin_x = neighbour->x;
+                        neighbour->action_state = args->next_state;
+                    }
+
+                    break;
+                }
+
                 case BUBBLE_SET: {
                     const BubbleSetArgs* args = (const BubbleSetArgs*) current_action.args;
                     
@@ -855,6 +969,85 @@ void neighbour_update(Neighbour* neighbour) {
                     const LookObject* current_look_object = neighbour->look_objects[args->room][args->id];
 
                     neighbour->action_state = (current_look_object->alt_action) ? args->alt_state : args->no_alt_state;
+
+                    break;
+                }
+
+                case USE_OBJECT_CHECK_TO_TRICK: {
+                    const UseObjectCheckToTrickArgs* args = (const UseObjectCheckToTrickArgs*) current_action.args;
+
+                    const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                    neighbour->action_state = (current_use_object->tricked) ? args->trick_state : args->no_trick_state;
+
+                    break;
+                }
+
+                case USE_OBJECT_CHECK_TO_FIRST_TIME: {
+                    const UseObjectCheckToFirstTimeArgs* args = (const UseObjectCheckToFirstTimeArgs*) current_action.args;
+
+                    const UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                    if (current_use_object->tricked) {
+                        neighbour->head_icon_animation_frame = 0;
+                        neighbour->head_icon_animation_play = true;
+                    }
+
+                    neighbour->action_state = (current_use_object->first_time) ? args->first_time_state : args->no_first_time_state;
+
+                    break;
+                }
+
+                case USE_OBJECT_MAKE_UNTRICKED: {
+                    const UseObjectMakeUntrickedArgs* args = (const UseObjectMakeUntrickedArgs*) current_action.args;
+
+                    UseObject* current_use_object = neighbour->use_objects[args->room][args->id];
+
+                    current_use_object->tricked = false;
+
+                    if (current_use_object->on_untrick) {
+                        neighbour->use_objects[args->room][args->id]->on_untrick();
+                    }
+
+                    neighbour->action_state = args->next_state;
+
+                    break;
+                }
+
+                case USE_OBJECT_TRICK_COUNT: {
+                    const UseObjectTrickCountArgs* args = (const UseObjectTrickCountArgs*) current_action.args;
+
+                    if (neighbour->angry == 0.0f) {
+                        woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
+
+                        neighbour->emotion = 2;
+                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                        neighbour->action_state = args->no_breakdown_state;
+                    } else {
+                        woody_tricks_counter_update(neighbour->woody, neighbour->use_objects[args->room][args->id]->trick_tv_rating);
+
+                        neighbour->emotion = 3;
+                        neighbour->head_icon_src_x = 47 * neighbour->emotion;
+
+                        neighbour_breakdown_counter_update(neighbour);
+                        neighbour->action_state = args->breakdown_state;
+                    }
+                    
+                    neighbour->angry = 100.0f;
+                    neighbour->angry_cooldown = 53;
+
+                    NFHHouseMusicPause();
+                    NFHSoundPlay(SOUND_JINGLE_JOKE);
+
+                    if (rand() % 2 == 0) {
+                        NFHSoundPlay(SOUND_BIG2);
+                    } else {
+                        NFHSoundPlay(SOUND_BIG3);
+                    }
+
+                    neighbour->jingle_joke_playing = true;
+                    neighbour->jingle_joke_timer = 120;
 
                     break;
                 }

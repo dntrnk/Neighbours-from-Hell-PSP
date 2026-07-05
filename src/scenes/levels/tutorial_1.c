@@ -369,6 +369,7 @@ static void init(void) {
         BUBBLE_SOFA, // start_bubble
         NULL, NULL, // h_doors, v_doors
         NULL, // look_objects
+        NULL, // use_objects
         woody, // woody
         NULL, // neighbour_active
         NULL // level_end_active

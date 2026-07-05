@@ -214,7 +214,7 @@ static void tv_on_trick(void) {
 static void tv_on_untrick(void) {
     use_objects[ROOM_LIR][0]->sprite_src_x = 0;
     use_objects[ROOM_LIR][0]->sprite_src_y = 0;
-    use_objects[ROOM_LIR][0]->collision_x = 69;
+    use_objects[ROOM_LIR][0]->collision_x = 49;
     use_objects[ROOM_LIR][0]->first_time = false;
     look_objects[ROOM_LIR][2]->collision_x = -128;
     look_objects[ROOM_LIR][2]->sprite_show = false;
@@ -889,6 +889,7 @@ static void init(void) {
         BUBBLE_SOFA, // start_bubble
         h_doors, v_doors, // h_doors, v_doors
         look_objects, // look_objects
+        use_objects, // use_objects
         woody, // woody,
         &neighbour_active, // neighbour_active
         &level_end_active // level_end_active
