@@ -845,6 +845,7 @@ static void woody_cancel_to_floor(Woody* woody) {
     woody->state = STATE_AUTO_V_MOVE;
     woody->auto_move_goal_type = GOAL_FLOOR;
     woody->auto_move_goal_y = woody->floor_y;
+    woody->is_on_floor = false;
 }
 
 static void woody_stop_making_trick(Woody* woody) {
@@ -1032,6 +1033,7 @@ static void woody_update_auto_h_move(Woody* woody) {
             woody_auto_move_complete(woody);
         } else {
             woody->state = STATE_AUTO_V_MOVE;
+            woody->is_on_floor = false;
         }
     }
 
@@ -1331,6 +1333,7 @@ static void woody_update_in_v_door(Woody* woody) {
             woody->camera_door_offset_x = 0;
             woody->camera_door_offset_y = 0;
 
+            woody->is_on_floor = false;
             woody->state = STATE_V_MOVE;
             woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
 
@@ -1530,7 +1533,19 @@ static void woody_update_level_ending(Woody* woody) {
             sprintf(woody->level_end->tv_rating_text, "%d", woody->tv_rating);
         }
     } else {
-        // потом
+        if (!(woody->current_animation_pack == ANIMATION_PACK_WOODY_GENERIC2 && woody->current_animation_index == ANIMATION_WOODY_WARDROBE_LEAVE)) {
+            woody->y += woody->speed_y;
+
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+
+            if (woody->y >= woody->floor_y) {
+                woody->y = woody->floor_y;
+                woody->is_on_floor = true;
+                woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MS2);
+            }
+        } else if (IS_LAST_ANIMATION_FRAME) {
+            woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_MG2);
+        }
     }
 }
 

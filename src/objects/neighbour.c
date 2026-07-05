@@ -920,6 +920,19 @@ void neighbour_update(Neighbour* neighbour) {
                         neighbour->look_objects[args->room][args->id]->on_untrick();
                     }
 
+                    if (neighbour->woody->tricks == neighbour->woody->total_tricks) {
+                        if (neighbour->woody->state == STATE_HIDEOUT) {
+                            woody_animation_set(neighbour->woody, ANIMATION_PACK_WOODY_GENERIC2, ANIMATION_WOODY_WARDROBE_LEAVE);
+                        }
+
+                        neighbour->woody->look_object_phrase_show = false;
+                        neighbour->woody->state = STATE_LEVEL_ENDING;
+
+                        *neighbour->woody->neighbour_active = false;
+
+                        neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
+                    }
+
                     neighbour->action_state = args->next_state;
 
                     break;

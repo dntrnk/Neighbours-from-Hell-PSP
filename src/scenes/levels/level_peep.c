@@ -904,6 +904,32 @@ static void init(void) {
 
     cJSON_Delete(parsed_json);
 
+    NFHSoundPreload(SOUND_DOOR_CLOSE1);
+    NFHSoundPreload(SOUND_DOOR_OPEN1);
+    NFHSoundPreload(SOUND_ILLEGAL);
+    NFHSoundPreload(SOUND_LEVELSTART);
+    NFHSoundPreload(SOUND_WOD_JUHU1);
+    NFHSoundPreload(SOUND_WOD_LAUGH1);
+    NFHSoundPreload(SOUND_WOD_STEP1A);
+    NFHSoundPreload(SOUND_WOD_STEP2A);
+    NFHSoundPreload(SOUND_OBJ_OPEN1);
+    NFHSoundPreload(SOUND_OBJ_CLOSE1);
+    NFHSoundPreload(SOUND_WOD_HA1);
+    NFHSoundPreload(SOUND_GIVE_TAKE1);
+    NFHSoundPreload(SOUND_GIVE_TAKE2);
+    NFHSoundPreload(SOUND_WOD_EH1);
+    NFHSoundPreload(SOUND_NA_STEP1);
+    NFHSoundPreload(SOUND_NA_STEP2);
+    NFHSoundPreload(SOUND_NA_SITSDOWN1);
+    NFHSoundPreload(SOUND_NA_REMOTE1);
+    NFHSoundPreload(SOUND_NA_GETSUP1);
+    NFHSoundPreload(SOUND_NA_PEEP1);
+    NFHSoundPreload(SOUND_NA_PEEP2);
+    NFHSoundPreload(SOUND_NA_PEEP3);
+    NFHSoundPreload(SOUND_NA_PEEP4);
+    NFHSoundPreload(SOUND_WOD_NONO);
+    NFHSoundPreload(SOUND_WOD_LAUGH2);
+
     NFHMusicPlay(MUSIC_JINGLE_LEVELSTART, 0);
 }
 

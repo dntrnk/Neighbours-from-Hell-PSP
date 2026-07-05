@@ -428,6 +428,15 @@ static void init(void) {
 
     cJSON_Delete(parsed_json);
 
+    NFHSoundPreload(SOUND_DOOR_CLOSE1);
+    NFHSoundPreload(SOUND_DOOR_OPEN1);
+    NFHSoundPreload(SOUND_ILLEGAL);
+    NFHSoundPreload(SOUND_LEVELSTART);
+    NFHSoundPreload(SOUND_WOD_JUHU1);
+    NFHSoundPreload(SOUND_WOD_LAUGH1);
+    NFHSoundPreload(SOUND_WOD_STEP1A);
+    NFHSoundPreload(SOUND_WOD_STEP2A);
+
     NFHMusicPlay(MUSIC_JINGLE_LEVELSTART, 0);
 }
 
