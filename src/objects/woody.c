@@ -896,7 +896,7 @@ static void woody_update_h_move(Woody* woody) {
         woody->velocity_x = -woody->speed_x;
         if (woody->x + woody->velocity_x < woody->room_collisions[woody->room].x1) {
             // Проверка на дверь
-            hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
+            hDoor* current_door = woody->h_doors[woody->room][LEFT_DOOR];
 
             if (current_door) {
                 if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {
@@ -913,7 +913,7 @@ static void woody_update_h_move(Woody* woody) {
         woody->velocity_x = woody->speed_x;
         if (woody->x + woody->velocity_x > woody->room_collisions[woody->room].x2) {
         // Проверка на дверь
-        hDoor* current_door = woody->h_doors[woody->room][1]; // Правая дверь всегда под индексом 1!
+        hDoor* current_door = woody->h_doors[woody->room][RIGHT_DOOR];
 
             if (current_door) {
                 if (woody->x + woody->velocity_x >= current_door->collision_x && current_door->using_by == USING_NONE) {
@@ -1489,7 +1489,7 @@ static void woody_update_level_start(Woody* woody) {
 
     if (woody->x + woody->velocity_x < woody->room_collisions[woody->room].x1) {
         // Проверка на дверь
-        hDoor* current_door = woody->h_doors[woody->room][0]; // Левая дверь всегда под индексом 0!
+        hDoor* current_door = woody->h_doors[woody->room][LEFT_DOOR];
 
         if (current_door) {
             if (woody->x + woody->velocity_x <= current_door->collision_x && current_door->using_by == USING_NONE) {

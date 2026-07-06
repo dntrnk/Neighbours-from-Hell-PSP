@@ -1028,7 +1028,7 @@ static void draw(void) {
 
     // Левые двери
     for (int room = 0; room < room_count; room++) {
-        hDoor* current_door = h_doors[room][0]; // Левая дверь всегда под индексом 0
+        hDoor* current_door = h_doors[room][LEFT_DOOR];
 
         if (!current_door) continue;
 
@@ -1045,7 +1045,7 @@ static void draw(void) {
 
     // Правые двери
     for (int room = 0; room < room_count; room++) {
-        hDoor* current_door = h_doors[room][1]; // Правая дверь всегда под индексом 1
+        hDoor* current_door = h_doors[room][RIGHT_DOOR];
 
         if (!current_door) continue;
 

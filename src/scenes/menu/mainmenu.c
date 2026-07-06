@@ -473,8 +473,8 @@ static void mainmenu_draw(void) {
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
     // Logo
-
     g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
+    
     intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 248, 137 + intraFontTextHeight(Font_ACMESA), "Начать игру");

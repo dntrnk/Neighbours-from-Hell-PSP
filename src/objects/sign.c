@@ -94,13 +94,13 @@ void sign_update(Sign* sign, bool woody_colliding) {
 
                 sign->room = ROOM_LIR;
 
-                hDoor* left_door_kit = sign->h_doors[ROOM_KIT][0];
+                hDoor* left_door_kit = sign->h_doors[ROOM_KIT][LEFT_DOOR];
                 left_door_kit->sprite_src_x = 423;
                 left_door_kit->sprite_src_y = 287;
                 left_door_kit->sprite_w = 17;
                 left_door_kit->sprite_h = 94;
 
-                hDoor* right_door_lir = sign->h_doors[ROOM_LIR][1];
+                hDoor* right_door_lir = sign->h_doors[ROOM_LIR][RIGHT_DOOR];
                 right_door_lir->sprite_src_x = 423;
                 right_door_lir->sprite_src_y = 101;
                 right_door_lir->sprite_w = 14;
@@ -154,13 +154,13 @@ void sign_update(Sign* sign, bool woody_colliding) {
 
                 sign->room = ROOM_FRO;
 
-                hDoor* left_door_fro = sign->h_doors[ROOM_FRO][0];
+                hDoor* left_door_fro = sign->h_doors[ROOM_FRO][LEFT_DOOR];
                 left_door_fro->sprite_src_x = 423;
                 left_door_fro->sprite_src_y = 287;
                 left_door_fro->sprite_w = 17;
                 left_door_fro->sprite_h = 94;
 
-                hDoor* right_door_anc = sign->h_doors[ROOM_ANC][1];
+                hDoor* right_door_anc = sign->h_doors[ROOM_ANC][RIGHT_DOOR];
                 right_door_anc->sprite_src_x = 423;
                 right_door_anc->sprite_src_y = 101;
                 right_door_anc->sprite_w = 14;

@@ -3,6 +3,9 @@
 
 #include "../types/room_types.h"
 
+#define LEFT_DOOR 0
+#define RIGHT_DOOR 1
+
 #define MAX_V_DOORS_IN_ROOM 3
 
 typedef enum {
