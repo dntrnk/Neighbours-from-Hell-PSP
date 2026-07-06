@@ -30,7 +30,7 @@ static void update(void) {
 }
 
 static void draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     intraFontSetStyle(Font_BLUEHIGB_18, 1, RED, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 1);
@@ -56,7 +56,7 @@ static void draw(void) {
         g2d_DrawRectFilled(0, 0, 480, 272, BLACK, (i - 616) * 15);
     }
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 Scene DisclaimerScene = {

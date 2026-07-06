@@ -147,7 +147,7 @@ void scene_error(const char* format, ...) {
             sceKernelExitGame();
         }
             
-        g2dClear(WHITE);
+        g2d_Clear(WHITE);
 
         intraFontSetStyle(Font_BLUEHIGB_18, 1, RED, 0, 0, INTRAFONT_ALIGN_LEFT);
         intraFontActivate(Font_BLUEHIGB_18, 0);
@@ -158,6 +158,6 @@ void scene_error(const char* format, ...) {
         intraFontActivate(Font_BLUEHIGB_18, 0);
         intraFontPrint(Font_BLUEHIGB_18, 32, 64 + intraFontTextHeight(Font_BLUEHIGB_18), error_screen_text);
 
-        g2dFlip(G2D_VSYNC);
+        g2d_Flip(G2D_VSYNC);
     }
 }

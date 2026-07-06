@@ -22,6 +22,8 @@
 
 #include "intraFont.h"
 
+#include "../graphics/g2d.h"
+
 static unsigned int __attribute__((aligned(16))) clut[16];
 
 unsigned long intraFontGetV(unsigned long n, unsigned char *p, unsigned long *b) {
@@ -740,6 +742,8 @@ void intraFontActivate(intraFont *font, bool linear) {
 }
 
 void intraFontSetStyle(intraFont *font, float size, unsigned int color, unsigned int shadowColor, float angle, unsigned int options) {
+  g2d_FlushBatch();
+
   if (!font) return;
   font->size = size;
   font->color = color;

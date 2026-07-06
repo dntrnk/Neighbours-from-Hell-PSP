@@ -195,7 +195,7 @@ static void update(void) {
 
 static void draw(void) {
     // да, копипаста (с мелкими изменениями да да)
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     // Правая половина (копирка newgame)
     g2d_DrawImageExt(BG_NEW_GAME, 240, 129, 240, 80, WHITE, 240, 129, 240, 80, 0, 255, G2D_UP_LEFT);
@@ -384,7 +384,7 @@ static void draw(void) {
     intraFontSetStyle(Font_ACMESA, 0.8f, menu_buttons_colors[3], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 149, 212 + OFFSET_Y + intraFontTextHeight(Font_ACMESA), "Вернуться в меню");
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 Scene PauseScene = {

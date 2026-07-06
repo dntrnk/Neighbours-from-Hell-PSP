@@ -61,13 +61,13 @@ extern int camera_bottom;
 
 // void scene_tutorial_1(void) {
 //     while (intro->song_timer < 79) {
-//         g2dClear(BLACK);
+//         g2d_Clear(BLACK);
 
 //         intro_update(intro);
 
 //         intro_draw(intro);
 
-//         g2dFlip(G2D_VSYNC);
+//         g2d_Flip(G2D_VSYNC);
 //     }
 // }
 
@@ -147,9 +147,9 @@ static void init(void) {
     intro_active = true;
 
     // == Progressbar == //
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
     intro_draw_loading(0);
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 
     // Дом
     houseBg1 = g2d_LoadImage(json_get_item_string(parsed_json, "houseBg1", 255), G2D_CLUT8); 
@@ -175,9 +175,9 @@ static void init(void) {
     }
 
     // == Progressbar == //
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
     intro_draw_loading(40);
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 
     // Горизонтальные двери
     for (int room = 0; room < room_count; room++) {
@@ -510,7 +510,7 @@ static void update(void) {
 }
 
 static void draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     // Отрисовка дома
     g2d_DrawImage(houseBg1, -camera_x, -camera_y, WHITE, 0, 255, G2D_UP_LEFT);
@@ -660,7 +660,7 @@ static void draw(void) {
     if (level_end_active)
         level_end_draw(level_end);
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 static void unload(void) {

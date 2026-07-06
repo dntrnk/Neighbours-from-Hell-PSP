@@ -126,7 +126,7 @@ static void new_game_menu_update(void) {
 }
 
 static void new_game_menu_draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     g2d_DrawImageExt(BG_NEW_GAME, 0, 129, 480, 80, WHITE, 0, 129, 480, 80, 0, 255, G2D_UP_LEFT);
 
@@ -314,7 +314,7 @@ static void new_game_menu_draw(void) {
         g2d_DrawImage(Button_peep_normal_pressed, 71, 84, WHITE, 0, 255, G2D_UP_LEFT);
     }
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 Scene NewGameMenuScene = {
@@ -335,7 +335,7 @@ static void authors_menu_update(void) {
 }
 
 static void authors_menu_draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     g2d_DrawImage(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
@@ -351,7 +351,7 @@ static void authors_menu_draw(void) {
     intraFontActivate(Font_BLUEHIGB_10, 0);
     intraFontPrint(Font_BLUEHIGB_10, 62, 188 + intraFontTextHeight(Font_BLUEHIGB_10), "t.me/pspdevlogdntrnk");
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 Scene AuthorsMenuScene = {
@@ -462,19 +462,19 @@ static void mainmenu_update(void) {
 }
 
 static void mainmenu_draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     // BG
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 0, 0, 480, 272, WHITE, 0, 72, 480, 272, 0, 255, G2D_UP_LEFT);
-
-    // Logo
-    g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
 
     // Отрисовка кнопок, состояние кнопки совпадает со спрайтом (не выбран/выбран/нажат)
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 130, 150, 24, WHITE, menu_buttons[0] * 150, 0, 150, 24, 0, 255, G2D_UP_LEFT);
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 155, 150, 24, WHITE, menu_buttons[1] * 150, 24, 150, 24, 0, 255, G2D_UP_LEFT);
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
+    // Logo
+
+    g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
     intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontActivate(Font_ACMESA, 1);
     intraFontPrint(Font_ACMESA, 248, 137 + intraFontTextHeight(Font_ACMESA), "Начать игру");
@@ -485,7 +485,7 @@ static void mainmenu_draw(void) {
     intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
     intraFontPrint(Font_ACMESA, 248, 187 + intraFontTextHeight(Font_ACMESA), "Выход");
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 Scene MainMenuScene = {

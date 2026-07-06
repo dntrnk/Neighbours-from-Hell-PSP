@@ -62,7 +62,7 @@ static void update(void) {
 }
 
 static void draw(void) {
-    g2dClear(BLACK);
+    g2d_Clear(BLACK);
 
     g2d_DrawImage(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
@@ -88,7 +88,7 @@ static void draw(void) {
         }
     }
 
-    g2dFlip(G2D_VSYNC);
+    g2d_Flip(G2D_VSYNC);
 }
 
 static void unload(void) {
