@@ -21,10 +21,13 @@
 
 ## Как собрать
 - Установите [PSPSDK](https://pspdev.github.io/installation.html)
-- Склонируйте репозиторий командой:
-```bash
-git clone https://github.com/dntrnk/Neighbours-from-Hell-PSP
-```
+- Получите исходный код одним из способов:
+  - **Стабильный релиз:** скачайте архив `Source code` желаемой версии со страницы [Releases](https://github.com/dntrnk/Neighbours-from-Hell-PSP/releases)
+  - **Nightly (последний коммит):** склонируйте репозиторий командой:
+    ```bash
+    git clone https://github.com/dntrnk/Neighbours-from-Hell-PSP
+    ```
+    > **Внимание:** Nightly-версия содержит самые последние изменения, которые ещё не вошли в релиз. Код может быть нестабильным или находиться в процессе доработки.
 - Откройте папку в терминале и запустите сборку:
 ```bash
 make clean && make
