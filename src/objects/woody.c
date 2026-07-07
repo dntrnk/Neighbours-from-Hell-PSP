@@ -145,7 +145,7 @@ Woody* woody_create(
     woody->hide = false;
     woody->caught = false;
 
-    woody->state = STATE_STOP;
+    woody->state = STATE_STOP_MOVE;
 
     woody->auto_move_goal_type = GOAL_NONE;
     woody->auto_move_goal_x = 0;
@@ -815,6 +815,7 @@ static bool woody_can_toggle_inventory(const Woody* woody) {
     switch (woody->state) {
         case STATE_AUTO_H_MOVE:
         case STATE_AUTO_V_MOVE:
+        case STATE_STOP_MOVE:
         case STATE_STORAGE_CHECK:
         case STATE_MAKING_TRICK:
         case STATE_HIDEOUT_ENTER:
@@ -826,7 +827,7 @@ static bool woody_can_toggle_inventory(const Woody* woody) {
         case STATE_CAUGHT_LOOP:
         case STATE_LEVEL_START:
         case STATE_LEVEL_ENDING:
-        case STATE_STOP:
+        case STATE_LEVEL_STOP:
             return false;
         default:
             return true;
@@ -1551,7 +1552,7 @@ static void woody_update_level_ending(Woody* woody) {
                 NFHSoundPlay(SOUND_APPLAUSE);
             }
             woody->animation_loop = false;
-            woody->state = STATE_STOP;            
+            woody->state = STATE_LEVEL_STOP;            
         } else if (woody->level_end->counter == 1) {
             // Обновляем данные ЗА КАДР до того, как level_end появится
             strcpy(woody->level_end->tricks_text, woody->ui_tricks_counter_text);
@@ -1600,6 +1601,7 @@ void woody_update(Woody* woody) {
         case STATE_V_MOVE: woody_update_v_move(woody); break;
         case STATE_AUTO_H_MOVE: woody_update_auto_h_move(woody); break;
         case STATE_AUTO_V_MOVE: woody_update_auto_v_move(woody); break;
+        case STATE_STOP_MOVE: break;
         case STATE_LOOK_OBJECT: woody_update_look_object(woody); break;
         case STATE_HIDEOUT_ENTER: woody_update_hideout_enter(woody); break;
         case STATE_HIDEOUT: woody_update_hideout(woody); break;
@@ -1619,7 +1621,7 @@ void woody_update(Woody* woody) {
         case STATE_CAUGHT_LOOP: break;
         case STATE_LEVEL_START: woody_update_level_start(woody); break;
         case STATE_LEVEL_ENDING: woody_update_level_ending(woody); break;
-        case STATE_STOP: break;
+        case STATE_LEVEL_STOP: break;
     }
 
     woody_hints_update(woody);
@@ -1697,8 +1699,20 @@ void woody_update(Woody* woody) {
     }
     
     // Движение камерой на стик
-    int stick_x = controls_AnalogX();
-    int stick_y = controls_AnalogY();
+    int stick_x = 0;
+    int stick_y = 0;
+
+    switch (woody->state) {
+        case STATE_CAUGHT_GO_TO_FLOOR:
+        case STATE_CAUGHT_START:
+        case STATE_CAUGHT_LOOP:
+        case STATE_LEVEL_ENDING:
+        case STATE_LEVEL_STOP:
+            break;
+        default:
+            stick_x = controls_AnalogX();
+            stick_y = controls_AnalogY();
+    }
         
     if ((abs(stick_x) > CAMERA_STICK_DEADZONE) || (abs(stick_y) > CAMERA_STICK_DEADZONE)) {
         woody->new_camera_offset_x = stick_x;

@@ -969,7 +969,7 @@ static void update(void) {
             }
 
             case INTRO_WOODY_START_ANIMATION: {
-                woody->state = STATE_STOP;
+                woody->state = STATE_STOP_MOVE;
                 woody->can_move = false;
                 woody_animation_set(woody, ANIMATION_PACK_WOODY_GENERIC, ANIMATION_WOODY_START);
 

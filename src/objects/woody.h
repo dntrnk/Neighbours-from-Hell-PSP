@@ -32,6 +32,7 @@ typedef enum {
     STATE_AUTO_H_MOVE,
     STATE_V_MOVE,
     STATE_AUTO_V_MOVE,
+    STATE_STOP_MOVE,
     STATE_IN_H_DOOR,
     STATE_IN_V_DOOR,
     STATE_LOOK_OBJECT,
@@ -51,7 +52,7 @@ typedef enum {
     STATE_CAUGHT_LOOP,
     STATE_LEVEL_START,
     STATE_LEVEL_ENDING,
-    STATE_STOP
+    STATE_LEVEL_STOP
 } WoodyState;
 
 typedef enum {
