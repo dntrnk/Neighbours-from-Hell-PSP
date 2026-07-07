@@ -69,6 +69,7 @@ OBJS = \
 	src/scenes/levels/level_peep.o \
 	src/main.o
 
+INCDIR = include
 CFLAGS = -G0 -O3 -fomit-frame-pointer -fsingle-precision-constant -Wall -Wno-trigraphs
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS) -c
