@@ -200,10 +200,10 @@ void NFHSoundPlay(int sound) {
         } else {
             short new_sound_channel = sound_channels_order[30];
 
-            // Сбросить биндинг вытесняемого звука
             for (int i = 0; i < sizeof(sound_channels_bindings) / sizeof(sound_channels_bindings[0]); i++) {
                 if (sound_channels_bindings[i] == new_sound_channel) {
                     sound_channels_bindings[i] = 0;
+                    sound_channels_order[30] = -1;
                     break;
                 }
             }
@@ -220,10 +220,23 @@ void NFHSoundPlay(int sound) {
         AalibSetAutoloop(current_sound_channel, false);
         AalibPlay(current_sound_channel);
 
-        for (int i = 30; i > 0; i--) {
-            sound_channels_order[i] = sound_channels_order[i-1];
+        for (int i = 0; i < 31; i++) {
+            if (sound_channels_order[i] == -1) {
+                for (int j = 30; j > 0; j--) {
+                    sound_channels_order[j] = sound_channels_order[j-1];
+                }
+                sound_channels_order[0] = current_sound_channel;
+
+                break;
+            } else if (sound_channels_order[i] == current_sound_channel) {
+                for (int j = i; j > 0; j--) {
+                    sound_channels_order[j] = sound_channels_order[j-1];
+                }
+                sound_channels_order[0] = current_sound_channel;
+
+                break;
+            }
         }
-        sound_channels_order[0] = current_sound_channel;
     }
 }
 
@@ -233,14 +246,15 @@ void NFHSoundPreload(int sound) {
     if (current_sound_channel == 0) {
         if (next_free_sound_channel < 48) {
             NFHSoundLoad(sound, next_free_sound_channel);
+            current_sound_channel = next_free_sound_channel;
             next_free_sound_channel++;
         } else {
             short new_sound_channel = sound_channels_order[30];
 
-            // Сбросить биндинг вытесняемого звука
             for (int i = 0; i < sizeof(sound_channels_bindings) / sizeof(sound_channels_bindings[0]); i++) {
                 if (sound_channels_bindings[i] == new_sound_channel) {
                     sound_channels_bindings[i] = 0;
+                    sound_channels_order[30] = -1;
                     break;
                 }
             }
@@ -249,20 +263,38 @@ void NFHSoundPreload(int sound) {
             AalibUnload(new_sound_channel);
             NFHSoundLoad(sound, new_sound_channel);
 
-            for (int i = 30; i > 0; i--) {
-                sound_channels_order[i] = sound_channels_order[i-1]; 
-            }
+            current_sound_channel = new_sound_channel;
+        }
+    }
 
-            sound_channels_order[0] = new_sound_channel;
+    for (int i = 0; i < 31; i++) {
+        if (sound_channels_order[i] == -1) {
+            for (int j = 30; j > 0; j--) {
+                sound_channels_order[j] = sound_channels_order[j-1];
+            }
+            sound_channels_order[0] = current_sound_channel;
+
+            break;
+        } else if (sound_channels_order[i] == current_sound_channel) {
+            for (int j = i; j > 0; j--) {
+                sound_channels_order[j] = sound_channels_order[j-1];
+            }
+            sound_channels_order[0] = current_sound_channel;
+
+            break;
         }
     }
 }
 
 void NFHSoundUnloadAll(void) {
     for (int channel = 17; channel < 48; channel++) {
-        if (AalibGetStatus(channel) != PSPAALIB_STATUS_STOPPED) {
-            AalibStop(channel);
-            AalibUnload(channel);
+        int sound_status = AalibGetStatus(channel);
+
+        if (sound_status == PSPAALIB_STATUS_PLAYING || sound_status == PSPAALIB_STATUS_PAUSED || sound_status == PSPAALIB_STATUS_STOPPED) {
+            if (sound_status == PSPAALIB_STATUS_STOPPED) {
+                AalibStop(channel);
+                AalibUnload(channel);
+            }
         }
     }
 
