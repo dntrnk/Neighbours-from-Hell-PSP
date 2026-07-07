@@ -39,8 +39,6 @@ void g2d_FreeImage(g2dImage* image) {
 
 void g2d_Clear(g2dColor color) {
     g2d_FlushBatch();
-    _batch.current_tex = NULL;
-    _batch.is_batching = false;
     g2dClear(color);
 }
 

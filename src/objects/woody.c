@@ -1479,9 +1479,9 @@ static void woody_update_caught_start(Woody* woody) {
     }
 }
 
-static void woody_update_caught_loop(Woody* woody) {
+// static void woody_update_caught_loop(Woody* woody) {
 
-}
+// }
 
 static void woody_update_level_start(Woody* woody) {
     // Типо как STATE_H_MOVE, но с автодвижением
@@ -1616,7 +1616,7 @@ void woody_update(Woody* woody) {
         case STATE_SMILE: woody_update_smile(woody); break;
         case STATE_CAUGHT_GO_TO_FLOOR: woody_update_caught_go_to_floor(woody); break;
         case STATE_CAUGHT_START: woody_update_caught_start(woody); break;
-        case STATE_CAUGHT_LOOP: woody_update_caught_loop(woody); break;
+        case STATE_CAUGHT_LOOP: break;
         case STATE_LEVEL_START: woody_update_level_start(woody); break;
         case STATE_LEVEL_ENDING: woody_update_level_ending(woody); break;
         case STATE_STOP: break;
