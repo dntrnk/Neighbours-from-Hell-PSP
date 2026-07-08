@@ -923,7 +923,7 @@ static void init(void) {
     NFHSoundPreload(SOUND_WOD_NONO);
     NFHSoundPreload(SOUND_WOD_LAUGH2);
 
-    NFHMusicPlay(MUSIC_JINGLE_LEVELSTART, 0);
+    NFHMusicPlay(MUSIC_JINGLE_LEVELSTART, false);
 }
 
 static void update(void) {

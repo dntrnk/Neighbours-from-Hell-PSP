@@ -1,13 +1,17 @@
 #include "NFHSound.h"
 
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "../audio/pspaalib.h"
 #include "../../objects/scene_manager.h"
 
 #define MUSIC_CHANNEL 5
 #define HOUSE_MUSIC_CHANNEL 6
+
+typedef struct {
+    const char* const path;
+    const float volume;
+} SfxBind;
 
 static const char* const music_bindings[] = {
     [MUSIC_DNTRNK] = "assets_my/music/dntrnk.at3",
@@ -19,80 +23,80 @@ static const char* const music_bindings[] = {
     [MUSIC_JINGLE_FAILED] = "assets_thq/music/jingle_failed.at3"
 };
 
-static const char* const sfx_bindings[] = {
-    [SOUND_BUT1] = "assets_thq/sfx/but1.wav",
-    [SOUND_BUT_HOVER1] = "assets_thq/sfx/but_hover1.wav",
-    [SOUND_DOOR_CLOSE1] = "assets_thq/sfx/door_close1.wav",
-    [SOUND_DOOR_OPEN1] = "assets_thq/sfx/door_open1.wav",
-    [SOUND_ILLEGAL] = "assets_thq/sfx/illegal.wav",
-    [SOUND_LEVELSTART] = "assets_thq/sfx/levelstart.wav",
-    [SOUND_WOD_JUHU1] = "assets_thq/sfx/wod_juhu1.wav",
-    [SOUND_WOD_LAUGH1] = "assets_thq/sfx/wod_laugh1.wav",
-    [SOUND_WOD_STEP1A] = "assets_thq/sfx/wod_step1a.wav",
-    [SOUND_WOD_STEP2A] = "assets_thq/sfx/wod_step2a.wav",
-    [SOUND_OBJ_OPEN1] = "assets_thq/sfx/obj_open1.wav",
-    [SOUND_OBJ_CLOSE1] = "assets_thq/sfx/obj_close1.wav",
-    [SOUND_WOD_HA1] = "assets_thq/sfx/wod_ha1.wav",
-    [SOUND_GIVE_TAKE1] = "assets_thq/sfx/give_take1.wav",
-    [SOUND_GIVE_TAKE2] = "assets_thq/sfx/give_take2.wav",
-    [SOUND_WOD_EH1] = "assets_thq/sfx/wod_eh1.wav",
-    [SOUND_NA_USE1A] = "assets_thq/sfx/na_use1a.wav",
-    [SOUND_NA_STEP1] = "assets_thq/sfx/na_step1.wav",
-    [SOUND_NA_STEP2] = "assets_thq/sfx/na_step2.wav",
-    [SOUND_NA_SITSDOWN1] = "assets_thq/sfx/na_sitsdown1.wav",
-    [SOUND_NA_REMOTE1] = "assets_thq/sfx/na_remote1.wav",
-    [SOUND_NA_GETSUP1] = "assets_thq/sfx/na_getsup1.wav",
-    [SOUND_NA_PEEP1] = "assets_thq/sfx/na_peep1.wav",
-    [SOUND_NA_PEEP2] = "assets_thq/sfx/na_peep2.wav",
-    [SOUND_NA_PEEP3] = "assets_thq/sfx/na_peep3.wav",
-    [SOUND_NA_PEEP4] = "assets_thq/sfx/na_peep4.wav",
-    [SOUND_OBJ_SQUIEEK1] = "assets_thq/sfx/obj_squieek1.wav",
-    [SOUND_NA_WORKOUT1] = "assets_thq/sfx/na_workout1.wav",
-    [SOUND_NA_WORKOUT2] = "assets_thq/sfx/na_workout2.wav",
-    [SOUND_NA_AAA_LONG2] = "assets_thq/sfx/na_aaa_long2.wav",
-    [SOUND_OBJ_PLOP1] = "assets_thq/sfx/obj_plop1.wav",
-    [SOUND_WOD_NONO] = "assets_thq/sfx/wod_nono.wav",
-    [SOUND_WOD_LAUGH2] = "assets_thq/sfx/wod_laugh2.wav",
-    [SOUND_WOD_FEAR1] = "assets_thq/sfx/wod_fear1.wav",
-    [SOUND_INSTALL1] = "assets_thq/sfx/install1.wav",
-    [SOUND_INSTALL2] = "assets_thq/sfx/install2.wav",
-    [SOUND_USE1] = "assets_thq/sfx/use1.wav",
-    [SOUND_APPLAUSE] = "assets_thq/sfx/applause.wav",
-    [SOUND_NA_SHOUT1] = "assets_thq/sfx/na_shout1.wav",
-    [SOUND_NA_HUH1] = "assets_thq/sfx/na_huh1.wav",
-    [SOUND_NA_SUP_HUH1] = "assets_thq/sfx/na_sup_huh1.wav",
-    [SOUND_NA_RUN1] = "assets_thq/sfx/na_run1.wav",
-    [SOUND_NA_RUN2] = "assets_thq/sfx/na_run2.wav",
-    [SOUND_NA_USE1] = "assets_thq/sfx/na_use1.wav",
-    [SOUND_NA_PEEP5] = "assets_thq/sfx/na_peep5.wav",
-    [SOUND_JINGLE_JOKE] = "assets_thq/sfx/jingle_joke.wav",
-    [SOUND_NA_AAA_LONG4] = "assets_thq/sfx/na_aaa_long4.wav",
-    [SOUND_NA_BACKBREAK1] = "assets_thq/sfx/na_backbreak1.wav",
-    [SOUND_NA_AAA_WHINE1] = "assets_thq/sfx/na_aaa_whine1.wav",
-    [SOUND_NA_WHEEZE3] = "assets_thq/sfx/na_wheeze3.wav",
-    [SOUND_NA_WHEEZE4] = "assets_thq/sfx/na_wheeze4.wav",
-    [SOUND_OBJ_MICRO_BEEP1] = "assets_thq/sfx/obj_micro_beep1.wav",
-    [SOUND_BIG1] = "assets_thq/sfx/big1.wav",
-    [SOUND_BIG2] = "assets_thq/sfx/big2.wav",
-    [SOUND_BIG3] = "assets_thq/sfx/big3.wav",
-    [SOUND_NA_GRRR1] = "assets_thq/sfx/na_grrr1.wav",
-    [SOUND_NA_SUP_HUH2] = "assets_thq/sfx/na_sup_huh2.wav",
-    [SOUND_NA_FART2] = "assets_thq/sfx/na_fart2.wav",
-    [SOUND_NA_HANDS1] = "assets_thq/sfx/na_hands1.wav",
-    [SOUND_JINGLE_CAUGHT] = "assets_thq/sfx/jingle_caught.wav",
-    [SOUND_KILL_WOOSH1] = "assets_thq/sfx/kill_woosh1.wav",
-    [SOUND_NA_KILL_BLAH1] = "assets_thq/sfx/na_kill_blah1.wav",
-    [SOUND_NA_KILL_BLAH2] = "assets_thq/sfx/na_kill_blah2.wav",
-    [SOUND_NA_KILLSHOUT2] = "assets_thq/sfx/na_killshout2.wav",
-    [SOUND_OBJ_HIT1] = "assets_thq/sfx/obj_hit1.wav",
-    [SOUND_WOD_AU1] = "assets_thq/sfx/wod_au1.wav",
-    [SOUND_WOD_AU2] = "assets_thq/sfx/wod_au2.wav",
-    [SOUND_OBJ_HIT2] = "assets_thq/sfx/obj_hit2.wav",
-    [SOUND_NA_KILL_HITS1] = "assets_thq/sfx/na_kill_hits1.wav",
-    [SOUND_NA_BEATS3] = "assets_thq/sfx/na_beats3.wav",
-    [SOUND_NA_KILL_JUMPS1] = "assets_thq/sfx/na_kill_jumps1.wav",
-    [SOUND_NA_KILL_BLAH3] = "assets_thq/sfx/na_kill_blah3.wav",
-    [SOUND_NA_BEATS1] = "assets_thq/sfx/na_beats1.wav"
+static const SfxBind sfx_bindings[] = {
+    [SOUND_BUT1] = {"assets_thq/sfx/but1.wav", 1.0f},
+    [SOUND_BUT_HOVER1] = {"assets_thq/sfx/but_hover1.wav", 1.0f},
+    [SOUND_DOOR_CLOSE1] = {"assets_thq/sfx/door_close1.wav", 1.0f},
+    [SOUND_DOOR_OPEN1] = {"assets_thq/sfx/door_open1.wav", 1.0f},
+    [SOUND_ILLEGAL] = {"assets_thq/sfx/illegal.wav", 0.8f},
+    [SOUND_LEVELSTART] = {"assets_thq/sfx/levelstart.wav", 1.0f},
+    [SOUND_WOD_JUHU1] = {"assets_thq/sfx/wod_juhu1.wav", 1.0f},
+    [SOUND_WOD_LAUGH1] = {"assets_thq/sfx/wod_laugh1.wav", 1.0f},
+    [SOUND_WOD_STEP1A] = {"assets_thq/sfx/wod_step1a.wav", 1.0f},
+    [SOUND_WOD_STEP2A] = {"assets_thq/sfx/wod_step2a.wav", 1.0f},
+    [SOUND_OBJ_OPEN1] = {"assets_thq/sfx/obj_open1.wav", 1.0f},
+    [SOUND_OBJ_CLOSE1] = {"assets_thq/sfx/obj_close1.wav", 1.0f},
+    [SOUND_WOD_HA1] = {"assets_thq/sfx/wod_ha1.wav", 1.0f},
+    [SOUND_GIVE_TAKE1] = {"assets_thq/sfx/give_take1.wav", 1.0f},
+    [SOUND_GIVE_TAKE2] = {"assets_thq/sfx/give_take2.wav", 1.0f},
+    [SOUND_WOD_EH1] = {"assets_thq/sfx/wod_eh1.wav", 1.0f},
+    [SOUND_NA_USE1A] = {"assets_thq/sfx/na_use1a.wav", 1.0f},
+    [SOUND_NA_STEP1] = {"assets_thq/sfx/na_step1.wav", 1.0f},
+    [SOUND_NA_STEP2] = {"assets_thq/sfx/na_step2.wav", 1.0f},
+    [SOUND_NA_SITSDOWN1] = {"assets_thq/sfx/na_sitsdown1.wav", 1.0f},
+    [SOUND_NA_REMOTE1] = {"assets_thq/sfx/na_remote1.wav", 1.0f},
+    [SOUND_NA_GETSUP1] = {"assets_thq/sfx/na_getsup1.wav", 1.0f},
+    [SOUND_NA_PEEP1] = {"assets_thq/sfx/na_peep1.wav", 1.0f},
+    [SOUND_NA_PEEP2] = {"assets_thq/sfx/na_peep2.wav", 1.0f},
+    [SOUND_NA_PEEP3] = {"assets_thq/sfx/na_peep3.wav", 1.0f},
+    [SOUND_NA_PEEP4] = {"assets_thq/sfx/na_peep4.wav", 1.0f},
+    [SOUND_OBJ_SQUIEEK1] = {"assets_thq/sfx/obj_squieek1.wav", 0.7f},
+    [SOUND_NA_WORKOUT1] = {"assets_thq/sfx/na_workout1.wav", 1.0f},
+    [SOUND_NA_WORKOUT2] = {"assets_thq/sfx/na_workout2.wav", 1.0f},
+    [SOUND_NA_AAA_LONG2] = {"assets_thq/sfx/na_aaa_long2.wav", 1.0f},
+    [SOUND_OBJ_PLOP1] = {"assets_thq/sfx/obj_plop1.wav", 1.0f},
+    [SOUND_WOD_NONO] = {"assets_thq/sfx/wod_nono.wav", 1.0f},
+    [SOUND_WOD_LAUGH2] = {"assets_thq/sfx/wod_laugh2.wav", 1.0f},
+    [SOUND_WOD_FEAR1] = {"assets_thq/sfx/wod_fear1.wav", 1.0f},
+    [SOUND_INSTALL1] = {"assets_thq/sfx/install1.wav", 1.0f},
+    [SOUND_INSTALL2] = {"assets_thq/sfx/install2.wav", 1.0f},
+    [SOUND_USE1] = {"assets_thq/sfx/use1.wav", 1.0f},
+    [SOUND_APPLAUSE] = {"assets_thq/sfx/applause.wav", 1.0f},
+    [SOUND_NA_SHOUT1] = {"assets_thq/sfx/na_shout1.wav", 1.0f},
+    [SOUND_NA_HUH1] = {"assets_thq/sfx/na_huh1.wav", 1.0f},
+    [SOUND_NA_SUP_HUH1] = {"assets_thq/sfx/na_sup_huh1.wav", 1.0f},
+    [SOUND_NA_RUN1] = {"assets_thq/sfx/na_run1.wav", 1.0f},
+    [SOUND_NA_RUN2] = {"assets_thq/sfx/na_run2.wav", 1.0f},
+    [SOUND_NA_USE1] = {"assets_thq/sfx/na_use1.wav", 1.0f},
+    [SOUND_NA_PEEP5] = {"assets_thq/sfx/na_peep5.wav", 0.9f},
+    [SOUND_JINGLE_JOKE] = {"assets_thq/sfx/jingle_joke.wav", 1.0f},
+    [SOUND_NA_AAA_LONG4] = {"assets_thq/sfx/na_aaa_long4.wav", 1.0f},
+    [SOUND_NA_BACKBREAK1] = {"assets_thq/sfx/na_backbreak1.wav", 1.0f},
+    [SOUND_NA_AAA_WHINE1] = {"assets_thq/sfx/na_aaa_whine1.wav", 1.0f},
+    [SOUND_NA_WHEEZE3] = {"assets_thq/sfx/na_wheeze3.wav", 1.0f},
+    [SOUND_NA_WHEEZE4] = {"assets_thq/sfx/na_wheeze4.wav", 1.0f},
+    [SOUND_OBJ_MICRO_BEEP1] = {"assets_thq/sfx/obj_micro_beep1.wav", 1.0f},
+    [SOUND_BIG1] = {"assets_thq/sfx/big1.wav", 1.0f},
+    [SOUND_BIG2] = {"assets_thq/sfx/big2.wav", 1.0f},
+    [SOUND_BIG3] = {"assets_thq/sfx/big3.wav", 1.0f},
+    [SOUND_NA_GRRR1] = {"assets_thq/sfx/na_grrr1.wav", 1.0f},
+    [SOUND_NA_SUP_HUH2] = {"assets_thq/sfx/na_sup_huh2.wav", 1.0f},
+    [SOUND_NA_FART2] = {"assets_thq/sfx/na_fart2.wav", 1.0f},
+    [SOUND_NA_HANDS1] = {"assets_thq/sfx/na_hands1.wav", 1.0f},
+    [SOUND_JINGLE_CAUGHT] = {"assets_thq/sfx/jingle_caught.wav", 1.0f},
+    [SOUND_KILL_WOOSH1] = {"assets_thq/sfx/kill_woosh1.wav", 1.0f},
+    [SOUND_NA_KILL_BLAH1] = {"assets_thq/sfx/na_kill_blah1.wav", 1.0f},
+    [SOUND_NA_KILL_BLAH2] = {"assets_thq/sfx/na_kill_blah2.wav", 1.0f},
+    [SOUND_NA_KILLSHOUT2] = {"assets_thq/sfx/na_killshout2.wav", 1.0f},
+    [SOUND_OBJ_HIT1] = {"assets_thq/sfx/obj_hit1.wav", 1.0f},
+    [SOUND_WOD_AU1] = {"assets_thq/sfx/wod_au1.wav", 1.0f},
+    [SOUND_WOD_AU2] = {"assets_thq/sfx/wod_au2.wav", 1.0f},
+    [SOUND_OBJ_HIT2] = {"assets_thq/sfx/obj_hit2.wav", 1.0f},
+    [SOUND_NA_KILL_HITS1] = {"assets_thq/sfx/na_kill_hits1.wav", 1.0f},
+    [SOUND_NA_BEATS3] = {"assets_thq/sfx/na_beats3.wav", 0.85f},
+    [SOUND_NA_KILL_JUMPS1] = {"assets_thq/sfx/na_kill_jumps1.wav", 1.0f},
+    [SOUND_NA_KILL_BLAH3] = {"assets_thq/sfx/na_kill_blah3.wav", 1.0f},
+    [SOUND_NA_BEATS1] = {"assets_thq/sfx/na_beats1.wav", 1.0f}
 };
 
 static unsigned short sound_channels_bindings[sizeof(sfx_bindings) / sizeof(sfx_bindings[0])] = {0};
@@ -113,7 +117,7 @@ static unsigned short next_free_sound_channel = 17;
 static short music_loaded = -1;
 static short house_music_loaded = -1;
 
-void NFHMusicPlay(int new_music, int loop) {
+void NFHMusicPlay(int new_music, bool loop) {
     if (music_loaded != new_music) {
         int error_code = AalibLoad(music_bindings[new_music], MUSIC_CHANNEL, true);
         if (error_code != PSPAALIB_SUCCESS) {
@@ -179,9 +183,15 @@ void NFHSoundLoad(int sound, int channel) {
     current_sound_channel->channel = channel;
     sound_channels_bindings[sound] = channel;
 
-    int error_code = AalibLoad(sfx_bindings[sound], channel, true);
+    const SfxBind current_sfx = sfx_bindings[sound];
+    const AalibVolume volume = {current_sfx.volume, current_sfx.volume};
+
+    int error_code = AalibLoad(current_sfx.path, channel, true);
     if (error_code != PSPAALIB_SUCCESS) {
-        scene_error("Ошибка загрузки %s: %d", sfx_bindings[sound], error_code);
+        scene_error("Ошибка загрузки %s: %d", current_sfx.path, error_code);
+    } else {
+        AalibEnable(channel, PSPAALIB_EFFECT_VOLUME_MANUAL);
+        AalibSetVolume(channel, volume);
     }
 }
 

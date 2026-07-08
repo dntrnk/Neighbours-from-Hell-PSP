@@ -1300,10 +1300,10 @@ static void woody_update_in_h_door(Woody* woody) {
                 NFHHouseMusicStop();
 
                 if (woody->tv_rating >= woody->min_quota || is_this_scene(&Tutorial1Scene)) {
-                    NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+                    NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, false);
                 } else {
                     strcpy(woody->level_end->end_text, "Провал");
-                    NFHMusicPlay(MUSIC_JINGLE_FAILED, 0);
+                    NFHMusicPlay(MUSIC_JINGLE_FAILED, false);
                 }
             }
         } else {

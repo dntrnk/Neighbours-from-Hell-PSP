@@ -16,7 +16,7 @@ static void init(void) {
 
     i = 0;
 
-    NFHMusicPlay(MUSIC_DNTRNK, 0);
+    NFHMusicPlay(MUSIC_DNTRNK, false);
 }
 
 static void update(void) {

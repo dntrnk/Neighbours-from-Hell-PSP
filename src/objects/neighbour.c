@@ -932,7 +932,7 @@ void neighbour_update(Neighbour* neighbour) {
 
                             NFHHouseMusicStop();
 
-                            NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, 0);
+                            NFHMusicPlay(MUSIC_JINGLE_SUCCESS_NORMAL, false);
 
                             neighbour_animation_set(neighbour, ANIMATION_PACK_NEIGHBOUR_GENERIC, ANIMATION_NEIGHBOUR_MG2);
                         }

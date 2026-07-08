@@ -34,7 +34,7 @@ static void init(void) {
     i2 = 0; // Таймер показа "Нажмите Start"
     start_text_y = 180;
 
-    NFHMusicPlay(MUSIC_TITEL, 1);
+    NFHMusicPlay(MUSIC_TITEL, true);
 }
 
 static void update(void) {

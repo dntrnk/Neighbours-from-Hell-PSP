@@ -1,10 +1,12 @@
 #ifndef NFHSOUND_H
 #define NFHSOUND_H
 
+#include <stdbool.h>
+
 #include "../../types/music_types.h"
 #include "../../types/sfx_types.h"
 
-void NFHMusicPlay(int new_music, int loop);
+void NFHMusicPlay(int new_music, bool loop);
 void NFHMusicStop(void);
 void NFHHouseMusicLoad(void);
 void NFHHouseMusicPlay(void);

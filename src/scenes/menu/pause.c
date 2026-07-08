@@ -71,7 +71,7 @@ static inline float lerp(float a, float b, float t) {
 
 static void init(void) {
     NFHHouseMusicPause();
-    NFHMusicPlay(MUSIC_TITEL, 1);
+    NFHMusicPlay(MUSIC_TITEL, true);
 
     tutorial_selected = is_this_scene(&Tutorial1Scene);
     new_scroll_y = 0.0f;

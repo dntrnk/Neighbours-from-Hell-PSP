@@ -392,7 +392,7 @@ static void mainmenu_init(void) {
         2 - Выход
     */
 
-    NFHMusicPlay(MUSIC_TITEL, 1);
+    NFHMusicPlay(MUSIC_TITEL, true);
 }
 
 static void mainmenu_buttons_update(void) {
