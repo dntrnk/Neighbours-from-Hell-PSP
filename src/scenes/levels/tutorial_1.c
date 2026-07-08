@@ -244,9 +244,9 @@ static void init(void) {
 
         int index = 0;
 
-        for (int i = 0; i < MAX_V_DOORS_IN_ROOM; i++) {
-            if (!v_doors[room][i]) {
-                index = i;
+        for (int j = 0; j < MAX_V_DOORS_IN_ROOM; j++) {
+            if (!v_doors[room][j]) {
+                index = j;
                 break;
             }
         }
