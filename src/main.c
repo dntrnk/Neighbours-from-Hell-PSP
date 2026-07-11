@@ -165,6 +165,34 @@ int main(void) {
     Font_ACMESA_17_9 = intraFontLoadTTF("assets_thq/fonts/acmesa.ttf", INTRAFONT_STRING_UTF8, 17.9f);
     Font_ACMESAI_13 = intraFontLoadTTF("assets_thq/fonts/acmesai.ttf", INTRAFONT_STRING_UTF8, 13);
 
+    // Common Sounds
+    NFHSoundPreload(SOUND_DOOR_CLOSE1);
+    NFHSoundPreload(SOUND_DOOR_OPEN1);
+    NFHSoundPreload(SOUND_LEVELSTART);
+    NFHSoundPreload(SOUND_WOD_JUHU1);
+    NFHSoundPreload(SOUND_WOD_LAUGH1);
+    NFHSoundPreload(SOUND_OBJ_CLOSE1);
+    NFHSoundPreload(SOUND_NA_SITSDOWN1);
+    NFHSoundPreload(SOUND_NA_GETSUP1);
+    NFHSoundPreload(SOUND_NA_PEEP1);
+    NFHSoundPreload(SOUND_NA_PEEP2);
+    NFHSoundPreload(SOUND_NA_PEEP3);
+    NFHSoundPreload(SOUND_NA_PEEP4);
+    NFHSoundPreload(SOUND_WOD_NONO);
+
+    // Priority Sounds
+    NFHSoundPreload(SOUND_INSTALL1);
+    NFHSoundPreload(SOUND_INSTALL2);
+    NFHSoundPreload(SOUND_BIG1);
+    NFHSoundPreload(SOUND_BIG2);
+    NFHSoundPreload(SOUND_BIG3);
+    NFHSoundPreload(SOUND_JINGLE_JOKE);
+    NFHSoundPreload(SOUND_JINGLE_CAUGHT);
+    NFHSoundPreload(SOUND_WOD_LAUGH2);
+    NFHSoundPreload(SOUND_USE1);
+    NFHSoundPreload(SOUND_NA_SHOUT1);
+    NFHSoundPreload(SOUND_NA_AAA_LONG4);
+
     scene_change(&DisclaimerScene);
     scene_handle_requests();
 
