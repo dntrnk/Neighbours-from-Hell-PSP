@@ -92,4 +92,4 @@ all: EBOOT.PBP copy
 
 copy: EBOOT.PBP
 	mkdir -p build
-	cp -f EBOOT.PBP build/EBOOT.PBP
+	mv EBOOT.PBP build/EBOOT.PBP
