@@ -142,7 +142,6 @@ int main(void) {
     SpriteList_ITEMS_2 = g2d_LoadImage("assets_thq/sprites/ui/ingame/items2.png", G2D_CLUT8); 
     SpriteList_PROGRESSBAR = g2d_LoadImage("assets_thq/sprites/ui/ingame/progressbar.png", G2D_RGBA8888); 
 
-    Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo.png", G2D_CLUT8);
     Sprite_LOADING_TEXT_DATA = g2d_LoadImage("assets_thq/sprites/ui/menu/loadingTextData.png", G2D_CLUT4);
     Sprite_Punkt = g2d_LoadImage("assets_thq/sprites/ui/menu/punkt.png", G2D_RGBA8888);
     Sprite_Angrybar = g2d_LoadImage("assets_thq/sprites/ui/ingame/angrybar.png", G2D_RGBA8888);

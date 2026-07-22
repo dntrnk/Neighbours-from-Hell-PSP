@@ -10,6 +10,8 @@
 
 extern Scene DisclaimerScene;
 
+extern g2dImage* Sprite_NFH_LOGO;
+
 extern intraFont* Font_BLUEHIGB_10;
 extern intraFont* Font_BLUEHIGB_18;
 
@@ -48,8 +50,14 @@ static void update(void) {
 
     if (controls_pressed(PSP_CTRL_CROSS)) {
         switch (selected) {
-            case 0: lang_set(LANG_ENGLISH); break;
-            case 1: lang_set(LANG_RUSSIAN); break;
+            case 0:
+                lang_set(LANG_ENGLISH);
+                Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo_en.png", G2D_CLUT8);
+                break;
+            case 1:
+                lang_set(LANG_RUSSIAN);
+                Sprite_NFH_LOGO = g2d_LoadImage("assets_thq/sprites/ui/menu/logo_ru.png", G2D_CLUT8);
+                break;
         }
 
         scene_change(&DisclaimerScene);
