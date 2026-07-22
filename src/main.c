@@ -83,7 +83,7 @@ intraFont* Font_ACMESA = NULL;
 intraFont* Font_ACMESA_17_9 = NULL;
 intraFont* Font_ACMESAI_13 = NULL;
 
-extern Scene DisclaimerScene;
+extern Scene LanguageSelectScene;
 
 int camera_x = 0;
 int camera_y = 0;
@@ -193,7 +193,7 @@ int main(void) {
     NFHSoundPreload(SOUND_NA_SHOUT1);
     NFHSoundPreload(SOUND_NA_AAA_LONG4);
 
-    scene_change(&DisclaimerScene);
+    scene_change(&LanguageSelectScene);
     scene_handle_requests();
 
     while (true) {
