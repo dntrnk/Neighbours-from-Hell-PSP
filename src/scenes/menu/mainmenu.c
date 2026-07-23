@@ -1,12 +1,14 @@
 #include "../../objects/scene_manager.h"
 
+#include <stdbool.h>
+#include <math.h>
+
 #include "../../engine/graphics/g2d.h"
 #include "../../engine/fonts/intraFont.h"
 #include "../../engine/controls/controls.h"
 #include "../../engine/NFHSound/NFHSound.h"
 
-#include <stdbool.h>
-#include <math.h>
+#include "../../objects/localizations.h"
 
 #define CG_MENU_GRAY G2D_RGB(199, 199, 199)
 #define MENU_BLUE G2D_RGB(0, 96, 254)
@@ -37,11 +39,12 @@ extern g2dImage* Button_tut1_normal_pressed;
 extern g2dImage* Button_peep_normal;
 extern g2dImage* Button_peep_normal_pressed;
 
+extern intraFont* Font_ACMESA;
+extern intraFont* Font_ACMESAI_13;
 extern intraFont* Font_BLUEHIGH_8;
 extern intraFont* Font_BLUEHIGH_10;
 extern intraFont* Font_BLUEHIGB_10;
 extern intraFont* Font_BLUEHIGB_18;
-extern intraFont* Font_ACMESA;
 
 // new_game_menu //
 static bool tutorial_selected;
@@ -324,9 +327,40 @@ Scene NewGameMenuScene = {
     .unload = NULL
 };
 
-// authors_menu //
+// credits_menu //
 
-static void authors_menu_update(void) {
+static char original_game_by_text[256];
+static char psp_version_by_text[256];
+static char return_to_menu_text[64];
+
+static void credits_menu_init(void) {
+    char loc_filename[512];
+    sprintf(loc_filename, "data/localizations/%s/creditsmenu.json", current_lang_code);
+
+    FILE* loc_file = fopen(loc_filename, "r");
+
+    if (!loc_file) {
+        scene_error("Не удалось открыть файл %s", loc_filename);
+    }
+
+    fseek(loc_file, 0, SEEK_END);
+    long size = ftell(loc_file);
+    fseek(loc_file, 0, SEEK_SET);
+    char* json = malloc(size + 1);
+    fread(json, 1, size, loc_file);
+    json[size] = '\0';
+    fclose(loc_file);
+    cJSON* parsed_loc_json = cJSON_Parse(json);
+    free(json);
+
+    strcpy(original_game_by_text, json_get_item_string(parsed_loc_json, "original_game_by", 255));
+    strcpy(psp_version_by_text, json_get_item_string(parsed_loc_json, "psp_version_by", 255));
+    strcpy(return_to_menu_text, json_get_item_string(parsed_loc_json, "return_to_menu", 63));
+
+    cJSON_Delete(parsed_loc_json);
+}
+
+static void credits_menu_update(void) {
     controls_read();
 
     if (controls_pressed(PSP_CTRL_CIRCLE)) {
@@ -334,17 +368,17 @@ static void authors_menu_update(void) {
     }
 }
 
-static void authors_menu_draw(void) {
+static void credits_menu_draw(void) {
     g2d_Clear(BLACK);
 
     g2d_DrawImage(BG_CINEMA, 0, 0, WHITE, 0, 255, G2D_UP_LEFT);
 
     intraFontSetStyle(Font_BLUEHIGB_18, 0.661f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intraFontActivate(Font_BLUEHIGB_18, 1);
-    intraFontPrint(Font_BLUEHIGB_18, 62, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "Оригинальная игра: JoWood Productions");
-    intraFontPrint(Font_BLUEHIGB_18, 62, 56 + intraFontTextHeight(Font_BLUEHIGB_18), "Версию для PSP сделал: dntrnk");
+    intraFontPrint(Font_BLUEHIGB_18, 62, 42 + intraFontTextHeight(Font_BLUEHIGB_18), original_game_by_text);
+    intraFontPrint(Font_BLUEHIGB_18, 62, 56 + intraFontTextHeight(Font_BLUEHIGB_18), psp_version_by_text);
 
-    intraFontPrint(Font_BLUEHIGB_18, 326, 42 + intraFontTextHeight(Font_BLUEHIGB_18), "вернуться в меню");
+    intraFontPrint(Font_BLUEHIGB_18, 326, 42 + intraFontTextHeight(Font_BLUEHIGB_18), return_to_menu_text);
     g2d_DrawImageExt(SpriteList_BUTTONS, 300, 35, 23, 23, WHITE, 23, 0, 23, 23, 0, 255, G2D_UP_LEFT); // CIRCLE
 
     intraFontSetStyle(Font_BLUEHIGB_10, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -354,14 +388,25 @@ static void authors_menu_draw(void) {
     g2d_Flip(G2D_VSYNC);
 }
 
-Scene AuthorsMenuScene = {
-    .init = NULL,
-    .update = authors_menu_update,
-    .draw = authors_menu_draw,
+Scene CreditsMenuScene = {
+    .init = credits_menu_init,
+    .update = credits_menu_update,
+    .draw = credits_menu_draw,
     .unload = NULL
 };
 
 // mainmenu //
+
+static int game_logo_x;
+static int game_logo_y;
+
+static intraFont* menu_buttons_font;
+static int menu_buttons_text_offset_y;
+
+static char start_game_text[64];
+static char credits_text[64];
+static char options_text[64];
+static char quit_game_text[64];
 
 static int clicked_button;
 static int selected_button;
@@ -369,6 +414,51 @@ static int menu_buttons[3];
 static g2dColor menu_buttons_colors[3];
 
 static void mainmenu_init(void) {
+    char loc_filename[512];
+    sprintf(loc_filename, "data/localizations/%s/mainmenu.json", current_lang_code);
+
+    FILE* loc_file = fopen(loc_filename, "r");
+
+    if (!loc_file) {
+        scene_error("Не удалось открыть файл %s", loc_filename);
+    }
+
+    fseek(loc_file, 0, SEEK_END);
+    long size = ftell(loc_file);
+    fseek(loc_file, 0, SEEK_SET);
+    char* json = malloc(size + 1);
+    fread(json, 1, size, loc_file);
+    json[size] = '\0';
+    fclose(loc_file);
+    cJSON* parsed_loc_json = cJSON_Parse(json);
+    free(json);
+
+    strcpy(start_game_text, json_get_item_string(parsed_loc_json, "start_game", 63));
+    strcpy(credits_text, json_get_item_string(parsed_loc_json, "credits", 63));
+    strcpy(options_text, json_get_item_string(parsed_loc_json, "options", 63));
+    strcpy(quit_game_text, json_get_item_string(parsed_loc_json, "quit_game", 63));
+
+    cJSON_Delete(parsed_loc_json);
+
+    switch (current_lang) {
+        case LANG_RUSSIAN:
+            game_logo_x = 186;
+            game_logo_y = 7;
+
+            menu_buttons_font = Font_ACMESA;
+            menu_buttons_text_offset_y = 0;
+
+            break;
+        case LANG_ENGLISH:
+            game_logo_x = 164;
+            game_logo_y = 17;
+
+            menu_buttons_font = Font_ACMESAI_13;
+            menu_buttons_text_offset_y = -1;
+
+            break;
+    }
+
     selected_button = 0; // Кнопка, выбранная посредством стрелочек
     clicked_button = 1; // Кнопка, на которой нажали X
 
@@ -448,7 +538,7 @@ static void mainmenu_update(void) {
 
                 break;
             case 1: // Авторы
-                scene_push(&AuthorsMenuScene);
+                scene_push(&CreditsMenuScene);
 
                 break;
             case 2: // Выход
@@ -473,17 +563,17 @@ static void mainmenu_draw(void) {
     g2d_DrawImageExt(SpriteAtlas_MENU_SPRITES, 173, 180, 150, 24, WHITE, menu_buttons[2] * 150, 48, 150, 24, 0, 255, G2D_UP_LEFT);
 
     // Logo
-    g2d_DrawImage(Sprite_NFH_LOGO, 186, 7, WHITE, 0, 255, G2D_UP_LEFT);
+    g2d_DrawImage(Sprite_NFH_LOGO, game_logo_x, game_logo_y, WHITE, 0, 255, G2D_UP_LEFT);
     
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
-    intraFontActivate(Font_ACMESA, 1);
-    intraFontPrint(Font_ACMESA, 248, 137 + intraFontTextHeight(Font_ACMESA), "Начать игру");
+    intraFontSetStyle(menu_buttons_font, 0.8, menu_buttons_colors[0], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontActivate(menu_buttons_font, 1);
+    intraFontPrint(menu_buttons_font, 248, 137 + intraFontTextHeight(menu_buttons_font) + menu_buttons_text_offset_y, start_game_text);
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
-    intraFontPrint(Font_ACMESA, 248, 162 + intraFontTextHeight(Font_ACMESA), "Авторы");
+    intraFontSetStyle(menu_buttons_font, 0.8, menu_buttons_colors[1], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontPrint(menu_buttons_font, 248, 162 + intraFontTextHeight(menu_buttons_font) + menu_buttons_text_offset_y, credits_text);
 
-    intraFontSetStyle(Font_ACMESA, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
-    intraFontPrint(Font_ACMESA, 248, 187 + intraFontTextHeight(Font_ACMESA), "Выход");
+    intraFontSetStyle(menu_buttons_font, 0.8, menu_buttons_colors[2], 0, 0, INTRAFONT_ALIGN_CENTER);
+    intraFontPrint(menu_buttons_font, 248, 187 + intraFontTextHeight(menu_buttons_font) + menu_buttons_text_offset_y, quit_game_text);
 
     g2d_Flip(G2D_VSYNC);
 }
