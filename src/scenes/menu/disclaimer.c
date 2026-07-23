@@ -33,14 +33,14 @@ static void init(void) {
     }
 
     fseek(loc_file, 0, SEEK_END);
-    long size = ftell(loc_file);
+    long loc_size = ftell(loc_file);
     fseek(loc_file, 0, SEEK_SET);
-    char* json = malloc(size + 1);
-    fread(json, 1, size, loc_file);
-    json[size] = '\0';
+    char* loc_json = malloc(loc_size + 1);
+    fread(loc_json, 1, loc_size, loc_file);
+    loc_json[loc_size] = '\0';
     fclose(loc_file);
-    cJSON* parsed_loc_json = cJSON_Parse(json);
-    free(json);
+    cJSON* parsed_loc_json = cJSON_Parse(loc_json);
+    free(loc_json);
 
     i = 0;
 

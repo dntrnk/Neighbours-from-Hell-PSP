@@ -8,6 +8,10 @@
 #include "../engine/NFHSound/NFHSound.h"
 #include "../engine/controls/controls.h"
 
+#include "scene_manager.h"
+
+#include "localizations.h"
+
 #define GRAY G2D_RGB(128, 128, 128)
 #define BLUE_EPISODE_NAME G2D_RGB(65, 92, 134)
 
@@ -36,6 +40,25 @@ Intro* intro_create(
     Intro* intro = malloc(sizeof(Intro));
     memset(intro, 0, sizeof(Intro));
 
+    char loc_filename[512];
+    sprintf(loc_filename, "data/localizations/%s/intro.json", current_lang_code);
+
+    FILE* loc_file = fopen(loc_filename, "r");
+
+    if (!loc_file) {
+        scene_error("Не удалось открыть файл %s", loc_filename);
+    }
+
+    fseek(loc_file, 0, SEEK_END);
+    long loc_size = ftell(loc_file);
+    fseek(loc_file, 0, SEEK_SET);
+    char* loc_json = malloc(loc_size + 1);
+    fread(loc_json, 1, loc_size, loc_file);
+    loc_json[loc_size] = '\0';
+    fclose(loc_file);
+    cJSON* parsed_loc_json = cJSON_Parse(loc_json);
+    free(loc_json);
+
     NFHHouseMusicLoad();
 
     strcpy(intro->episode_name, episode_name);
@@ -45,13 +68,35 @@ Intro* intro_create(
     intro->timer = 0;
     intro->song_timer = 0;
 
+    strcpy(intro->presents_text, json_get_item_string(parsed_loc_json, "presents", 31));
+
+    intraFontSetStyle(Font_ACMESAI_13, 0.7f, BLUE_EPISODE_NAME, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intraFontActivate(Font_ACMESAI_13, 0);
+    intro->presents_text_x = 240 - (intraFontMeasureText(Font_ACMESAI_13, intro->presents_text) * 0.5);
+
     intro->jwd_logo_y = 21;
     intro->jwd_logo_speed = 0;
 
     intro->nfh_logo_x = -139;
     intro->nfh_logo_y = 48;
+
+    switch (current_lang) {
+        case LANG_RUSSIAN:
+            intro->nfh_logo_offset_x = 0;
+            intro->nfh_logo_offset_y = 0;
+
+            break;
+        case LANG_ENGLISH:
+            intro->nfh_logo_offset_x = -22;
+            intro->nfh_logo_offset_y = 10;
+
+            break;
+    }
+
     intro->nfh_logo_speed_x = 0;
     intro->nfh_logo_speed_y = 0;
+
+    strcpy(intro->in_episode_text, json_get_item_string(parsed_loc_json, "in_episode", 31));
 
     intro->in_episode_speed = 0;
     intro->in_episode_x = 749;
@@ -60,7 +105,7 @@ Intro* intro_create(
     intro->episode_x = -270;
 
     intraFontSetStyle(Font_ACMESAI_13, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
-    intro->text1_offset = (int) (intraFontMeasureText(Font_ACMESAI_13, "в серии") * 0.5);
+    intro->text1_offset = (int) (intraFontMeasureText(Font_ACMESAI_13, intro->in_episode_text) * 0.5);
 
     intraFontSetStyle(Font_ACMESA_17_9, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intro->text2_offset = (int) (intraFontMeasureText(Font_ACMESA_17_9, intro->episode_name) * 0.5);
@@ -69,6 +114,8 @@ Intro* intro_create(
     intro->camera_extra_y = camera_extra_y;
 
     intro->woody = woody;
+
+    cJSON_Delete(parsed_loc_json);
 
     return intro;
 }
@@ -185,7 +232,7 @@ void intro_draw(const Intro* intro) {
             // in_episode shadow
             intraFontSetStyle(Font_ACMESAI_13, 0.7f, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
             intraFontActivate(Font_ACMESAI_13, 0);
-            intraFontPrint(Font_ACMESAI_13, 206, intro->jwd_logo_y + 152 + intraFontTextHeight(Font_ACMESAI_13), "представляет");
+            intraFontPrint(Font_ACMESAI_13, intro->presents_text_x + 2, intro->jwd_logo_y + 142 + intraFontTextHeight(Font_ACMESAI_13), intro->presents_text);
 
             // in_episode outline
             intraFontSetStyle(Font_ACMESAI_13, 0.7f, BLUE_EPISODE_NAME, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -194,16 +241,16 @@ void intro_draw(const Intro* intro) {
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
-                    intraFontPrint(Font_ACMESAI_13, 203-i, intro->jwd_logo_y + 149-j + intraFontTextHeight(Font_ACMESAI_13), "представляет");
+                    intraFontPrint(Font_ACMESAI_13, intro->presents_text_x-i, intro->jwd_logo_y + 139-j + intraFontTextHeight(Font_ACMESAI_13), intro->presents_text);
             }
 
             // in_episode text
             intraFontSetStyle(Font_ACMESAI_13, 0.7f, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
-            intraFontPrint(Font_ACMESAI_13, 203, intro->jwd_logo_y + 149 + intraFontTextHeight(Font_ACMESAI_13), "представляет");
+            intraFontPrint(Font_ACMESAI_13, intro->presents_text_x, intro->jwd_logo_y + 139 + intraFontTextHeight(Font_ACMESAI_13), intro->presents_text);
         }
 
         if (intro->timer > 192)
-            g2d_DrawImage(Sprite_NFH_LOGO, intro->nfh_logo_x, intro->nfh_logo_y, WHITE, 0, 255, G2D_UP_LEFT);
+            g2d_DrawImage(Sprite_NFH_LOGO, intro->nfh_logo_x + intro->nfh_logo_offset_x, intro->nfh_logo_y + intro->nfh_logo_offset_y, WHITE, 0, 255, G2D_UP_LEFT);
 
         if (intro->timer > 340) {
             // а может всё-таки сделать функции-обёртки
@@ -214,7 +261,7 @@ void intro_draw(const Intro* intro) {
             // in_episode shadow
             intraFontSetStyle(Font_ACMESAI_13, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
             intraFontActivate(Font_ACMESAI_13, 0);
-            intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset + 3, 141 + intraFontTextHeight(Font_ACMESAI_13), "в серии");
+            intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset + 3, 141 + intraFontTextHeight(Font_ACMESAI_13), intro->in_episode_text);
 
             // in_episode outline
             intraFontSetStyle(Font_ACMESAI_13, 1, BLUE_EPISODE_NAME, 0, 0, INTRAFONT_ALIGN_LEFT);
@@ -223,12 +270,12 @@ void intro_draw(const Intro* intro) {
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
-                    intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset-i, 138-j + intraFontTextHeight(Font_ACMESAI_13), "в серии");
+                    intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset-i, 138-j + intraFontTextHeight(Font_ACMESAI_13), intro->in_episode_text);
             }
 
             // in_episode text
             intraFontSetStyle(Font_ACMESAI_13, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
-            intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset, 138 + intraFontTextHeight(Font_ACMESAI_13), "в серии");
+            intraFontPrint(Font_ACMESAI_13, intro->in_episode_x - intro->text1_offset, 138 + intraFontTextHeight(Font_ACMESAI_13), intro->in_episode_text);
 
             // episode_name //
 

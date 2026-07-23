@@ -21,13 +21,21 @@ typedef struct {
     int timer;
     int song_timer;
 
+    char presents_text[32];
+
+    int presents_text_x;
+
     int jwd_logo_y;
     int jwd_logo_speed;
 
     int nfh_logo_x;
     int nfh_logo_y;
+    int nfh_logo_offset_x;
+    int nfh_logo_offset_y;
     int nfh_logo_speed_x;
     int nfh_logo_speed_y;
+
+    char in_episode_text[32];
 
     int in_episode_x;
     int in_episode_speed;

@@ -1,0 +1,68 @@
+{
+    "episode_name": "First steps",
+
+    "tutorial_phrases": [
+		{
+			"phrase_texts": [
+				{"text": "Welcome to the 'Neighbours from Hell' show. I'm Joe, the director of the show.", "y": 2},
+				{"text": "In the course of the following three episodes you will learn how to help Woody, the hero", "y": 18},
+				{"text": "of our show, play tricks on the nasty neighbour.", "y": 28},
+				{"text": "You can move Woody with the directional pad.", "y": 44},
+				{"text": "Now send Woody to his first target: the green floor marking to his left.", "y": 60}
+			],
+			
+			"window_size": 10
+		},
+
+		{
+			"phrase_texts": [
+				{"text": "Perfect! Let Woody go through the now unlocked door into room A to get your", "y": 2},
+				{"text": "next target.", "y": 12},
+				{"text": "To do this, hold down the directional button pointing towards it.", "y": 28}
+			],
+			
+			"window_size": 0
+		},
+
+		{
+			"phrase_texts": [
+				{"text": "Very good! Your screen shows only a part of the house.", "y": 2},
+				{"text": "You can look at other parts of the house with the help of your analog stick.", "y": 18},
+				{"text": "Now send Woody to his second target.", "y": 34}
+			],
+			
+			"window_size": 1
+		},
+
+		{
+			"phrase_texts": [
+				{"text": "Doors at the back wall always connect floors: they lead to the door directly above or", "y": 2},
+				{"text": "below it.", "y": 12},
+				{"text": "In order to send Woody to his third target, you need to hold down the 'up' button next to", "y": 28},
+				{"text": "the door to the other floor and then hold down the 'right' button, when Woody reaches", "y": 38},
+				{"text": "the ground floor.", "y": 48}
+			],
+			
+			"window_size": 6
+		},
+
+		{
+			"phrase_texts": [
+				{"text": "Well done! You've learned the basic elements for controlling Woody. Now you can go to", "y": 2},
+				{"text": "objects, through doors and into further rooms.", "y": 12},
+				{"text": "Now get Woody to leave the house through the front door and you will have completed", "y": 28},
+				{"text": "the introductory episode.", "y": 38}
+			],
+			
+			"window_size": 2
+		},
+
+		{
+			"phrase_texts": [
+				{"text": "", "y": 0}
+			],
+			
+			"window_size": 0
+		}
+    ]
+}

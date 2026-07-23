@@ -344,14 +344,14 @@ static void credits_menu_init(void) {
     }
 
     fseek(loc_file, 0, SEEK_END);
-    long size = ftell(loc_file);
+    long loc_size = ftell(loc_file);
     fseek(loc_file, 0, SEEK_SET);
-    char* json = malloc(size + 1);
-    fread(json, 1, size, loc_file);
-    json[size] = '\0';
+    char* loc_json = malloc(loc_size + 1);
+    fread(loc_json, 1, loc_size, loc_file);
+    loc_json[loc_size] = '\0';
     fclose(loc_file);
-    cJSON* parsed_loc_json = cJSON_Parse(json);
-    free(json);
+    cJSON* parsed_loc_json = cJSON_Parse(loc_json);
+    free(loc_json);
 
     strcpy(original_game_by_text, json_get_item_string(parsed_loc_json, "original_game_by", 255));
     strcpy(psp_version_by_text, json_get_item_string(parsed_loc_json, "psp_version_by", 255));
@@ -424,14 +424,14 @@ static void mainmenu_init(void) {
     }
 
     fseek(loc_file, 0, SEEK_END);
-    long size = ftell(loc_file);
+    long loc_size = ftell(loc_file);
     fseek(loc_file, 0, SEEK_SET);
-    char* json = malloc(size + 1);
-    fread(json, 1, size, loc_file);
-    json[size] = '\0';
+    char* loc_json = malloc(loc_size + 1);
+    fread(loc_json, 1, loc_size, loc_file);
+    loc_json[loc_size] = '\0';
     fclose(loc_file);
-    cJSON* parsed_loc_json = cJSON_Parse(json);
-    free(json);
+    cJSON* parsed_loc_json = cJSON_Parse(loc_json);
+    free(loc_json);
 
     strcpy(start_game_text, json_get_item_string(parsed_loc_json, "start_game", 63));
     strcpy(credits_text, json_get_item_string(parsed_loc_json, "credits", 63));

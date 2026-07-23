@@ -26,6 +26,8 @@
 #include "../../objects/tutorial.h"
 #include "../../objects/level_end.h"
 
+#include "../../objects/localizations.h"
+
 extern Scene PauseScene;
 
 extern g2dImage* SpriteList_WOODY_GENERIC;
@@ -134,8 +136,27 @@ static void init(void) {
     cJSON* parsed_json = cJSON_Parse(json);
     free(json);
 
+    char loc_filename[512];
+    sprintf(loc_filename, "data/localizations/%s/tutorial_1.json", current_lang_code);
+
+    FILE* loc_file = fopen(loc_filename, "r");
+
+    if (!loc_file) {
+        scene_error("Не удалось открыть файл %s", loc_filename);
+    }
+
+    fseek(loc_file, 0, SEEK_END);
+    long loc_size = ftell(loc_file);
+    fseek(loc_file, 0, SEEK_SET);
+    char* loc_json = malloc(loc_size + 1);
+    fread(loc_json, 1, loc_size, loc_file);
+    loc_json[loc_size] = '\0';
+    fclose(loc_file);
+    cJSON* parsed_loc_json = cJSON_Parse(loc_json);
+    free(loc_json);
+
     // Интро
-    current_episode_name = json_get_item_string(parsed_json, "episode_name", 127);
+    current_episode_name = json_get_item_string(parsed_loc_json, "episode_name", 127);
 
     intro = intro_create(
         current_episode_name, // episode_name
@@ -377,7 +398,7 @@ static void init(void) {
     woody->neighbour = neighbour;
 
     // Туториал
-    cJSON* tutorial_phrases = json_get_item_array(parsed_json, "tutorial_phrases");
+    cJSON* tutorial_phrases = json_get_item_array(parsed_loc_json, "tutorial_phrases");
 
     int tutorial_phrases_count = cJSON_GetArraySize(tutorial_phrases);
 
@@ -427,6 +448,7 @@ static void init(void) {
     pause_button_pressed = false;
 
     cJSON_Delete(parsed_json);
+    cJSON_Delete(parsed_loc_json);
 
     NFHMusicPlay(MUSIC_JINGLE_LEVELSTART, false);
 }
