@@ -3,7 +3,10 @@
 
 #include <stdbool.h>
 
+#include "../engine/fonts/intraFont.h"
+
 #include "woody.h"
+
 
 #define INTRO_WOODY_START_MOVE_TO_HOUSE 1
 #define INTRO_WOODY_START_ANIMATION 2
@@ -14,6 +17,7 @@
 typedef struct Woody Woody;
 
 typedef struct {
+    intraFont* episode_name_font;
     char episode_name[128];
     bool move_woody;
 

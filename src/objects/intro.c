@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "../engine/graphics/g2d.h"
-#include "../engine/fonts/intraFont.h"
 #include "../engine/NFHSound/NFHSound.h"
 #include "../engine/controls/controls.h"
 
@@ -28,6 +27,7 @@ extern g2dImage* Sprite_NFH_LOGO;
 extern g2dImage* Sprite_LOADING_TEXT_DATA;
 
 extern intraFont* Font_ACMESA_17_9;
+extern intraFont* Font_ACMESAI_17_9;
 extern intraFont* Font_ACMESAI_13;
 
 Intro* intro_create(
@@ -61,6 +61,16 @@ Intro* intro_create(
 
     NFHHouseMusicLoad();
 
+    switch (current_lang) {
+        case LANG_ENGLISH:
+            intro->episode_name_font = Font_ACMESAI_17_9;
+
+            break;
+        case LANG_RUSSIAN:
+            intro->episode_name_font = Font_ACMESA_17_9;
+
+            break;
+    }
     strcpy(intro->episode_name, episode_name);
     intro->move_woody = move_woody;
 
@@ -107,8 +117,8 @@ Intro* intro_create(
     intraFontSetStyle(Font_ACMESAI_13, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
     intro->text1_offset = (int) (intraFontMeasureText(Font_ACMESAI_13, intro->in_episode_text) * 0.5);
 
-    intraFontSetStyle(Font_ACMESA_17_9, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
-    intro->text2_offset = (int) (intraFontMeasureText(Font_ACMESA_17_9, intro->episode_name) * 0.5);
+    intraFontSetStyle(intro->episode_name_font, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+    intro->text2_offset = (int) (intraFontMeasureText(intro->episode_name_font, intro->episode_name) * 0.5);
 
     intro->camera_extra_x = camera_extra_x;
     intro->camera_extra_y = camera_extra_y;
@@ -280,23 +290,23 @@ void intro_draw(const Intro* intro) {
             // episode_name //
 
             // episode_name shadow
-            intraFontSetStyle(Font_ACMESA_17_9, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
-            intraFontActivate(Font_ACMESA_17_9, 0);
-            intraFontPrint(Font_ACMESA_17_9, intro->episode_x - intro->text2_offset + 3, 162 + intraFontTextHeight(Font_ACMESA_17_9), intro->episode_name);
+            intraFontSetStyle(intro->episode_name_font, 1, BLACK, 0, 0, INTRAFONT_ALIGN_LEFT);
+            intraFontActivate(intro->episode_name_font, 0);
+            intraFontPrint(intro->episode_name_font, intro->episode_x - intro->text2_offset + 3, 162 + intraFontTextHeight(intro->episode_name_font), intro->episode_name);
 
             // episode_name outline
-            intraFontSetStyle(Font_ACMESA_17_9, 1, BLUE_EPISODE_NAME, 0, 0, INTRAFONT_ALIGN_LEFT);
-            intraFontActivate(Font_ACMESA_17_9, 0);
+            intraFontSetStyle(intro->episode_name_font, 1, BLUE_EPISODE_NAME, 0, 0, INTRAFONT_ALIGN_LEFT);
+            intraFontActivate(intro->episode_name_font, 0);
 
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
-                    intraFontPrint(Font_ACMESA_17_9, intro->episode_x - intro->text2_offset-i, 159-j + intraFontTextHeight(Font_ACMESA_17_9), intro->episode_name);
+                    intraFontPrint(intro->episode_name_font, intro->episode_x - intro->text2_offset-i, 159-j + intraFontTextHeight(intro->episode_name_font), intro->episode_name);
             }
 
             // episode_name text   
-            intraFontSetStyle(Font_ACMESA_17_9, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
-            intraFontPrint(Font_ACMESA_17_9, intro->episode_x - intro->text2_offset, 159 + intraFontTextHeight(Font_ACMESA_17_9), intro->episode_name);
+            intraFontSetStyle(intro->episode_name_font, 1, WHITE, 0, 0, INTRAFONT_ALIGN_LEFT);
+            intraFontPrint(intro->episode_name_font, intro->episode_x - intro->text2_offset, 159 + intraFontTextHeight(intro->episode_name_font), intro->episode_name);
         }
     }
 }
